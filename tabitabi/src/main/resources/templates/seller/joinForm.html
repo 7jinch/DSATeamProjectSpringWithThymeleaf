@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="containter">
+		<h1>Sign Up</h1>
+		<p>
+		<form action="join" method="POST" th:object="${member}">
+			<table>
+				<tr>
+					<th>이메일</th>
+					<td>
+						<input type="text" id="email"  th:field="*{email}" required>
+						 @ <input id="dotCom" type=text>
+						<select id="selectEmail"  onchange="updateDotComValue()">
+		                     <option value="select">직접 입력하기</option>
+		                     <option value="gmail.com">google</option>
+		                     <option value="naver.com">naver</option>
+               			</select>
+               			<div id="error-email" class="error"></div>
+               			<input type="button" id="emailSend" onclick="emailCodeSend()" value="이메일 인증">
+					</td>
+				</tr>
+				<tr>
+					<th>인증코드</th>
+					<td>
+						<input type="text" id="emailCode">
+						<div style="display:none" id="VerifyCode"></div>
+						<div id="error-emailCode" class="error"></div>
+						<input type="button" id="codeVerify" onclick="return emailCodeVerify();" value="인증코드 확인"></input>
+					</td>
+				</tr>
+				<tr>
+					<th>비밀번호</th>
+					<td>
+						<input type="password" th:field="*{password}">
+						<div id="error-password" class="error"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>이름</th>
+					<td>
+						<input type="text" th:field="*{name}">
+						<div id="error-name" class="error"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>연락처</th>
+					<td>
+						<input type="text" th:field="*{phoneNumber}">
+						<div id="error-phone-number" class="error"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>성별</th>
+					<td>
+						<th:block th:each="gender : ${T(com.example.tabitabi.model.member.GenderType).values()}">
+							<label th:for="${#ids.next('gender')}">[[${gender.description}]]</label>
+							<input type="radio" th:field="*{gender}" th:value="${gender}">				
+						</th:block>
+						<div id="error-gender" class="error"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>생년월일</th>
+					<td>
+						<input type="date" th:field="*{birth}">
+						<div th:errors="*{birth}" class="error"></div>
+					</td>
+				</tr>
+				<tr>
+				    <th>비밀번호 찾기 질문</th>
+				    <td>
+				      <select id="question" onchange="updateQuestionValue()">
+				        <option value="">Select a question</option>
+            			<th:block th:each="question : ${questions}">
+                			<option th:value="${question.name()}" th:text="${question.questionText}"></option>
+            			</th:block>
+        			  </select>
+        			  <input type="hidden" id="selected-question" name="question">
+        			  <div id="error-question" class="error"></div>
+				    </td>
+				</tr>
+				<tr>
+				    <th>답변</th>
+				    <td>
+				     	<input type="text" th:field="*{answer}">
+						<div id="error-answer" class="error"></div>
+				    </td>
+				</tr>
+			</table>
+			<p>
+			<div class="center">
+				<input type="button" onclick="location.href='/'" value="Main">
+				<input type="button" onclick="return joinFormValidator();" value="Sign up">
+				<input type="reset" value="reset">
+			</div>
+		</form>
+<script src="/js/join.js"></script>
+</body>
+</html>

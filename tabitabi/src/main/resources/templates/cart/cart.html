@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>cart</title>
+<style>
+.product-image-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.cart-page-content {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	
+	transition: background-color 0.3s;
+}
+
+.cart-page-content-name-price-quantity {
+	display: flex;
+	flex-direction: column;
+}
+
+img {
+	width: 120px;
+}
+</style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script th:inline="javascript">
+$(document).ready(function(){
+	let cartTotalPrice = 0;
+	$('#cart-total-price span').text(cartTotalPrice);
+    $('.product-checkbox').change(function() {
+        const priceText  = $(this).closest('.cart-page-content').find('.cart-page-content-name-price-quantity').find('.product-price').find('.this-is-product-price').text().replace('원', '').replace(',', '');
+        const price = parseInt(priceText, 10);
+        
+        console.log(priceText);
+        
+        if ($(this).is(':checked')) {
+            $(this).closest('.cart-page-content').css('background-color', 'skyblue');
+            cartTotalPrice += price;
+            $('#cart-total-price span').text(cartTotalPrice);
+        } else {
+            $(this).closest('.cart-page-content').css('background-color', '');
+            cartTotalPrice -= price;
+            $('#cart-total-price span').text(cartTotalPrice);
+        }
+    });
+    
+	// 선택한 상품 주문하기
+	$('#order-button').click(function(){
+		$('.stock-error').text('');
+		let memberId = [[${memberId}]];
+		const url = `http://localhost:9000/order`;
+		console.log(memberId);
+		
+		let productId = '';
+		let quantity = '';
+		const orders = [];
+		$('input[type="checkbox"]:checked').each(function(){
+			productId = $(this).attr('id');
+			const parent = $(this).closest('.product-order-quantity');
+			const max = parent.find('.order-quantity').attr('max');
+			const min = 1;
+			quantity = parent.find('.order-quantity').val();
+			if(quantity > max) {
+				parent.find('.stock-error').text(`최대 ${max}개 주문할 수 있습니다.`);
+				return;
+			} else if(quantity < min){
+				parent.find('.stock-error').text("1개 이상 주문해 주세요.");
+				return;
+			}
+			orders.push({productId, quantity});
+		});
+		const orderListDTO = { orders };
+
+		////////////////////////////////// 주문하기 기능 완성하기
+		$.ajax({
+			url: url,
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify(orderListDTO),
+			success: function(response){
+				const orderId = response.orderId;
+				console.log(orderId);
+				window.location.href = url + `/${orderId}`; // 주문서 작성 페이지로 이동
+			},
+			error: function(xhr, status, error){
+				console.log("실패: ", error);
+				if(xhr.status === 400) {
+					const res = xhr.responseJSON;
+					alert(res.message);
+					window.location.href = url + `/${res.orderId}`; // 기존의 주문서 작성 페이지로 이동
+				}
+			}
+		})
+	});
+	
+	// 선택한 상품 삭제하기
+	$('#delete-button').click(function(){
+		let memberId = [[${memberId}]];
+		const url = `http://localhost:9000/cart/${memberId}`;
+		const ckeckedValues = [];
+		$('input[type="checkbox"]:checked').each(function(){
+			ckeckedValues.push($(this).attr('id'));
+		});
+		$.ajax({
+			url: url,
+			type: 'DELETE',
+			contentType: 'application/json',
+			data: JSON.stringify(ckeckedValues),
+			success: function(response){
+				window.location.href = url;
+			},
+			error: function(xhr, status, error){
+				console.log("실패: ", error)
+			}
+		})
+	});
+	
+	/////////////////////////////////////////////////////////////////////////////
+	// 장바구니 비우기
+	$('#delete-all-button').click(function(){
+		let memberId = [[${memberId}]];
+		const url = `http://localhost:9000/cart/${memberId}`;
+		$.ajax({
+			url: url + '/all',
+			type: 'DELETE',
+			contentType: 'application/json',
+			data: JSON.stringify({allDelete: "yes"}),
+			success: function(response){
+				window.location.href = url;
+			},
+			error: function(xhr, status, error){
+				console.log("실패: ", error)
+			}
+		})
+	});
+});
+</script>
+</head>
+<body>
+	<div id="cart-page" class="cart-page">
+		<h1 id="card-page-title" class="card-page-title">장바구니</h1>
+		<div id="cart-page-contaier" class="cart-page-contaier">
+			<div class="cart-page-content" th:each="item : ${cartList}">
+				<span class="product-image-container" style="text-align: center;">
+					<img
+						th:if="${item.productImage != null}"
+						th:src="@{/products/files?filename={filename}(filename=${item.productImage.saved_filename})}"
+						alt="Product Image" />
+					<input type="checkbox" class="product-checkbox" th:id="${item.cartItem.product.productId}" th:value="${item.cartItem.product.productId}" />
+				</span> 
+				<div class="cart-page-content-name-price-quantity">
+					<span class="product-name">
+						<span>상품이름:</span>
+						<span th:text="${item.cartItem.product.name}"></span>
+					</span>
+					<span class="product-price">
+						<span>상품가격:</span>
+						<span class="this-is-product-price" th:text="|${#numbers.formatInteger(item.cartItem.product.price, 0, 'COMMA')}원|"></span>
+					</span>
+					<span class="product-order-quantity">
+						<span>상품 주문 수량:</span>
+						<span th:text="${item.cartItem.quantity}"></span>
+						<input type="number" class="order-quantity" min="1"
+							th:attr="max=${item.cartItem.product.stock}"
+							th:value="${item.cartItem.quantity}">
+						<span>(남은 수량:</span>
+						<span th:text="${item.cartItem.product.stock}"></span>
+						<span>)</span>
+						<span class="stock-error"></span>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div id="cart-total-price" class="cart-total-price">
+			총 <span></span>원
+		</div>
+		<div id="button-box" class="button-box">
+			<input type="button" id="order-button" class="order-button"
+				value="선택한 상품 주문하기"> <input type="button" id="delete-button"
+				class="delete-button" value="선택한 상품 장바구니에서 삭제하기"> <input
+				type="button" id="delete-all-button" class="delete-all-button"
+				value="장바구니 비우기"> <input type="button"
+				onclick="location.href='/'" value="메인으로">
+		</div>
+	</div>
+</body>
+</html>

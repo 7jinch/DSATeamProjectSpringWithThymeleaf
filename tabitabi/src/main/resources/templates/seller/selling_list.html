@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>판매자 상품 리스트</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+    	$(document).ready(function(){
+    	})    		
+        function search() {
+            let searchText = document.getElementById("searchText").value;
+            location.href = "/products/seller/list?searchText=" + encodeURIComponent(searchText);
+        }
+    </script>
+</head>
+<body>
+    <h1>판매자 상품 리스트</h1>
+    <div>
+        <input type="text" id="searchText" placeholder="검색어 입력">
+        <button onclick="search()">검색</button>
+    </div>
+    <table th:object=${product} border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>설명</th>
+                <th>가격</th>
+                <th>재고</th>
+                <th>분류</th>
+                <th>재고상태</th>
+                <th>수정</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${productList}">
+                <td th:text="${productStat.count}" ></td>
+                <td><a th:href="@{/products/seller/read(id=${product.productId})}" th:text="${product.name}"></a></td>
+                <td th:text="${product.description}"></td>
+                <td th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}"></td>
+                <td th:text="${product.stock}"></td>
+                <td th:text="${product.category}"></td>
+                <td th:text="${product.status}"></td>
+                <td>
+                    <a th:href="@{/products/update(id=${product.productId})}">수정</a>
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이지 네비게이터 추가 
+    <div th:if="${navi != null}">
+        <a th:href="@{/products/seller/list(page=${navi.firstPage})}">First</a>
+        <a th:href="@{/products/seller/list(page=${navi.prevPage})}" th:if="${navi.prevPage != null}">Previous</a>
+        <a th:href="@{/products/seller/list(page=${navi.nextPage})}" th:if="${navi.nextPage != null}">Next</a>
+        <a th:href="@{/products/seller/list(page=${navi.lastPage})}">Last</a>
+    </div>-->
+
+    <p>
+    <input type="button" onclick="location.href='/products/register'" value="상품 등록하기">
+    <input type="button" onclick="location.href='/'" value="메인으로">
+    </p>
+</body>
+</html>

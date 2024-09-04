@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Password</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>비밀번호 찾기</h1>
+      <table>
+        <tr>
+          <th>Email</th>
+          <td>
+            <input type="text" id="email" />
+          </td>
+        </tr>
+        <tr>
+          <th>Question</th>
+          <td>
+            <select id="question" onchange="updateQuestionValue()">
+              <option value="">Select a question</option>
+              <th:block th:each="question : ${questions}">
+                <option
+                  th:value="${question.name()}"
+                  th:text="${question.questionText}"
+                ></option>
+              </th:block>
+            </select>
+            <input type="hidden" id="selected-question" name="question" />
+          </td>
+        </tr>
+        <tr>
+          <th>Answer</th>
+          <td>
+            <input type="text" id="answer" />
+          </td>
+        </tr>
+      </table>
+      <p></p>
+      <div class="center">
+        <input type="button" onclick="location.href='/'" value="Main" />
+        <input type="button" onclick="return FormValidator();" value="submit" />
+      </div>
+    </div>
+    <script src="/js/password.js"></script>
+  </body>
+</html>

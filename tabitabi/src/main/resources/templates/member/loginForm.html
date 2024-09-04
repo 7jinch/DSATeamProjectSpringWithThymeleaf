@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+</head>
+<body>
+<div id="container">
+  <h1>Login</h1>
+  <form action="" method="POST" th:object="${loginForm}">
+      <div th:if="${#fields.hasGlobalErrors()}">
+      	<p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="error"></p>
+      </div>
+    <table>
+      <tr>
+        <th>Email</th>
+        <td>
+          <input type="text" id="email" th:field="*{email}">
+        </td>
+      </tr>
+      <tr>
+        <th>Password</th>
+        <td>
+          <input type="password" id="password" th:field="*{password}">
+        </td>
+      </tr>
+    </table>
+    <br>
+    <div class="center">
+      <input type="button" onclick="location.href='/'" value="Main">
+      <input type="submit" value="Login">
+      <input type="button" onclick="location.href='/member/forgotPw'" value="비밀번호 찾기">
+    </div>
+  </form>
+</div>
+</body>
+</html>

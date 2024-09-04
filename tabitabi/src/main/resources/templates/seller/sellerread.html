@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 상세조회</title>
+    <script>
+        function removeFile() {
+            document.getElementById("fileRemoved").value = "true";
+            document.getElementById("productImage").style.display = "none";
+        }
+    </script>
+    <style>
+        img{
+        	width:20%;
+        	margin:auto;
+        	display:block;
+        }
+        .product-details {
+            margin-top: 20px;
+        }
+        .product-details td {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="product-detail-container">
+        <!-- 상품 이미지 -->
+        <div class="product-image-container" style="text-align: center;">
+            <img th:if="${productImage != null}" 
+                  th:src="@{/products/files?filename={filename}(filename=${productImage.saved_filename})}"
+                 alt="Product Image"/>
+        </div>
+        
+		<input type="button" onclick="location.href='/products/seller/list'" value="내 상품 리스트">
+        <!-- 상품 정보 -->
+        <div class="product-details">
+            <table border="1" width="100%">
+                <tr>
+                    <td><strong>상품명:</strong> <span th:text="${product.name}"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>상품 설명:</strong> <span th:text="${product.description}"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>가격:</strong>
+                        <th:block th:if="${product.price != 0}">
+                            <span th:text="|${#numbers.formatInteger(product.price, 0, 'COMMA')}원|"></span>
+                        </th:block>
+                        <th:block th:if="${product.price == 0}">
+                            <span>가격 정보 없음</span>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>카테고리:</strong> <span th:text="${product.category}"></span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <p>
+    <table th:object=${product}>
+        <td>
+           	<a th:href="@{/products/update(id=${product.productId})}">상품 수정</a>
+        </td>
+
+    </table>
+        
+    </p>
+</body>
+</html>

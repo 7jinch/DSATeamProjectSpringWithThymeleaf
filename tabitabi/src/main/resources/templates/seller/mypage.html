@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My page</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<img id="imagePreview" th:src="@{/uploads/{imageUrl}(imageUrl=${seller.fileName})}" alt="Image Preview" />
+	<input type="file" class="form-control" id="profile" name="profile" onchange="chooseImage(this)">
+	<button type="button" class="btn btn-primary" onclick="updateImage()">사진 변경</button>
+	
+	<form action="update" id="updateForm" method="POST" th:object="${seller}">
+		<table>
+			<tr>
+				<th>Email</th>
+				<td>
+				<!-- readonly는 form 제출시 값도 함께 전달됌 -->
+				<input id="email" th:field="*{email}" readonly>
+				</td>
+			</tr>
+			<tr>
+				<th>password</th>
+				<td><input type="password" id="password" th:field="*{password}">
+					<div id="error-password" class="error"></div></td>
+			</tr>
+			<tr>
+				<th>Name</th>
+				<td>
+					<input type="text" id="name" th:field="*{name}">
+				</td>
+			</tr>
+			<tr>
+				<th>Gender</th>
+				<td>
+					<input th:field="*{gender}" readonly>
+				</td>
+			</tr>
+			<tr>
+				<th>Address</th>
+				<td>
+					<input type="text" id="address" th:field="*{address}">
+				</td>
+			</tr>
+			<tr>
+			    <th>Question</th>
+			    <td>
+			      <select id="question" onchange="updateQuestionValue()">
+            		<th:block th:each="question : ${questions}">
+               			<option th:value="${question.name()}" th:text="${question.questionText}"
+               			th:selected="${question == defaultQu}"></option>
+            		</th:block>
+        		  </select>
+        		  <input type="hidden" id="selected-question" name="question">
+			    </td>
+			</tr>
+			<tr>
+			    <th>Answer</th>
+			    <td>
+			     	<input type="text" id="answer" th:field="*{answer}">
+			    </td>
+			</tr>
+		</table>
+		<p>
+		<div class="center">
+			<input type="submit" value="수정하기">
+			<input type="button" onclick="pwCheck()" value="회원탈퇴">
+		</div>
+	</form>
+<script src="/js/mypage.js"></script>
+</body>
+</html>

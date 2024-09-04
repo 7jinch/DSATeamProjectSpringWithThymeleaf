@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>New Password</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div>New Password Set</div>
+	<input id="password" type="password"></input>
+	<p>
+	<input id="re-password" type="password"></input>
+	<div class="center">
+      <input type="button" onclick="location.href='/'" value="Main">
+      <input type="button" onclick="return setPw();" value="submit">
+      <input type="reset" value="Reset">
+    </div>
+    <input type="hidden" id="email" value="${member.email}">
+<script src="/js/checkPassword.js"></script>
+</body>
+</html>

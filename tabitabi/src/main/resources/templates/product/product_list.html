@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>Product List</title>
+<style>
+</style>
+<script>
+//수정 필요, soldout일 경우 제품 이미지 색이 변하게 만들기
+document.addEventListener("DOMContentLoaded", function() {
+    // 모든 상품 항목을 가져온다
+    var productItems = document.querySelectorAll('.product-item');
+
+    // 각 상품 항목을 순회하면서 상태를 확인
+    productItems.forEach(function(item) {
+        var status = item.getAttribute('data-status');
+        // 상태가 'SOLD_OUT'인 경우 해당 상품 항목을 숨김
+        if (status === 'SOLD_OUT') {
+            item.style.display ="none";
+        }
+    });
+});
+</script>
+
+</head>
+<body>
+	<input id="move-cart-page" class="move-cart-page" type="button"
+		value="장바구니 보기" />
+	<h1>상품 리스트</h1>
+	<table border="1">
+		<tr>
+			<th>ID</th>
+			<th>상품명</th>
+			<th>설명</th>
+			<th>가격</th>
+			<th>재고</th>
+			<th>분류</th>
+		</tr>
+		<tr th:each="product : ${productList}" class="product-item"
+			th:data-status="${product.status}">
+			<td th:text="${product.productId}"></td>
+			<td><a th:href="@{/products/read(id=${product.productId})}"
+				th:text="${product.name}"></a></td>
+			<td th:text="${product.description}"></td>
+			<td><th:block th:if="${product.price != 0}">
+					<span
+						th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"></span>
+				</th:block> <th:block th:if="${product.price == 0}">
+					<span>가격 정보 없음</span>
+				</th:block></td>
+			<td th:text="${product.stock}"></td>
+			<td th:text="${product.category}"></td>
+		</tr>
+	</table>
+	<p>
+	<input type="button" onclick="location.href='/'" value="메인으로">
+
+<script th:inline="javascript">
+window.onload = function(){
+	
+    // 요소에 이벤트 바인딩하기
+    document.querySelector('#move-cart-page').addEventListener('click', () => {
+        let member_id = /*[[${member != null} ? ${member.id} : 0]]*/ 0;
+        if (member_id !== 0) {
+            window.location.href = `http://localhost:9000/cart/${member_id}`;
+        } else {
+            window.location.href = `http://localhost:9000/member/login`;
+        }
+    });
+}
+ </script>
+</body>
+</html>

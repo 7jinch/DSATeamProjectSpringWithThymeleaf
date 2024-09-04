@@ -1,0 +1,43 @@
+server:
+  port: 9000
+  
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/datasa
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show-sql: true
+        format-sql: true
+  servlet:
+    multipart:
+      max-file-size: #한파일당 최대용량 제한
+        10MB
+      max-request-size: #모든 파일의 최대용량제한
+        10MB        
+  data:
+    web:
+      pageable:
+        default-page-size: 10 #한페이지당 게시글 수
+        one-indexed-parameters: true #페이지를 0부터 말고 1부터
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: niniku058@gmail.com
+    password: mclu ewvh riti mhuy
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000

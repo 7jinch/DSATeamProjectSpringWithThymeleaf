@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>MAIN</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="container">
+   <h1>[ Main ]</h1>
+   <div th:unless="${session.loginMember}">
+      <div th:unless="${session.loginSeller}">
+      <input type="button" onclick="location.href='/member/join'" value="sign up">
+      <input type="button" onclick="location.href='/seller/join'" value="seller sign up">
+        <input type="button" onclick="location.href='/member/login'" value="login">
+      <input type="button" onclick="location.href='/seller/login'" value="seller login">
+   </div>
+   </div>
+   <div th:if="${session.loginMember}">
+      <p>WELCOME</p>
+         <input type="button" onclick="location.href='/member/logout'" value="로그아웃">
+   </div>
+   <div th:if="${session.loginMember}">
+   <input type="button" onclick="location.href='/member/mypage'" value="mypage">
+   		<input type="button" onclick="location.href='/products/list'" value="상품리스트">
+   </div>
+   <div th:if="${session.loginSeller}">
+      <p>WELCOME</p>
+      <input type="button" onclick="location.href='/seller/mypage'" value="mypage">
+         <input type="button" onclick="location.href='/seller/logout'" value="로그아웃">
+   </div>
+   <div th:if="${session.loginSeller}">
+   	<p>상품 등록을 해주세요</p>
+   		<input type="button" onclick="location.href='/products/register'" value="상품등록">
+   </div>
+   <div th:if="${session.loginSeller}">
+   	<p>등록된 상품 리스트</p>
+   		<input type="button" onclick="location.href='/products/seller/list'" value="내 상품 리스트">
+   </div>
+</div>
+</body>
+</html>

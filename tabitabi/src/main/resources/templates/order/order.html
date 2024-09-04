@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>order</title>
+<style>
+.order-page-container {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.info-container {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	
+	border: 1px solid gray;
+	border-radius: 5px;
+	
+	padding: 20px
+}
+
+.info-title {
+	font-size: 20px
+}
+
+.orderer-info-content {
+	display: flex;
+	flex-direction: row;
+	gap: 30px
+}
+
+.shipping-info-content{
+	display: flex;
+	flex-direction: row;
+	gap: 30px
+}
+
+.ckeck-box {
+	display: flex;
+	flex-direction: row;
+	
+	width: 200px;
+	
+	cursor: pointer;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script th:inline="javascript">
+$(document).ready(function(){
+	$('#same-as-orderer').click(function(){
+		const checkBox = $('#same-check-box');
+		if(checkBox.is(':checked')) {
+			$('#shipping-info-name-name').val('');
+			$('#shipping-info-phone-number-number').val('');
+			$('.disabled').prop('disabled', false);	
+			checkBox.prop('checked', false);
+		}
+		else {
+			const ordererName = $('#orderer-info-name-name').val();
+			const ordererPhoneNumber = $('#orderer-info-phone-number-number').val();
+			$('#shipping-info-name-name').val(ordererName);
+			$('#shipping-info-phone-number-number').val(ordererPhoneNumber);
+			$('.disabled').prop('disabled', true);				
+			checkBox.prop('checked', true);
+		}
+	})
+	
+	let tmp = /*[[${addressList}]]*/;
+	console.log(tmp);
+})
+</script>
+</head>
+<body>
+<div id="order-page" class="order-page">
+	<div id="order-page-title" class="order-page-title">주문 페이지</div>
+	<div id="order-page-container" class="order-page-container">
+		<div id="orderer-info" class="orderer-info info-container">
+			<div id="orderer-info-title" class="orderer-info-title info-title">주문자 정보</div>
+			<hr>
+			<div id="orderer-info-name" class="orderer-info-name orderer-info-content">
+				<div>주문자</div>
+				<input type="text" id="orderer-info-name-name" class="orderer-info-name-name" disabled th:value="${member.name}" />
+			</div>
+			<div id="orderer-info-phone-number" class="orderer-info-phone-number orderer-info-content">
+				<div>연락처</div>
+				<input type="text" id="orderer-info-phone-number-number" class="orderer-info-phone-number-number" disabled th:value="${member.phoneNumber}" />
+			</div>
+			<div id="orderer-info-email" class="orderer-info-email orderer-info-content">
+				<div>이메일</div>
+				<input type="text" disabled th:value="${member.email}" />
+			</div>
+		</div>
+		<div id="shipping-info" class="shipping-info info-container">
+			<div id="shipping-info-title" class="shipping-info-title info-title">배송지 정보</div>
+			<div id="same-as-orderer" class="same-as-orderer ckeck-box">
+				<input type="checkbox" id="same-check-box" class="same-check-box" />
+				<p>주문자 정보와 동일</p>
+			</div>
+			<div id="shipping-info-name" class="shipping-info-name shipping-info-content">
+				<div>이름</div>
+				<input type="text" id="shipping-info-name-name" class="shipping-info-name-name disabled" />
+			</div>
+			<div id="shipping-info-phone-number" class="shipping-info-phone-number shipping-info-content">
+				<div>연락처</div>
+				<input type="text" id="shipping-info-phone-number-number" class="shipping-info-phone-number-number disabled" />
+			</div>
+			<div id="shipping-info-address" class="shipping-info-address shipping-info-content">
+				<div>주소</div>
+				<input type="text" id="shipping-info-address-address" class="shipping-info-address-addressr" />
+				<select id="shipping-info-address-content" class="shipping-info-address-content">
+					<option th:each="address : ${addressList}" th:value="${address.address}" th:text="${address.address}">
+				</select>
+				<div id="self-input-address" class="self-input-address ckeck-box">
+					<input type="checkbox" id="self-input-address-check-box" class="self-input-address-check-box" />
+					<div>직접 입력하기</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
