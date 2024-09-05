@@ -1,5 +1,6 @@
 package com.example.tabitabi.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.tabitabi.DTO.OrderListDTO;
+import com.example.tabitabi.DTO.ProductAndImageDTO;
+import com.example.tabitabi.model.Product.ProductImage;
 import com.example.tabitabi.model.member.Member;
 import com.example.tabitabi.model.order.OrderItems;
 import com.example.tabitabi.model.order.OrderTable;
@@ -22,6 +25,7 @@ import com.example.tabitabi.model.seller.LoginForm;
 import com.example.tabitabi.service.MemberService;
 import com.example.tabitabi.service.OrderAddressService;
 import com.example.tabitabi.service.OrderTableService;
+import com.example.tabitabi.service.ProductService;
 
 import jakarta.validation.Valid;
 
@@ -39,6 +43,7 @@ public class OrderController {
 	private final MemberService memberService;
 	private final OrderTableService orderTableService;
 	private final OrderAddressService addressService;
+	private final ProductService productService;
 
 	@GetMapping("{orderId}")
 	public String orderPage(@PathVariable(name = "orderId") Long orderId, Model model,
@@ -65,9 +70,29 @@ public class OrderController {
 		model.addAttribute("addressList", addressList); // 배송지 리스트 담기
 
 		List<OrderItems> orderItemList = orderTableService.findOrderItemsByOrder(findOrder);
-		model.addAttribute("orderList", orderItemList); // 주문할 상품 리스트 담기
+		List<ProductAndImageDTO> productAndImageList = new ArrayList<>(); // 빈 리스트 생성
 		
-		log.info("주문할 상품 리스트: {}", orderItemList);
+		for(OrderItems ot : orderItemList) {
+			ProductAndImageDTO productAndImage = new ProductAndImageDTO();
+			ProductImage productImage = productService.findFileByProductId(ot.getProduct()); // 상품 이미지 객체 가져오기
+			
+			productAndImage.setProductImage(productImage); // 상품 이미지
+			productAndImage.setProduct(ot.getProduct()); // 상품
+			productAndImage.setQuantity(ot.getQuantity()); // 주문 수량
+			
+			productAndImageList.add(productAndImage); // 리스트에 값 추가
+		}
+		
+		model.addAttribute("orderItemList", productAndImageList); // 주문할 상품 리스트 담기
+		
+		OrderTable orderTable = orderTableService.findById(orderId);
+		model.addAttribute("order", orderTable); // 주문 담기
+		
+//		for(ProductAndImageDTO ot : productAndImageList) {
+//			log.info("주문할 상품: {}", ot.getProduct());
+//			log.info("주문할 상품 이미지: {}", ot.getProductImage());
+//			log.info("주문할 상품 수량: {}", ot.getQuantity());
+//		}
 		return "order/order";
 	}
 
@@ -99,5 +124,20 @@ public class OrderController {
 			return ResponseEntity.ok(Map.of("orderId", id));
 		}
 		return ResponseEntity.badRequest().body(Map.of("message", "알 수 없는 에러: 관리자에게 문의하세요."));
+	}
+	
+	@GetMapping("list")
+	public String myOrderList(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+			Model model
+			) {
+		if(loginMember == null) {
+			model.addAttribute("loginForm", new LoginForm());
+			return "member/loginForm"; // 로그인하지 않은 상태라면 로그아웃
+		}
+		
+		List<OrderTable> otlist = orderTableService.findByMember(loginMember);
+		
+		model.addAttribute("orderTableList", otlist);
+		return "order/orderList";
 	}
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>order list</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script th:inline="javascript">
+</script>
+<body>
+<div id="order-list-page" class="order-list-page">
+	<div th:each="ot : ${orderTableList}" class="order-container">
+		<div th:text="${ot.product.name}"></div>
+	</div>
+</div>
+</body>
+</html>

@@ -82,6 +82,7 @@
       <div class="my-page-button-box">
       	<input id="move-address-page" calss="move-address-page" type="button" value="배송지 관리하기" />
       	<input id="move-cart-page" class="move-cart-page" type="button" value="장바구니 보기" />
+      	<input id="move-order-list-page" class="move-order-list-page" type="button" value="주문목록 보기" />
      	<input type="submit" value="수정하기" />
        	<input type="button" onclick="pwCheck()" value="회원탈퇴" />
       </div>
@@ -99,6 +100,10 @@
  	    document.querySelector('#move-cart-page').addEventListener('click', () => {
 	 		let member_id = [[${member.id}]]; // 회원의 id 가져오기
 	 		window.location.href = `http://localhost:9000/cart/${member_id}`;
+ 	    });
+ 	    
+ 	    document.querySelector('#move-order-list-page').addEventListener('click', () => {
+	 		window.location.href = `http://localhost:9000/order/list`;
  	    });
  	}
     </script>

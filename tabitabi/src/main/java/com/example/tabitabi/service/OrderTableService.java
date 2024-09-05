@@ -49,7 +49,7 @@ public class OrderTableService {
 			
 			orderItemsRepository.save(oi);
 			
-			totalPrice += product.getPrice();
+			totalPrice += product.getPrice() * od.getQuantity();
 		}
 		ot.setTotal_price(totalPrice); // 총 가격
 		

@@ -35,16 +35,17 @@ $(document).ready(function(){
     $('.product-checkbox').change(function() {
         const priceText  = $(this).closest('.cart-page-content').find('.cart-page-content-name-price-quantity').find('.product-price').find('.this-is-product-price').text().replace('원', '').replace(',', '');
         const price = parseInt(priceText, 10);
-        
-        console.log(priceText);
+            const quantity = $(this).closest('.cart-page-content').find('.order-quantity').val();
         
         if ($(this).is(':checked')) {
             $(this).closest('.cart-page-content').css('background-color', 'skyblue');
-            cartTotalPrice += price;
+            $(this).closest('.cart-page-content').find('input[type="number"]').prop('disabled', true);
+            cartTotalPrice += price * quantity;
             $('#cart-total-price span').text(cartTotalPrice);
         } else {
             $(this).closest('.cart-page-content').css('background-color', '');
-            cartTotalPrice -= price;
+            $(this).closest('.cart-page-content').find('input[type="number"]').prop('disabled', false);
+            cartTotalPrice -= price * quantity;
             $('#cart-total-price span').text(cartTotalPrice);
         }
     });
@@ -54,14 +55,13 @@ $(document).ready(function(){
 		$('.stock-error').text('');
 		let memberId = [[${memberId}]];
 		const url = `http://localhost:9000/order`;
-		console.log(memberId);
 		
 		let productId = '';
 		let quantity = '';
 		const orders = [];
 		$('input[type="checkbox"]:checked').each(function(){
 			productId = $(this).attr('id');
-			const parent = $(this).closest('.product-order-quantity');
+			const parent = $(this).closest('.cart-page-content');
 			const max = parent.find('.order-quantity').attr('max');
 			const min = 1;
 			quantity = parent.find('.order-quantity').val();
@@ -96,6 +96,7 @@ $(document).ready(function(){
 				}
 			}
 		})
+
 	});
 	
 	// 선택한 상품 삭제하기
@@ -180,12 +181,10 @@ $(document).ready(function(){
 			총 <span></span>원
 		</div>
 		<div id="button-box" class="button-box">
-			<input type="button" id="order-button" class="order-button"
-				value="선택한 상품 주문하기"> <input type="button" id="delete-button"
-				class="delete-button" value="선택한 상품 장바구니에서 삭제하기"> <input
-				type="button" id="delete-all-button" class="delete-all-button"
-				value="장바구니 비우기"> <input type="button"
-				onclick="location.href='/'" value="메인으로">
+			<input type="button" id="order-button" class="order-button" value="선택한 상품 주문하기">
+			<input type="button" id="delete-button" class="delete-button" value="선택한 상품 장바구니에서 삭제하기">
+		   	<input type="button" id="delete-all-button" class="delete-all-button" value="장바구니 비우기">
+		   	<input type="button" onclick="location.href='/'" value="메인으로">
 		</div>
 	</div>
 </body>

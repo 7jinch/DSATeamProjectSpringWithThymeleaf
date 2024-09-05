@@ -4,7 +4,14 @@
 <meta charset="UTF-8">
 <title>order</title>
 <style>
+.order-page-top-container {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
 .order-page-container {
+	flex: 1;
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
@@ -37,6 +44,11 @@
 	gap: 30px
 }
 
+.shipping-info-address {
+	display: flex;
+	flex-direction: row;
+}
+
 .ckeck-box {
 	display: flex;
 	flex-direction: row;
@@ -45,10 +57,187 @@
 	
 	cursor: pointer;
 }
+
+.order-page-billing-info-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	
+	width: 100%;
+	height: 100%;
+	
+	border: 1px solid gray;
+	border-radius: 5px;
+	
+	padding: 20px
+}
+
+.order-product-list {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	padding: 15px;
+	margin-right: 15px;
+	height: 200px;
+	border: 1px solid black;
+	border-radius: 5px;
+	
+	overflow-y: auto;
+}
+
+.order-product-list::-webkit-scrollbar {
+    display: none;
+}
+.order-product-list:hover::-webkit-scrollbar {
+    display: block;
+    width: 10px;
+}
+.order-product-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 10px;
+}
+.order-product-list::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+
+.order-product-item {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	
+	width: 100%
+}
+
+.item-name {
+	cursor: pointer;
+}
+
+.item-price-quantity-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 10px
+}
+
+.item-price-quantity {
+	display: flex;
+	flex-direction: row;
+	gap: 10px
+}
+
+.item-price-quantity-price {
+	font-weight: bold;
+}
+
+.order-product-total-price-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	
+	font-size: 20px;
+}
+
+.order-product-total-price-box {
+	display: flex;
+	flex-direction: row;
+	
+	font-size: 30px;
+}
+
+.payment-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	
+	padding: 20px;
+	border: 1px solid black;
+	border-radius: 5px;
+	
+	font-size: 20px;
+	
+	cursor: pointer;
+}
+
+.address-not-found {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+}
+
+.add-address {
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+.request-info-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.request-info-content-box {
+	display: flex;
+	flex-direction: column;
+}
+
+.product-image-container > img{
+	width: 70px;
+	height: 70px;
+	border-radius: 10px;
+	
+	cursor: pointer;
+}
+
+.order-product-item-box {
+	display: flex;
+	flex-direction: row;
+	gap: 15px;
+	
+	padding-bottom: 15px;
+	border-bottom: 1px solid #ccc;
+}
+
+.order-product-item-box:last-child {
+	border-bottom: none;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:inline="javascript">
 $(document).ready(function(){
+	const checkBox = $('#input-address-check-box');
+	const addressList = $('#address-list');
+	const selfInputAddress = $('#self-input-address');
+	checkBox.prop('checked', true);
+	if(checkBox.is(':checked')) {
+		addressList.show();
+		selfInputAddress.hide();
+		checkBox.prop('checked', false);
+	} else {
+		addressList.hide();
+		selfInputAddress.show();
+		checkBox.prop('checked', true);
+	}
+	
+	const scrollElement = $('#order-product-list');
+	let scrollTimeout;
+	scrollElement.on('scroll', function(){
+		// 스크롤 이벤트가 발생하면 스크롤바가 보임
+		clearTimeout(scrollTimeout);
+		scrollElement.addClass('scrolling');
+		
+		// 1초 후에 숨기기
+		scrollTimeout = setTimeout(function() {
+			scrollElement.removeClass('scrolling')
+		}, 1000)
+	})
+	
+	// 주문자 정보와 동일 기능
 	$('#same-as-orderer').click(function(){
 		const checkBox = $('#same-check-box');
 		if(checkBox.is(':checked')) {
@@ -67,56 +256,148 @@ $(document).ready(function(){
 		}
 	})
 	
-	let tmp = /*[[${addressList}]]*/;
-	console.log(tmp);
+	// 주소 직접 입력 여부
+	$('#input-address').click(function(){
+		const checkBox = $('#input-address-check-box');
+		const addressList = $('#address-list');
+		const selfInputAddress = $('#self-input-address');
+		
+		if(checkBox.is(':checked')) {
+			addressList.show();
+			selfInputAddress.hide();
+			$('#self-shipping-info-address').val('');
+			
+			checkBox.prop('checked', false);
+		} else {
+			addressList.hide();
+			$('#shipping-info-address-details').val('');
+			
+			selfInputAddress.show();
+			
+			checkBox.prop('checked', true);
+		}
+	})
+	
+	$('#add-address').click(function(){
+		const movePage = confirm('현재까지 작성한 정보는 저장되지 않아 다시 작성해야 할 수 있어요.');
+		let member_id = [[${member.id}]]; // 회원의 id 가져오기
+		window.location.href = `http://localhost:9000/member/address/${member_id}`;
+	})
+	
+	// 상품 페이지로 이동
+	$('.product-image-container').click(function(){
+		const productId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
+		$('.item-name').click(function(){
+		const productId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
+	
+	// 주문하기
+	$('#payment-button').click(function(){
+		const orderQ = confirm("주문하시겠어요?");
+		if(orderQ) console.log('주문하기');
+		else console.log('주문 취소')
+	})
 })
 </script>
 </head>
 <body>
 <div id="order-page" class="order-page">
 	<div id="order-page-title" class="order-page-title">주문 페이지</div>
-	<div id="order-page-container" class="order-page-container">
-		<div id="orderer-info" class="orderer-info info-container">
-			<div id="orderer-info-title" class="orderer-info-title info-title">주문자 정보</div>
-			<hr>
-			<div id="orderer-info-name" class="orderer-info-name orderer-info-content">
-				<div>주문자</div>
-				<input type="text" id="orderer-info-name-name" class="orderer-info-name-name" disabled th:value="${member.name}" />
-			</div>
-			<div id="orderer-info-phone-number" class="orderer-info-phone-number orderer-info-content">
-				<div>연락처</div>
-				<input type="text" id="orderer-info-phone-number-number" class="orderer-info-phone-number-number" disabled th:value="${member.phoneNumber}" />
-			</div>
-			<div id="orderer-info-email" class="orderer-info-email orderer-info-content">
-				<div>이메일</div>
-				<input type="text" disabled th:value="${member.email}" />
-			</div>
-		</div>
-		<div id="shipping-info" class="shipping-info info-container">
-			<div id="shipping-info-title" class="shipping-info-title info-title">배송지 정보</div>
-			<div id="same-as-orderer" class="same-as-orderer ckeck-box">
-				<input type="checkbox" id="same-check-box" class="same-check-box" />
-				<p>주문자 정보와 동일</p>
-			</div>
-			<div id="shipping-info-name" class="shipping-info-name shipping-info-content">
-				<div>이름</div>
-				<input type="text" id="shipping-info-name-name" class="shipping-info-name-name disabled" />
-			</div>
-			<div id="shipping-info-phone-number" class="shipping-info-phone-number shipping-info-content">
-				<div>연락처</div>
-				<input type="text" id="shipping-info-phone-number-number" class="shipping-info-phone-number-number disabled" />
-			</div>
-			<div id="shipping-info-address" class="shipping-info-address shipping-info-content">
-				<div>주소</div>
-				<input type="text" id="shipping-info-address-address" class="shipping-info-address-addressr" />
-				<select id="shipping-info-address-content" class="shipping-info-address-content">
-					<option th:each="address : ${addressList}" th:value="${address.address}" th:text="${address.address}">
-				</select>
-				<div id="self-input-address" class="self-input-address ckeck-box">
-					<input type="checkbox" id="self-input-address-check-box" class="self-input-address-check-box" />
-					<div>직접 입력하기</div>
+	<input type="button" onclick="location.href='/'" value="메인으로">
+	<div id="order-page-top-container" class="order-page-top-container">
+		<div id="order-page-container" class="order-page-container">
+			<div id="orderer-info" class="orderer-info info-container">
+				<div id="orderer-info-title" class="orderer-info-title info-title">주문자 정보</div>
+				<hr>
+				<div id="orderer-info-name" class="orderer-info-name orderer-info-content">
+					<div>주문자</div>
+					<input type="text" id="orderer-info-name-name" class="orderer-info-name-name" disabled th:value="${member.name}" />
+				</div>
+				<div id="orderer-info-phone-number" class="orderer-info-phone-number orderer-info-content">
+					<div>연락처</div>
+					<input type="text" id="orderer-info-phone-number-number" class="orderer-info-phone-number-number" disabled th:value="${member.phoneNumber}" />
+				</div>
+				<div id="orderer-info-email" class="orderer-info-email orderer-info-content">
+					<div>이메일</div>
+					<input type="text" disabled th:value="${member.email}" />
 				</div>
 			</div>
+			<div id="shipping-info" class="shipping-info info-container">
+				<div id="shipping-info-title" class="shipping-info-title info-title">배송지 정보</div>
+				<div id="same-as-orderer" class="same-as-orderer ckeck-box">
+					<input type="checkbox" id="same-check-box" class="same-check-box" />
+					<p>주문자 정보와 동일</p>
+				</div>
+				<div id="shipping-info-name" class="shipping-info-name shipping-info-content">
+					<div>이름 </div>
+					<input type="text" id="shipping-info-name-name" class="shipping-info-name-name disabled" />
+				</div>
+				<div id="shipping-info-phone-number" class="shipping-info-phone-number shipping-info-content">
+					<div>연락처</div>
+					<input type="text" id="shipping-info-phone-number-number" class="shipping-info-phone-number-number disabled" />
+				</div>
+				<div id="shipping-info-address" class="shipping-info-address shipping-info-content">
+					<div>주소</div>
+					<div id="shipping-info-address-box" class="shipping-info-address-box">
+						<div id="input-address" class="input-address ckeck-box">
+							<input type="checkbox" id="input-address-check-box" class="input-address-check-box" />
+							<div>직접 입력하기</div>
+						</div>
+						<div th:if="${#lists.size(addressList) > 0}" id="address-list" class="address-list">
+							<select id="shipping-info-address-content" class="shipping-info-address-content">
+								<option th:each="address : ${addressList}" th:value="${address.address}" th:text="${address.address}">
+							</select>
+							<input type="text" id="shipping-info-address-details" class="shipping-info-address-details" placeholder="상세 주소를 입력해주세요." />
+						</div>
+						<div th:if="${#lists.size(addressList) == 0}" id="address-list" class="address-list address-not-found">
+							<div>현재 저장된 배송지가 없습니다.</div>
+							<div id="add-address" class="add-address">배송지 추가하기</div>
+						</div>
+						<div id="self-input-address" class="self-input-address">
+							<input type="text" id="self-shipping-info-address" class="self-shipping-info-address" placeholder="주소를 입력해주세요." />
+						</div>
+					</div>
+				</div>
+				<div id="request-info-container" class="request-info-container">
+					<label for="request-info-content">요청사항</label>
+					<textarea id="request-info-content" class="request-info-content" rows="4" cols="50" placeholder="요청사항을 간단히 작성해주세요."></textarea>
+				</div>
+			</div>
+		</div>
+		<div id="order-page-billing-info-container" class="order-page-billing-info-container">
+			<div id="billing-info-title" class="billing-info-title info-title">결제 정보</div>
+			<div id="order-product-list-title" class="order-product-list-title">주문 상품</div>
+			<div id="order-product-list" class="order-product-list">
+				<div th:each="orderItemAndImage : ${orderItemList}" class="order-product-item-box">
+			        <div class="product-image-container" style="text-align: center;" th:id="${orderItemAndImage.product.productId}">
+			           <img th:if="${orderItemAndImage.productImage != null}" 
+			                th:src="@{/products/files?filename={filename}(filename=${orderItemAndImage.productImage.saved_filename})}"
+			                alt="Product Image"/>
+			       	</div>
+			       	<div class="order-product-item">
+				       	<div class="item-name" th:id="${orderItemAndImage.product.productId}" th:text="${orderItemAndImage.product.name}"></div>
+						<div class="item-price-quantity-box">
+							<div class="item-price-quantity">
+								<div class="item-price" th:text="|${#numbers.formatInteger(orderItemAndImage.product.price, 0, 'COMMA')}원|"></div>
+								<div>X</div>
+								<div class="item-quantity" th:text="|${orderItemAndImage.quantity}개|"></div>
+								<div>=</div>
+							</div>
+							<div class="item-price-quantity-price" th:text="|${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
+						</div>
+			       	</div>
+				</div>
+			</div>
+			<div id="order-product-total-price-container" class="order-product-total-price-container">
+				<div>총 결제금액</div>
+				<div id="order-product-total-price-box" class="order-product-total-price-box">
+					<div id="order-product-total-price" class="order-product-total-price" th:text="|${#numbers.formatInteger(order.total_price, 0, 'COMMA')}원|"></div>
+				</div>
+			</div>
+			<div id="payment-button" class="payment-button">결제하기</div>
 		</div>
 	</div>
 </div>
