@@ -7,14 +7,26 @@
 .product-image-container {
 	display: flex;
 	flex-direction: column;
+	
+	cursor: pointer;
 }
 
 .cart-page-content {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	gap: 30px;
 	
 	transition: background-color 0.3s;
+	
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 15px;
+	border-bottom: 1px solid #ccc;
+}
+
+.cart-page-content:last-child {
+	border-bottom: none;
 }
 
 .cart-page-content-name-price-quantity {
@@ -24,6 +36,24 @@
 
 img {
 	width: 120px;
+	border-radius: 10px;
+}
+
+.product-name {
+	cursor: pointer;
+}
+
+.toast_message {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
 }
 </style>
 <script
@@ -74,7 +104,15 @@ $(document).ready(function(){
 			}
 			orders.push({productId, quantity});
 		});
+		if(orders.length === 0) {
+            const tm = $('#toast_message');
+            tm.text('선택된 상품이 없어요.')
+            tm.fadeIn(400).delay(1000).fadeOut(400);
+			return;
+		}
+			
 		const orderListDTO = { orders };
+		
 
 		////////////////////////////////// 주문하기 기능 완성하기
 		$.ajax({
@@ -139,23 +177,37 @@ $(document).ready(function(){
 			}
 		})
 	});
+	
+	// 상품 페이지로 이동
+	$('.image-box').click(function(){
+		const productId = $(this).closest('.product-image-container').find('.product-checkbox').attr('id');
+		console.log(productId);
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
+	$('.product-name').click(function(){
+		const productId = $(this).attr('id');
+		console.log(productId);
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
 });
 </script>
 </head>
 <body>
 	<div id="cart-page" class="cart-page">
+		<div id="toast_message" class="toast_message"></div>
 		<h1 id="card-page-title" class="card-page-title">장바구니</h1>
 		<div id="cart-page-contaier" class="cart-page-contaier">
-			<div class="cart-page-content" th:each="item : ${cartList}">
+			<div th:each="item : ${cartList}" class="cart-page-content">
 				<span class="product-image-container" style="text-align: center;">
 					<img
+						class="image-box"
 						th:if="${item.productImage != null}"
 						th:src="@{/products/files?filename={filename}(filename=${item.productImage.saved_filename})}"
 						alt="Product Image" />
 					<input type="checkbox" class="product-checkbox" th:id="${item.cartItem.product.productId}" th:value="${item.cartItem.product.productId}" />
 				</span> 
 				<div class="cart-page-content-name-price-quantity">
-					<span class="product-name">
+					<span class="product-name" th:id="${item.cartItem.product.productId}">
 						<span>상품이름:</span>
 						<span th:text="${item.cartItem.product.name}"></span>
 					</span>

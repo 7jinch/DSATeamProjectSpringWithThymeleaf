@@ -1,16 +1,276 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>order list</title>
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:inline="javascript">
+// 상품 페이지로 이동
+$(document).ready(function() {
+	$('.product-container').hide();
+	$('.order-product-total-price-container').hide();
+	
+	$('.show-button').click(function(){
+		const text = $(this).text();
+		if(text === '펼쳐보기 ▼') {
+			// $(this).closest('.product-container').addClass('hide');
+			$(this).closest('.order-container').find('.product-container').show('fast');
+			$(this).closest('.order-container').find('.order-product-total-price-container').show('fast');
+			$(this).text('접기 ▲');
+		} else {
+			// $(this).closest('.product-container').removeClass('hide');
+			$(this).closest('.order-container').find('.product-container').hide('fast');
+			$(this).closest('.order-container').find('.order-product-total-price-container').hide('fast');
+			$(this).text('펼쳐보기 ▼');
+		}
+	})
+	
+	$('.product-image-container').click(function(){
+		const productId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
+	$('.item-name').click(function(){
+		const productId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
+	
+	$('#move-main-page').click(function(){
+		window.location.href = `http://localhost:9000/`;
+	})
+	
+	const showTM = (message) => {
+		const tm = document.querySelector('#toast_message'); // 토스트 메시지 요소 가져오기
+		tm.textContent = message; // 메시지값 주기
+		tm.classList.add('active'); // 클래스 속성에 'active' 추가
+		setTimeout(() => tm.classList.remove('active'), 2000) // 클래스 속성에서 'active' 제거(1000밀리초 후)
+	}
+	
+	// 장바구니 추가
+	$('.add-cart-button').click(function(){
+		const productId = $(this).attr('id');
+		const url = `http://localhost:9000/cart`;
+		
+		$.ajax({
+			url: url,
+			type: "POST",
+			contentType: "application/json",
+			data: JSON.stringify({productId}),
+			success: function(response){
+                const tm = $('#toast_message');
+                tm.text('장바구니에 추가되었습니다.');
+                
+                $('.add-cart-button').text('장바구니에 추가하였습니다.');
+                tm.fadeIn(400).delay(1000).fadeOut(400);
+			},
+			error: function(xhr, status, error){
+				const tm = $('#toast_message');
+				tm.text(xhr.responseJSON.message || error);
+				tm.fadeIn(400).delay(1000).fadeOut(400);
+			}
+		})
+	})
+	
+	// 장바구니에서 삭제
+})
+
+const checkProductInCart = () => {
+	
+}
 </script>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.show-button {
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.order-list-page-title-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	
+	z-index: 999;
+    position: sticky;
+    top: 0;
+    
+	padding: 15px;
+	padding-left: 35px;
+	padding-right: 35px;
+	
+	background-color: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.order-list-page-title {
+	font-size: 30px;
+}
+
+.move-main-page {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	
+	cursor: pointer;
+}
+
+.order-container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	
+	padding-top: 25px;
+	padding-bottom: 25px;
+	margin-left: 25px;	
+	margin-right: 25px;	
+	border-bottom: 1px solid #ccc;
+}
+
+.order-container:last-child {
+	border-bottom: none;
+}
+
+.order-status-and-order-date {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+
+.order-status-date {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+}
+
+.order_status {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.order-date {
+	color: green;
+}
+
+.order-details {
+	cursor: pointer;
+}
+
+.product-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+
+	padding-left: 20px;
+	padding-right: 70px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+}
+
+.product-image-name-price-quantity {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+
+.product-image-container > img{
+	width: 70px;
+	height: 70px;
+	border-radius: 10px;
+	
+	cursor: pointer;
+}
+
+.product-name-price-quantity {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+}
+
+.item-name {
+	cursor: pointer;
+}
+
+.product-price-quantity {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+}
+
+.order-product-total-price-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	align-items: center;
+}
+
+.order-total-price {
+	font-size: 20px;
+}
+
+.toast_message {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+}
+</style>
 <body>
 <div id="order-list-page" class="order-list-page">
-	<div th:each="ot : ${orderTableList}" class="order-container">
-		<div th:text="${ot.product.name}"></div>
+	<div id="toast_message" class="toast_message"></div>
+	<div id="order-list-page-title-container" class="order-list-page-title-container">
+		<div id="order-list-page-title" class="order-list-page-title">주문 목록</div>
+		<div id="move-main-page" class="move-main-page">메인으로</div>
+	</div>
+	<div th:each="order : ${orderAndOrderItemsList}" class="order-container">
+		<div class="order-status-and-order-date">
+			<div class="order-status-date">
+				<div th:text="${order.orderTable.order_status}" class="order_status"></div>
+				<div th:text="|${order.orderTable.order_date}에 주문하신 상품|" class="order-date"></div>
+			</div>
+			<div class="order-details">주문 상세 보기 ></div>
+		</div>
+		<div class="show-button">펼쳐보기 ▼</div>
+		<div th:each="orderItems : ${order.ProductAndImageList}" class="product-container">
+			<div class="product-image-name-price-quantity">
+		        <div class="product-image-container" style="text-align: center;" th:id="${orderItems.product.productId}">
+		           <img th:if="${orderItems.productImage != null}" 
+		                th:src="@{/products/files?filename={filename}(filename=${orderItems.productImage.saved_filename})}"
+		                alt="Product Image"/>
+		       	</div>
+				<div class="product-name-price-quantity">
+					<div th:text="${orderItems.product.name}" class="item-name" th:id="${orderItems.product.productId}"></div>
+					<div class="product-price-quantity">
+				       	<div th:text="|${#numbers.formatInteger(orderItems.product.price, 0, 'COMMA')}원|"></div>
+				       	<div th:text="|${orderItems.quantity}개|"></div>
+					</div>
+				</div>
+			</div>
+			<div class="add-cart-button" th:id="${orderItems.product.productId}" th:if="${not idList.contains(orderItems.product.productId)}">장바구니에 추가하기</div>
+			<div class="added-in-cart" th:id="${orderItems.product.productId}" th:if="${idList.contains(orderItems.product.productId)}">이미 장바구니에 추가된 상품입니다.</div>
+		</div>
+		<div class="order-product-total-price-container">
+			<div>총 주문 금액:&nbsp;</div>
+			<div th:text="|${#numbers.formatInteger(order.orderTable.total_price, 0, 'COMMA')}원|" class="order-total-price"></div>
+		</div>
 	</div>
 </div>
 </body>

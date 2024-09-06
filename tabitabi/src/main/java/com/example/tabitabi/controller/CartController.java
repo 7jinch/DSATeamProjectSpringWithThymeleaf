@@ -49,6 +49,7 @@ public class CartController {
 			HttpServletRequest req, HttpSession session,
 			@SessionAttribute(name = "loginMember", required = false) Member loginMember,
 			Model model) {
+		log.info("showCart 실행");
 		log.info("장바구니 페이지 열기");
 		log.info("받은 회원 id: {}", member_id);
 		if(req.getSession() == null) return "member/loginForm"; // 로그인하지 않은 상태라면 로그아웃
@@ -95,6 +96,7 @@ public class CartController {
 			@Validated @RequestBody Map<String, Long> requestBody, BindingResult result,
 			@SessionAttribute(name = "loginMember", required = false) Member loginMember
 			){
+		log.info("addCart 실행");
 		if (result.hasErrors()) return ResponseEntity.badRequest().body(Map.of("message", "장바구니 추가 중 에러가 발생했습니다."));
 		if(loginMember == null) return ResponseEntity.badRequest().body(Map.of("message", "로그인이 필요합니다."));
 		Long productId = requestBody.get("productId"); // productId 가져오기
@@ -121,6 +123,7 @@ public class CartController {
 												@SessionAttribute(name = "loginMember", required = false) Member loginMember, // 세션 가져오기
 												BindingResult result
 			) {
+		log.info("deleteCartProducts 실행");
 		if (result.hasErrors()) return ResponseEntity.badRequest().body(Map.of("message", "장바구니 삭제 중 에러가 발생했습니다."));
 		if(loginMember == null) return ResponseEntity.badRequest().body(Map.of("message", "로그인이 필요합니다."));
 		
@@ -134,6 +137,7 @@ public class CartController {
 		if(!findMember.getId().equals(member_id)) return ResponseEntity.badRequest().body(Map.of("message", "로그인이 필요합니다."));
 		Cart cart = cartService.findCartByMemberId(findMember.getId()); // 로그인한 회원의 cart 가져오기
 		
+		//
 		cartService.deleteCartItemByCart(cart, productIdList);
 		
 		log.info("장바구니에서 삭제했습니다.");
@@ -145,6 +149,7 @@ public class CartController {
 	public ResponseEntity<?> deleteAllCartProducts(@PathVariable(name="member_id") Long member_id, // 경로변수 받아오기,
 											       @SessionAttribute(name = "loginMember", required = false) Member loginMember // 세션 가져오기
 	) {
+		log.info("deleteAllCartProducts 실행");
 		if(loginMember == null) return ResponseEntity.badRequest().body(Map.of("message", "로그인이 필요합니다."));
 	
 		log.info("받은 회원 id: {}", member_id);
