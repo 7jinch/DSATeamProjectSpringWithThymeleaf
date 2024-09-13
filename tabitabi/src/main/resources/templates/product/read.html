@@ -16,16 +16,16 @@
         	margin:auto;
         	display:block;
         }
+        
+        <!--
         .product-details {
             margin-top: 20px;
         }
+        
         .product-details td {
             padding: 10px;
         }
-     	.heartIcon{
-     		width:2%;
-     		height:2%;
-     	}
+        -->
      	
 		#toast_message {
 		    opacity: 0;
@@ -44,31 +44,110 @@
 		    opacity: 1;
 		    top: 50px;
 		}
+		
+		.wishlist {
+            width: 2%;
+            height: 2%;
+        }
+        .wishlist-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            margin-top: 10px;
+        }
+        .wishlist-button.red-heart {
+            background-image: url('/images/redheart.png');
+        }
+        .wishlist-button.black-heart {
+            background-image: url('/images/blackheart.png');
+        }
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .slider-images {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+            object-fit: scale-down;
+        }
+        .slider-image {
+            min-width: 100%;
+            box-sizing: border-box;
+            object-fit: scale-down;
+        }
+        button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1;
+        }
+        .prev {
+            left: 10px;
+        }
+        .next {
+            right: 10px;
+        }
       
     </style>
 </head>
 <body>
     <div class="product-detail-container">
-    	<input id="move-cart-page" class="move-cart-page" type="button"
-		value="장바구니 보기" />
+    	<input id="move-cart-page" class="move-cart-page" type="button" value="장바구니 보기" />
+		
     	<!-- 토스트 메시지 -->
         <div id="toast_message"></div>
+        
         <!-- 상품 이미지 -->
-        <div class="product-image-container" style="text-align: center;">
-            <img th:if="${productImage != null}" 
-                  th:src="@{/products/files?filename={filename}(filename=${productImage.saved_filename})}"
-                 alt="Product Image"/>
+        <div class="slider-container">
+            <div class="slider-images">
+                <img th:each="image, iterStat : ${productImages}" 
+                     th:if="${image != null}" 
+                     th:src="@{/products/files?filename={filename}(filename=${image.saved_filename})}" 
+                     alt="Product Image" 
+                     class="slider-image">
+            </div>
+            <button class="prev" aria-label="Previous">&#10094;</button>
+            <button class="next" aria-label="Next">&#10095;</button>
         </div>
+        
+        <!-- 장바구니 추가 버튼 -->
         <div class="add-cart-button-container">
         	<input id="add-cart-button" class="add-cart-button" type="button" value="장바구니에 추가하기" />
         </div>
         <p>
+        
+        <!-- 찜 버튼 -->
+        <div style="text-align: center;">
+            <button id="wishlistButton" class="wishlist-button" disabled></button>
+        </div>
         
         <!-- 상품 정보 -->
         <div class="product-details">
             <table border="1" width="100%">
                 <tr>
                     <td><strong>상품명:</strong> <span th:text="${product.name}"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>셀러:</strong> 
+                        <!-- 셀러 닉네임 클릭 시 셀러 소개 페이지로 이동 -->
+                        <a th:href="@{/seller/{id}/introshow(id=${product.seller.id})}"
+                           th:text="${product.seller.nickname}"></a>
+                    </td>
                 </tr>
                 <tr>
                     <td><strong>상품 설명:</strong> <span th:text="${product.description}"></span></td>
@@ -84,17 +163,126 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>카테고리:</strong> <span th:text="${product.category}"></span></td>
+                    <td>
+                        <strong>카테고리:</strong>
+                        <a th:href="@{/products/categorylist(category=${product.category})}" th:text="${product.category}"></a>
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
+    <input type="button" onclick="startChat();" value="채팅하기">
     <input type="button" onclick="location.href='/'" value="메인으로">
    	<input type="button" onclick="location.href='http://localhost:9000/products/list'" value="상품리스트 보기">
-
-<script th:inline="javascript">
-window.onload = function (){
+	<input type="hidden" id="product" th:value="${product.productId}">
+	<input type="hidden" id="seller" th:value="${product.seller.email}">
+    <input type="hidden" id="memberId" th:value="${memberId}">
 	
+<script src="/js/createChat.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:inline="javascript">
+$(document).ready(function () {
+    var memberId = $('#memberId').val();
+    var productId = $('#productId').val();
+    var isOwnProduct = $('#isOwnProduct').val() === 'true'; // 자신의 상품인지 여부
+    var isInWishlist = false; // 초기화
+    
+    // 찜 버튼 상태 업데이트 함수
+    function updateWishlistButton(isInWishlist) {
+        var button = $('#wishlistButton');
+        if (isOwnProduct) {
+            button.prop('disabled', true);
+            button.attr('title', '자신의 상품은 찜할 수 없습니다.');
+        } else {
+            button.prop('disabled', false);
+            if (isInWishlist) {
+                button.removeClass('black-heart').addClass('red-heart');
+            } else {
+                button.removeClass('red-heart').addClass('black-heart');
+            }
+        }
+    }
+
+    // 페이지 로드 시 찜 상태 확인
+    if (!isOwnProduct) {
+        $.ajax({
+            url: '/isInWishlist',
+            method: 'GET',
+            data: { memberId: memberId, productId: productId },
+            success: function (response) {
+                isInWishlist = response; // 서버에서 받은 찜 상태
+                updateWishlistButton(isInWishlist);
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to check wishlist status:', error);
+            }
+        });
+    } else {
+        updateWishlistButton(false); // 자신의 상품인 경우 초기화
+    }
+
+    // 버튼 클릭 이벤트 처리
+    $('#wishlistButton').click(function () {
+        if (isInWishlist) {
+            // 찜 취소 요청
+            $.ajax({
+                url: '/removeWishlist',
+                method: 'POST',
+                data: { memberId: memberId, productId: productId },
+                success: function () {
+                    isInWishlist = false;
+                    updateWishlistButton(isInWishlist);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to remove from wishlist:', error);
+                }
+            });
+        } else {
+            // 찜 추가 요청
+            $.ajax({
+                url: '/addWishlist',
+                method: 'POST',
+                data: { memberId: memberId, productId: productId },
+                success: function () {
+                    isInWishlist = true;
+                    updateWishlistButton(isInWishlist);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to add to wishlist:', error);
+                }
+            });
+        }
+    });
+});
+
+// 슬라이더 로직
+document.addEventListener('DOMContentLoaded', function() {
+    const sliderImages = document.querySelector('.slider-images');
+    const images = sliderImages.querySelectorAll('.slider-image');
+    const prevButton = document.querySelector('.prev');
+    const nextButton = document.querySelector('.next');
+    let currentIndex = 0;
+
+    function updateSlider() {
+        const offset = -currentIndex * 100;
+        sliderImages.style.transform = `translateX(${offset}%)`;
+    }
+
+    prevButton.addEventListener('click', function() {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
+        updateSlider();
+    });
+
+    nextButton.addEventListener('click', function() {
+        currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+        updateSlider();
+    });
+
+    // 초기 슬라이드 상태 설정
+    updateSlider();
+});
+
+window.onload = function (){
 	const showTM = (message) => {
 		const tm = document.querySelector('#toast_message'); // 토스트 메시지 요소 가져오기
 		tm.textContent = message; // 메시지값 주기
@@ -137,10 +325,12 @@ window.onload = function (){
     document.querySelector('#add-cart-button').addEventListener('click', addCart);
     
     document.querySelector('#move-cart-page').addEventListener('click', () => {
-        let member_id = /*[[${member != null} ? ${member.id} : 0]]*/ 0;
-        if (member_id !== 0) {
+        let member_id = [[${memberId}]]
+        if (member_id) {
+        	// console.log(member_id);
             window.location.href = `http://localhost:9000/cart/${member_id}`;
         } else {
+        	alert('로그인이 필요합니다.');
             window.location.href = `http://localhost:9000/member/login`;
         }
     });

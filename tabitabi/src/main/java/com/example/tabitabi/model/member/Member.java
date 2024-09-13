@@ -57,4 +57,6 @@ public class Member {
 	private Question question;
 	
 	private String answer;
+	
+	private String nickname;
 }

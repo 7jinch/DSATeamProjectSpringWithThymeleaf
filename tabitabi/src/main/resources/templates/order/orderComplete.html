@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>주문 완료</title>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.order-complete-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 25px;
+	
+	margin-top: 15px;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	padding-left: 30px;
+	padding-right: 30px;
+
+	border: 1px solid lightgray;
+	border-radius: 15px;
+
+	position: relative;
+	width: 40%;
+	left: 30%;
+}
+
+.order-complete-page-title {
+	font-size: 25px;
+}
+
+.order-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	
+	width: 100%;
+	
+	padding: 15px;
+	border-bottom: 1px solid lightgray
+}
+.order-complete-page > .order-container:last-child {
+    border-bottom: none;
+}
+
+.order-product-list-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	height: 300px;
+	
+	overflow-y: auto;
+}
+.order-product-list-container::-webkit-scrollbar {
+    display: none;
+}
+.order-product-list-container:hover::-webkit-scrollbar {
+    display: block;
+    width: 10px;
+}
+.order-product-list-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 10px;
+}
+.order-product-list-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+
+.order-product-item-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	
+	width: 100%;
+}
+
+.product-image-container > img{
+	width: 70px;
+	height: 70px;
+	border-radius: 10px;
+}
+
+.notice-text {
+	font-size: 15px;
+	color: lightgray;
+}
+
+.button-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	
+	width: 100%;
+}
+
+.button {
+	cursor: pointer;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script th:inline="javascript">
+$(document).ready(function() {
+	$('#move-home').click(function(){
+		window.location.href = `http://localhost:9000/`;
+	})
+	
+	$('.move-detail-order').click(function(){
+		const orderId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/order/orderdetails/${orderId}`;
+	})
+})
+</script>
+</head>
+<body>
+<div id="order-complete-page" class="order-complete-page">
+	<div id="order-complete-page-title" class="order-complete-page-title">주문이 완료되었습니다.</div>
+	<div id="order-date-container" class="order-date-container order-container">
+		<div id="order-date-title" class="order-date-title">주문일</div>
+		<div id="order-date-content" class="order-date-content" th:text="${order.order_date}"></div>
+	</div>
+	<div id="order-product-list-container" class="order-product-list-container order-container">
+		<div id="order-product-list-title" class="order-product-list-title">주문상품</div>
+		<div th:each="orderItemAndImage : ${orderItemList}" class="order-product-item-box">
+	       <div class="product-image-container" style="text-align: center;" th:id="${orderItemAndImage.product.productId}">
+	          <img th:if="${orderItemAndImage.productImage != null}" 
+	               th:src="@{/products/files?filename={filename}(filename=${orderItemAndImage.productImage.saved_filename})}"
+	               alt="Product Image"/>
+	      	</div>
+	      	<div class="order-product-item">
+				<div class="item-quantity" th:text="|${orderItemAndImage.quantity}개|"></div>
+				<div class="item-price-quantity-price" th:text="|${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
+	      	</div>
+		</div>
+	</div>
+	<div id="order-payment-amount-container" class="order-payment-amount-container order-container">
+		<div id="order-payment-amount-title" class="order-payment-amount-title">결제금액</div>
+		<div id="order-payment-amount" class="order-payment-amount" th:text="|${#numbers.formatInteger(order.total_price, 0, 'COMMA')}원|"></div>
+	</div>
+	<div id="order-payment-type-container" class="order-payment-type-container order-container">
+		<div id="order-payment-type-title" class="order-payment-type-title">결제수단</div>
+	</div>
+	<div id="order-notice-container" class="order-notice-container notice-text">
+		<div id="order-notice-content-1" class="order-notice-content-1">
+			※주문 상태가 [주문 완료 - 판매자가 주문을 확인하는 중]인 경우에만 주문 상세 페이지에서 주문 취소가 가능합니다.
+		</div>
+	</div>
+	<div id="button-container" class="button-container">
+		<div th:id="${order.id}" class="move-detail-order button">주문 상세 보기</div>
+		<div id="move-home" class="move-home button">메인으로</div>
+	</div>
+</div>
+</body>
+</html>

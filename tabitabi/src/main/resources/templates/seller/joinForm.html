@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Sign Up</title>
+<title>회원가입</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 	<div id="containter">
-		<h1>Sign Up</h1>
+		<h1>회원가입</h1>
 		<p>
 		<form action="join" method="POST" th:object="${member}">
 			<table>
@@ -46,6 +46,13 @@
 					<td>
 						<input type="text" th:field="*{name}">
 						<div id="error-name" class="error"></div>
+					</td>
+				</tr>
+				<tr>
+					<th>별명</th>
+					<td>
+						<input type="text" th:field="*{nickname}">
+						<div id="error-nickname" class="error"></div>
 					</td>
 				</tr>
 				<tr>

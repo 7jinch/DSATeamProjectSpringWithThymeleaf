@@ -1,0 +1,147 @@
+/* 전체 컨테이너 스타일 */
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* 판매자 정보 섹션 스타일 */
+.seller-info {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* 프로필 이미지 스타일 */
+.seller-info img {
+    width: 150px; /* 이미지 크기 조정 */
+    height: 150px;
+    border-radius: 50%; /* 원형으로 만들기 */
+    object-fit: cover; /* 이미지 비율 유지 */
+    border: 2px solid #ddd; /* 테두리 스타일 */
+    margin-bottom: 20px; /* 이미지와 텍스트 사이 간격 */
+}
+
+/* 판매자 닉네임 스타일 */
+.seller-nickname {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+/* 찜한 사람 수 스타일 */
+.follower-count {
+    font-size: 18px;
+    color: #666;
+}
+
+/* 상품 리스트 섹션 스타일 */
+.product-list {
+    margin-top: 20px;
+}
+
+/* 상품 리스트 제목 스타일 */
+.product-list h3 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/*카테고리 리스트 스타일 */
+.category-list {
+    margin-top: 20px;
+}
+
+/* 상품 목록 스타일 */
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* 상품 간격 */
+}
+
+/* 개별 상품 스타일 */
+.product {
+    width: 200px; /* 상품 카드의 너비 */
+    border: 1px solid #ddd; /* 테두리 스타일 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    padding: 15px;
+    text-align: center;
+    background-color: #fff; /* 배경 색상 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 링크 스타일 제거 */
+.product a {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 링크 색상 상속 (부모 요소의 색상 적용) */
+}
+
+/* 링크에 마우스를 올렸을 때 스타일 */
+.product a:hover {
+    text-decoration: none; /* 호버 상태에서도 밑줄 제거 */
+    color: #333; /* 호버 상태에서의 색상 변경 (선택 사항) */
+}
+
+/* 상품 이미지 스타일 */
+.product-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover; /* 이미지 비율 유지 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
+/* 상품 이름 스타일 */
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 10px;
+}
+
+/* 상품 가격 스타일 */
+.product-price {
+    font-size: 16px;
+    color: #e60012; /* 가격 색상 (예: 빨강) */
+    margin: 0;
+}
+
+.main {
+	width: 100px;
+    margin: auto;
+    display: block;
+}
+
+img{
+        	width:20%;
+        	margin:auto;
+        	display:block;
+        }
+        
+.wishlist{
+     		width:2%;
+     		height:2%;
+     	}
+      	
+.wishlist-button {
+        	background-color: transparent; /* 버튼 배경을 투명하게 */
+        	border: none; /* 버튼 테두리를 없앰 */
+        	cursor: pointer; /* 클릭 가능한 포인터 표시 */
+        	width: 50px; /* 이미지 크기와 맞춘 버튼 크기 */
+        	height: 50px;
+        	background-repeat: no-repeat;
+	        background-position: center;
+	        background-size: contain; /* 이미지 크기를 버튼 크기에 맞춤 */
+}
+
+/* 찜한 상태일 때 빨간 하트 */
+.wishlist-button.red-heart {
+      background-image: url('/images/redheart.png');
+}
+
+/* 찜하지 않은 상태일 때 검은 하트 */
+.wishlist-button.black-heart {
+      background-image: url('/images/blackheart.png');
+}

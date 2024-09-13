@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>cart</title>
+<title>장바구니</title>
 <style>
 .product-image-container {
 	display: flex;
@@ -79,6 +79,16 @@ $(document).ready(function(){
             $('#cart-total-price span').text(cartTotalPrice);
         }
     });
+    
+	// 재고가 0인 상품은 선택 불가능
+	const stocks = $('.product-stock')
+	stocks.each(function() {
+		const stock = $(this).text();
+		if(stock == 0) {
+			$(this).closest('.cart-page-content').find('.product-checkbox').prop('disabled', true);
+			$(this).closest('.product-order-quantity').after(`<p>현재 재고가 부족하여 주문할 수 없습니다.</p>`);
+		}
+	});
     
 	// 선택한 상품 주문하기
 	$('#order-button').click(function(){
@@ -221,8 +231,8 @@ $(document).ready(function(){
 						<input type="number" class="order-quantity" min="1"
 							th:attr="max=${item.cartItem.product.stock}"
 							th:value="${item.cartItem.quantity}">
-						<span>(남은 수량:</span>
-						<span th:text="${item.cartItem.product.stock}"></span>
+						<span>( 남은 수량:</span>
+						<span th:text="${item.cartItem.product.stock}" class="product-stock"></span>
 						<span>)</span>
 						<span class="stock-error"></span>
 					</span>

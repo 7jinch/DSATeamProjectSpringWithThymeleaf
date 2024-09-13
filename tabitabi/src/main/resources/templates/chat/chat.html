@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>판매자 채팅</title>
+    <script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="chat">
+    <input type="hidden" id="chatRoom" th:value="${chatRoom.id}" />
+    <input type="hidden" id="sender" th:value="${sender.name}" />
+    <input type="text" id="message" placeholder="Your message" />
+    <button onclick="sendMessage()">Send</button>
+    <h2>Messages:</h2>
+    <div id="messages">
+        <div th:each="message : ${message}">
+            <div th:text="${message.sender} + ': ' + ${message.content}"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/chat.js"></script>
+<script>
+$(document).ready(function(){
+	$('#message').on('keydown', function(event){
+		if(event.key === 'Enter'){
+			console.log("엔터키");
+		}
+	})
+})
+</script>
+</body>
+</html>

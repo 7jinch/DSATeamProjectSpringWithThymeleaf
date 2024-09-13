@@ -1,6 +1,7 @@
 package com.example.tabitabi.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.springframework.util.PatternMatchUtils;
 
@@ -26,8 +27,6 @@ public class LoginCheckFilter implements Filter {
 		try {
 			log.info("LoginCheckFilter 실행");
 			String requestURI = httpRequest.getRequestURI();
-//			String id = httpRequest.getParameter("id");
-//			log.info("LoginCheckFilter id: {}", id);
 			
 			if(isLoginCheckPath(requestURI)) {
 				HttpSession session = httpRequest.getSession(false); //세션없다고 만들지 않도록 false
@@ -35,13 +34,14 @@ public class LoginCheckFilter implements Filter {
 				if(session == null || session.getAttribute("loginMember") == null && session.getAttribute("loginSeller") == null ) {
 					//로그인 하지 않은 상태
 					log.info("로그인 하지 않은 사용자의 요청");
-					httpResponse.sendRedirect("/"); //서블릿에서 리다이렉트 하는 방식
+					httpResponse.setContentType("text/html; charset=UTF-8");
+				    PrintWriter out = httpResponse.getWriter();
+				    out.println("<script>alert('로그인이 필요한 페이지입니다. 메인화면으로 이동합니다.'); location.href='/';</script>");
 					return;
 				}
 			}
 			chain.doFilter(request, response);
 		} catch (Exception e) {
-			// TODO: handle exception
 		} finally {
 			log.info("LoginCheckFilter 종료");
 		}
@@ -50,8 +50,9 @@ public class LoginCheckFilter implements Filter {
 	
 	private boolean isLoginCheckPath(String requestURI) {
 		//로그인 체크X. 로그인을 하지 않아도 들어갈 수 있는 경로들
-		String[] whiteList = {"/", "/*/login", "/*/join"};
-		
+		String[] whiteList = {"/","/*/join","/*/login", "/*/logout", "/*/forgotPw", "/*/setPw"
+				 ,"/*.css", "/*.js", "/*.ico", "/error"};
+ 		
 		return !PatternMatchUtils.simpleMatch(whiteList, requestURI);
 	}
 

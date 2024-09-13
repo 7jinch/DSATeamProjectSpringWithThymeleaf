@@ -46,12 +46,13 @@ public class ProductService {
     }
 
     @Transactional
-    public void createProduct(Product product, ProductImage productImage) {
+    public void createProduct(Product product, List<ProductImage> productImages) {
         productRepository.save(product);
-        if (productImage != null) {
-        	productImage.setProduct(product);
-            productImageRepository.save(productImage);
-
+        if (productImages != null && !productImages.isEmpty()) {
+            for (ProductImage productImage : productImages) {
+                productImage.setProduct(product);
+                productImageRepository.save(productImage);
+            }
         }
     }
 
@@ -64,9 +65,14 @@ public class ProductService {
 
         return optionalProduct.orElseThrow(() -> new NoSuchElementException("Product not found for ID: " + productId));
     }
+    
+    public Page<Product> findSearch(String searchText, Pageable pageable) {
+		Page<Product> searchList = productRepository.findByNameContaining(searchText, pageable);
+		return searchList;
+	}
 
     @Transactional
-    public void updateProduct(Product updateProduct, boolean isFileRemoved, MultipartFile file) {
+    public void updateProduct(Product updateProduct, boolean areFilesRemoved, List<MultipartFile> files) {
         Product findProduct = findProduct(updateProduct.getProductId());
 
         findProduct.setName(updateProduct.getName());
@@ -77,23 +83,34 @@ public class ProductService {
         findProduct.setCategory(updateProduct.getCategory());
 
         // 기존 파일 확인 및 삭제
-        ProductImage productImage = findFileByProductId(findProduct);
-        if (productImage != null && (isFileRemoved || (file != null && file.getSize() > 0))) {
-            removeFile(productImage);
+        List<ProductImage> existingImages = findFilesByProduct(findProduct);
+
+        // 이미지 삭제 조건 확인
+        if (existingImages != null && !existingImages.isEmpty() && areFilesRemoved) {
+            for (ProductImage image : existingImages) {
+                removeFile(image);
+                productImageRepository.delete(image); // 데이터베이스에서 이미지 삭제
+            }
         }
 
         // 새 파일이 있는 경우 저장
-        if (file != null && file.getSize() > 0) {
-            ProductImage savedFile = fileService.saveFile(file);
-            savedFile.setProduct(findProduct);
-            createProduct(findProduct, savedFile);
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                if (file != null && file.getSize() > 0) {
+                    ProductImage savedFile = fileService.saveFile(file);
+                    savedFile.setProduct(findProduct);
+                    productImageRepository.save(savedFile);
+                }
+            }
         }
 
+        // 제품 정보 업데이트
         productRepository.save(findProduct);
     }
-
-
-
+    
+    public List<ProductImage> findFilesByProduct(Product product) {
+        return productImageRepository.findByProduct(product);
+    }
 
     @Transactional
     public void removeFile(ProductImage productImage) {
@@ -115,12 +132,21 @@ public class ProductService {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + productId));
     }
+    
+    public ProductImage findFileByProduct(Product product) {
+        // findByProduct가 여러 결과를 반환할 수 있으므로 적절한 메서드로 수정
+        List<ProductImage> images = productImageRepository.findByProduct(product);
+        if (images.isEmpty()) {
+            return null; // 또는 적절한 처리
+        }
+        return images.get(0); // 첫 번째 이미지만 반환 (또는 원하는 처리를 수행)
+    }
 
     @Transactional
     public void deleteProduct(Product product) {
-        
-        ProductImage productImage = findFileByProductId(product);
-        if (productImage != null) {
+        // 모든 이미지를 삭제하도록 수정
+        List<ProductImage> productImages = findFilesByProduct(product);
+        for (ProductImage productImage : productImages) {
             removeFile(productImage);
         }
         productRepository.deleteById(product.getProductId());
@@ -130,4 +156,17 @@ public class ProductService {
 		Product product = productRepository.getById(productId);
 		return product;
 	}
+
+    public Product findByProductId(Long productId) {
+    	Optional<Product> product = productRepository.findById(productId);
+    	return product.orElse(null);
+    }
+    
+    public List<Product> getProductsBySellerId(Long sellerId) {
+        return productRepository.findBySellerId(sellerId);
+    }
+    
+    public List<Product> findProductsByCategory(String category) {
+        return productRepository.findByCategory(category);
+    }
 }

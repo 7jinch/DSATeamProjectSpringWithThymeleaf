@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Introduction</title>
+    <link rel="stylesheet" href="/css/intro.css">
+</head>
+<body>
+    <div class="container">
+    
+        <!-- 판매자 정보 섹션 -->
+        <div class="seller-info">
+            <img 
+                 th:src="@{/uploads/{imageUrl}(imageUrl=${seller.fileName})}"
+                 alt="profile Image"/>
+            <h2 class="seller-nickname" th:text="${seller.nickname}">판매자 닉네임</h2>
+            <div style="text-align: center;">
+    		<button id="wishlistButton" class="wishlist-button"></button>
+		</div>
+
+            <p class="follower-count" th:text="'팔로워: ' + ${followerCount}">팔로워</p>
+            <h3 class="follower-count" th:text="${seller.description}"></h3>
+        </div>
+
+        <!-- 판매자 상품 리스트 섹션 -->
+        <div class="product-list">
+            <h3>판매 중인 상품</h3>
+            <div class="products">
+                <div class="product" th:each="product : ${sellerProducts}">
+                    <a th:href="@{/products/read(id=${product.productId})}" class="product-link">
+                        <img th:src="@{/products/files?filename={filename}(filename=${product.images[0].saved_filename})}"
+                             class="product-image"
+                             alt="Product Image"/>
+                    </a>
+                    <h4 class="product-name" th:text="${product.name}">상품 이름</h4>
+                    <p class="product-price" th:text="${product.price} + ' 원'">상품 가격</p>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+    	<input type="button" onclick="location.href='/'" value="메인으로">
+    </div>
+    <input type="hidden" id="memberId" th:value="${memberId}">
+    <input type="hidden" id="sellerId" th:value="${seller.id}">
+    <input type="hidden" id="isOwnSeller" th:value="${isOwnSeller}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        	var memberId = $('#memberId').val();
+            var sellerId = $('#sellerId').val();
+            var isOwnSeller = $('#isOwnSeller').val() === 'true';
+            var isInWishlistS; // 찜 상태를 저장할 변수
+         // 콘솔에 ID 값 출력
+            console.log('Seller ID:', sellerId);
+            console.log('Member ID:', memberId);
+            
+            function updateWishlistButton(isInWishlistS) {
+            	var button = $('#wishlistButton');
+            	if (isOwnSeller) {
+                    button.prop('disabled', true);
+                    button.attr('title', '자신을 찜할 수 없습니다.');
+                } else {
+                    button.prop('disabled', false);
+                    if (isInWishlist) {
+                        button.removeClass('black-heart').addClass('red-heart');
+                    } else {
+                        button.removeClass('red-heart').addClass('black-heart');
+                    }
+                }
+            }
+           	
+            if(!isOwnSeller) {
+            	$.ajax({
+                    url: '/isSellerInWishlist',
+                    method: 'GET',
+                    data: {
+                        memberId: memberId,
+                        sellerId: sellerId
+                    },
+                    success: function (response) {
+                    	isInWishlistS = response; // 서버에서 받은 찜 상태로 변수 초기화
+                        updateWishlistButton(isInWishlistS);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Failed to check wishlist status:', error);
+                    }
+                });
+            } else {
+            	updateWishlistButton(false);
+            }
+            
+
+            // 버튼 클릭 이벤트 처리
+            $('#wishlistButton').click(function () {
+                if (isInWishlistS) {
+                    // 찜 취소 요청
+                    $.ajax({
+                        url: '/removeSellerFromWishlist',
+                        method: 'POST',
+                        data: {
+                            memberId: memberId,
+                            sellerId: sellerId
+                        },
+                        success: function (response) {
+                            // 서버 응답에 따라 상태를 업데이트
+                            isInWishlistS = false; // 상태 토글
+                            updateWishlistButton(isInWishlistS);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Failed to remove from wishlist:', error);
+                        }
+                    });
+                } else {
+                    // 찜 추가 요청
+                    $.ajax({
+                        url: '/addSellerToWishlist',
+                        method: 'POST',
+                        data: {
+                            memberId: memberId,
+                            sellerId: sellerId
+                        },
+                        success: function (response) {
+                            // 서버 응답에 따라 상태를 업데이트
+                            isInWishlistS = true; // 상태 토글
+                            updateWishlistButton(isInWishlistS);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Failed to add to wishlist:', error);
+                        }
+                    });
+                }
+            });
+
+            
+        });
+    </script>
+</body>
+</html> 

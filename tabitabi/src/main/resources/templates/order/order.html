@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>order</title>
+<title>주문서</title>
 <style>
 .order-page-top-container {
 	display: flex;
@@ -297,7 +297,44 @@ $(document).ready(function(){
 	// 주문하기
 	$('#payment-button').click(function(){
 		const orderQ = confirm("주문하시겠어요?");
-		if(orderQ) console.log('주문하기');
+		const url = `http://localhost:9000/order`;
+		const orderId = [[${order.id}]];
+		
+		if(orderQ) {
+			console.log('주문하기');
+			const shipping_name = $('#shipping-info-name-name').val();
+			const shipping_phone_number = $('#shipping-info-phone-number-number').val();
+			let shipping_address = "";
+			if($('#input-address-check-box').is(':checked')) shipping_address = $('#self-shipping-info-address').val();
+			else shipping_address = $('#shipping-info-address-content').val() + ' ' + $('#shipping-info-address-details').val();
+			const request_info = $('#request-info-content').val();
+			
+			if(shipping_name === '') {
+				alert("받는 분의 성함을 정확히 입력하세요.");
+				return;
+			} else if(!RegExp('^\\d{3}-\\d{4}-\\d{4}$').test(shipping_phone_number)){
+				alert("연락처를 정확히 입력하세요.");
+				return;
+			} else if(shipping_address === "") {
+				alert("주소를 입력해주세요.");
+				return;
+			}
+			console.log(`이름: ${shipping_name}, 주소: ${shipping_address}, 연락처: ${shipping_phone_number}, 요청사항: ${request_info}`);
+			
+			$.ajax({
+				url: url + `/${orderId}/shipping`,
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify({shipping_name, shipping_phone_number, shipping_address, request_info}),
+				success: function(response){
+					const orderId = response.orderId;
+					window.location.href = url + `/${orderId}/complete`;
+				},
+				error: function(xhr, status, error){
+					alert(`에러 발생 - 관리자에게 문의하세요(${xhr.responseJSON.message || error})`);
+				}
+			})	
+		}
 		else console.log('주문 취소')
 	})
 })

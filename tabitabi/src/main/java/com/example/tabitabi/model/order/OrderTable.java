@@ -33,7 +33,10 @@ public class OrderTable {
 	@JoinColumn(name="member_id")
 	private Member member;
 	
-	@Column(nullable = false)
+	@OneToOne
+	@JoinColumn(name="orderShippingInfo_id")
+	private OrderShippingInfo orderShippingInfo;
+	
 	private LocalDate order_date;
 	
 	@Column(nullable = false)

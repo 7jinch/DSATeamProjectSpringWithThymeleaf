@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>채팅리스트</title>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+</style>
+</head>
+<body>
+	<ul th:each="chatRoom : ${chatRoom}">
+		<li th:object="${chatRoom.product}">
+			<button th:id="'chatRoomId-'+ '${chatRoom.id}'"
+				th:text="*{name}" th:value="${chatRoom.id}"
+				onclick="showChatList(this)"
+				th:data-id="${chatRoom.id}"></button>
+		</li>
+	</ul>
+	<table>
+		<input type="hidden" id="sender" th:value="${sender.name}" />
+		<tbody id="chat"></tbody>
+	</table>
+	<script src="/js/chatList.js"></script>
+	<script src="/js/chat.js"></script>
+</body>
+</html>

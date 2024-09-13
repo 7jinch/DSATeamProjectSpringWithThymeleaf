@@ -27,6 +27,8 @@ public class MemberJoinForm {
 	
 	private String phoneNumber;
 	
+	private String nickname;
+	
 
 	public static Member toMember(MemberJoinForm memberJoinForm) {
 		Member member = new Member();
@@ -38,6 +40,7 @@ public class MemberJoinForm {
 		member.setQuestion(memberJoinForm.getQuestion());
 		member.setAnswer(memberJoinForm.getAnswer());
 		member.setPhoneNumber(memberJoinForm.getPhoneNumber());
+		member.setNickname(memberJoinForm.getNickname());
 		
 		return member;
 	}

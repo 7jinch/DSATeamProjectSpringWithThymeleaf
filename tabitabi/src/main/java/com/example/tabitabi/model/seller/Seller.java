@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.example.tabitabi.model.Question;
 import com.example.tabitabi.model.member.GenderType;
+import com.example.tabitabi.model.member.Member;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
@@ -13,6 +14,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,4 +58,12 @@ public class Seller {
 	private String answer;
 	
 	private String phoneNumber;
+	
+	private String nickname;
+	
+	private String description;
+	
+//	@OneToOne // 또는 @ManyToOne, 관계에 따라 수정
+//    @JoinColumn(name = "member_id")
+//    private Member member;
 }

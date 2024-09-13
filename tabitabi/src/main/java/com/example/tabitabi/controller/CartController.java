@@ -52,12 +52,7 @@ public class CartController {
 		log.info("showCart 실행");
 		log.info("장바구니 페이지 열기");
 		log.info("받은 회원 id: {}", member_id);
-		if(req.getSession() == null) return "member/loginForm"; // 로그인하지 않은 상태라면 로그아웃
 		session = req.getSession(); // 세션 받아오기
-		if(session.getAttribute("loginMember") == null) {
-			model.addAttribute("loginForm", new LoginForm());
-			return "member/loginForm"; // 로그인하지 않은 상태라면 로그아웃
-		}
 		
 		Member member = (Member)session.getAttribute("loginMember"); // member 객체 받아오기
 		if(!member.getId().equals(member_id)) {

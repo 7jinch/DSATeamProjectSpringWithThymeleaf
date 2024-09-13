@@ -17,7 +17,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ShippingAddress {
+public class ShippingAddress { // 판매자 판매, 배송 가능 지역
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

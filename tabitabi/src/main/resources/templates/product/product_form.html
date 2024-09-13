@@ -43,16 +43,32 @@
                 </td>
             </tr>
             <tr>
-                <th>분류</th>
-                <td>
-                     <input type="text" th:field="*{category}" />
-                    <div class="error" th:errors="*{category}"></div>
-                </td>
+    			<th>분류</th>
+   				<td>
+        			<select th:field="*{category}">
+            			<option value="">카테고리 선택</option>
+            			<option value="과일">과일</option>
+            			<option value="고기류">고기류</option>
+            			<option value="채소">채소</option>
+           				<option value="계란">계란</option>
+            			<option value="버섯">버섯</option>
+            			<option value="수산물">수산물</option>
+            			<option value="곡물류">곡물류</option>
+            			<option value="조개류">조개류</option>
+            			<option value="친환경">친환경</option>
+            			<option value="양념류">양념류</option>
+            			<option value="간식">간식</option>
+            			<option value="음료">음료</option>
+            			<option value="가공식품">가공식품</option>
+            			<option value="꿀">꿀</option>
+        			</select>
+        			<div class="error" th:errors="*{category}"></div>
+    			</td>
             </tr>
             <tr>
                 <th>첨부파일</th>
                 <td id="fileInputsContainer">
-                    <input type="file" name="file" style="height:30px;" multiple>
+                    <input id="file-test" type="file" name="files" style="height:30px;" multiple>
                 </td>
             </tr>
             <tr>
@@ -67,8 +83,9 @@
             </tr>      
         </table>
         <p>
-
             <button type="submit">등록</button>
+            
+            <input type="button" id="sujung" value="테스트"/ >
         </p>
     </form>
     <p>
@@ -76,5 +93,24 @@
     </p>
 </div>
 
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('#file-test').on('change', function(event) {
+        const files = event.target.files; // 파일 목록을 가져옵니다
+        if (files.length > 0) {
+            console.log('Selected files:');
+            for (let i = 0; i < files.length; i++) {
+                console.log('File name: ' + files[i].name);
+                console.log('File size: ' + files[i].size + ' bytes');
+                console.log('File type: ' + files[i].type);
+            }
+        } else {
+            console.log('No files selected');
+        }
+    });
+})
+</script>
 </body>
 </html>

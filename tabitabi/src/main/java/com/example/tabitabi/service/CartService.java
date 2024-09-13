@@ -77,4 +77,11 @@ public class CartService {
 	public void deleteAllCartProducts(Cart cart) {
 		cartItemRepository.deleteByCartId(cart.getId());
 	}
+
+	public void addCartItem(Cart cart, Product product) {
+		CartItem cartItem = new CartItem();
+		cartItem.setCart(cart);
+		cartItem.setProduct(product);
+		cartItemRepository.save(cartItem);
+	}
 }

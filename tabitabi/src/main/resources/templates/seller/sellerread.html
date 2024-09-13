@@ -8,34 +8,121 @@
             document.getElementById("fileRemoved").value = "true";
             document.getElementById("productImage").style.display = "none";
         }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliderImages = document.querySelector('.slider-images');
+            const images = sliderImages.querySelectorAll('.slider-image');
+            const prevButton = document.querySelector('.prev');
+            const nextButton = document.querySelector('.next');
+            let currentIndex = 0;
+
+            function updateSlider() {
+                const offset = -currentIndex * 100;
+                sliderImages.style.transform = `translateX(${offset}%)`;
+            }
+
+            prevButton.addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                } else {
+                    currentIndex = images.length - 1; // 마지막 이미지로 돌아가기
+                }
+                updateSlider();
+            });
+
+            nextButton.addEventListener('click', function() {
+                if (currentIndex < images.length - 1) {
+                    currentIndex++;
+                } else {
+                    currentIndex = 0; // 첫 번째 이미지로 돌아가기
+                }
+                updateSlider();
+            });
+
+            // 초기 슬라이드 상태 설정
+            updateSlider();
+        });
     </script>
+    
     <style>
-        img{
-        	width:20%;
-        	margin:auto;
-        	display:block;
-        }
-        .product-details {
-            margin-top: 20px;
-        }
-        .product-details td {
-            padding: 10px;
-        }
+img{
+	width:20%;
+	margin:auto;
+	display:block;
+}
+.product-details {
+    margin-top: 20px;
+}
+.product-details td {
+    padding: 10px;
+}
+        
+.slider-container {
+    position: relative;
+    width: 100%; /* 전체 너비를 차지하도록 설정 */
+    max-width: 800px; /* 최대 너비 설정 (필요에 따라 조정) */
+    height: 500px; /* 원하는 높이로 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    overflow: hidden;
+}
+
+.slider-images {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+    object-fit: cover;
+}
+
+.slider-image {
+
+    width: 100%;
+    height: 100%; /* 이미지 높이도 100%로 설정 */
+   
+}
+
+button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
     </style>
 </head>
 <body>
     <div class="product-detail-container">
         <!-- 상품 이미지 -->
-        <div class="product-image-container" style="text-align: center;">
-            <img th:if="${productImage != null}" 
-                  th:src="@{/products/files?filename={filename}(filename=${productImage.saved_filename})}"
-                 alt="Product Image"/>
-        </div>
+        <div class="slider-container">
+    		<div class="slider-images">
+        		<img th:each="image, iterStat : ${productImages}" 
+             		th:if="${image != null}" 
+             		th:src="@{/products/files?filename={filename}(filename=${image.saved_filename})}" 
+             		alt="Product Image" 
+             		class="slider-image">
+    		</div>
+    		<button class="prev" aria-label="Previous">&#10094;</button>
+    		<button class="next" aria-label="Next">&#10095;</button>
+		</div>
         
 		<input type="button" onclick="location.href='/products/seller/list'" value="내 상품 리스트">
         <!-- 상품 정보 -->
         <div class="product-details">
             <table border="1" width="100%">
+            	<tr>
+                    <td><strong>좋아요 개수:</strong> <span th:text="${wishlistCount}"></span></td>
+                </tr>
                 <tr>
                     <td><strong>상품명:</strong> <span th:text="${product.name}"></span></td>
                 </tr>
@@ -52,9 +139,10 @@
                         </th:block>
                     </td>
                 </tr>
-                <tr>
-                    <td><strong>카테고리:</strong> <span th:text="${product.category}"></span></td>
-                </tr>
+                <td>
+    			    	<strong>카테고리:</strong>
+        				<a th:href="@{/products/categorylist(category=${product.category})}" th:text="${product.category}"></a>
+    				</td>
             </table>
         </div>
     </div>

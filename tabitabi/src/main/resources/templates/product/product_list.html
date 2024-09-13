@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<title>Product List</title>
+<title>상품 리스트</title>
 <style>
 </style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
 //수정 필요, soldout일 경우 제품 이미지 색이 변하게 만들기
+document.addEventListener("DOMContentLoaded", function() {
+    // 모든 상품 항목을 가져온다
+    var productItems = document.querySelectorAll('.product-item');
+
+    // 각 상품 항목을 순회하면서 상태를 확인
+    productItems.forEach(function(item) {
+        var status = item.getAttribute('data-status');
+        // 상태가 'SOLD_OUT'인 경우 해당 상품 항목을 숨김
+        if (status === 'SOLD_OUT') {
+            item.style.backgroundColor ="#F0F0F0";
+            const link = item.querySelector('.product-link');
+            link.style.textDecoration = 'line-through';
+            
+            const stock = item.querySelector('.product-stock');
+            stock.textContent = '재고가 없어요.';
+        }
+    });
+});
+
+function search() {
+    let searchText = document.querySelector("input[name='searchText']").value;
+    location.href = "/products/list?searchText=" + encodeURIComponent(searchText);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     // 모든 상품 항목을 가져온다
     var productItems = document.querySelectorAll('.product-item');
@@ -23,10 +49,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </head>
 <body>
-	<input id="move-cart-page" class="move-cart-page" type="button"
-		value="장바구니 보기" />
+	<input id="move-cart-page" class="move-cart-page" type="button" value="장바구니 보기" />
 	<h1>상품 리스트</h1>
 	<table border="1">
+    	<div class="right">
+  			<label for="searchText">검색</label>
+  			<input type="search" id="searchText" name="searchText" th:value="${searchText}">
+  			<input type="button" value="검색" onclick="search()"> 
+  		</div>
 		<tr>
 			<th>ID</th>
 			<th>상품명</th>
@@ -35,19 +65,22 @@ document.addEventListener("DOMContentLoaded", function() {
 			<th>재고</th>
 			<th>분류</th>
 		</tr>
-		<tr th:each="product : ${productList}" class="product-item"
-			th:data-status="${product.status}">
+		<tr th:each="product : ${productList}" class="product-item" th:data-status="${product.status}">
 			<td th:text="${product.productId}"></td>
-			<td><a th:href="@{/products/read(id=${product.productId})}"
-				th:text="${product.name}"></a></td>
+			<td>
+				<a th:href="@{/products/read(id=${product.productId})}"
+				   th:text="${product.name}"
+				   class="product-link"
+				></a>
+		   </td>
 			<td th:text="${product.description}"></td>
-			<td><th:block th:if="${product.price != 0}">
-					<span
-						th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"></span>
+			<td>
+				<th:block th:if="${product.price != 0}">
+					<span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'"></span>
 				</th:block> <th:block th:if="${product.price == 0}">
 					<span>가격 정보 없음</span>
 				</th:block></td>
-			<td th:text="${product.stock}"></td>
+			<td th:text="${product.stock}" class="product-stock"></td>
 			<td th:text="${product.category}"></td>
 		</tr>
 	</table>
@@ -55,18 +88,21 @@ document.addEventListener("DOMContentLoaded", function() {
 	<input type="button" onclick="location.href='/'" value="메인으로">
 
 <script th:inline="javascript">
-window.onload = function(){
-	
-    // 요소에 이벤트 바인딩하기
-    document.querySelector('#move-cart-page').addEventListener('click', () => {
-        let member_id = /*[[${member != null} ? ${member.id} : 0]]*/ 0;
-        if (member_id !== 0) {
-            window.location.href = `http://localhost:9000/cart/${member_id}`;
-        } else {
-            window.location.href = `http://localhost:9000/member/login`;
-        }
-    });
-}
+$(document).ready(function(){
+	$('#move-cart-page').click(function(){
+		let member_id = [[${memberId}]];
+		
+		if(member_id) {
+			// console.log(`memberId 있음: ${member_id}`);
+			window.location.href = `http://localhost:9000/cart/${member_id}`;
+		} else {
+			// console.log(`memberId 없음`);
+			alert('로그인이 필요합니다.');
+			window.location.href = `http://localhost:9000/member/login`;
+			
+		}
+	});
+})
  </script>
 </body>
 </html>

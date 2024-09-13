@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>order list</title>
+<title>주문 리스트</title>
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:inline="javascript">
@@ -72,6 +72,20 @@ $(document).ready(function() {
 	})
 	
 	// 장바구니에서 삭제
+	
+	// 주문 상세 보기
+	$('.order-details').click(function(){
+		let memberId = [[${memberId}]];
+		const url = `http://localhost:9000/order`;
+		const status = $(this).closest('.order-status-and-order-date').find('.order_status').text();
+		const orderId = $(this).attr('id');
+		
+		if(status === "주문서 작성 중") { // 기존에 작성 중인 주문서가 있을 경우 작성 페이지로 이동
+			window.location.href = url + `/${orderId}`;
+		} else { // 주문서 작성 완료한 주문일 경우 주문 상세 페이지로 이동
+			window.location.href = url + `/orderdetails/${orderId}`;
+		}
+	})
 })
 
 const checkProductInCart = () => {
@@ -246,7 +260,7 @@ body {
 				<div th:text="${order.orderTable.order_status}" class="order_status"></div>
 				<div th:text="|${order.orderTable.order_date}에 주문하신 상품|" class="order-date"></div>
 			</div>
-			<div class="order-details">주문 상세 보기 ></div>
+			<div th:id="${order.orderTable.id}" class="order-details">주문 상세 보기 ></div>
 		</div>
 		<div class="show-button">펼쳐보기 ▼</div>
 		<div th:each="orderItems : ${order.ProductAndImageList}" class="product-container">

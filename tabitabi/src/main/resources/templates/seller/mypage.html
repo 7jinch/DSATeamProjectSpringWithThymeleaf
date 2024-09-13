@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>My page</title>
+<title>마이페이지</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
@@ -13,37 +13,43 @@
 	<form action="update" id="updateForm" method="POST" th:object="${seller}">
 		<table>
 			<tr>
-				<th>Email</th>
+				<th>이메일</th>
 				<td>
 				<!-- readonly는 form 제출시 값도 함께 전달됌 -->
 				<input id="email" th:field="*{email}" readonly>
 				</td>
 			</tr>
 			<tr>
-				<th>password</th>
+				<th>비밀번호</th>
 				<td><input type="password" id="password" th:field="*{password}">
 					<div id="error-password" class="error"></div></td>
 			</tr>
 			<tr>
-				<th>Name</th>
+				<th>이름</th>
 				<td>
 					<input type="text" id="name" th:field="*{name}">
 				</td>
 			</tr>
 			<tr>
-				<th>Gender</th>
+				<th>별명</th>
+				<td>
+					<input type="text" id="nickname" th:field="*{nickname}">
+				</td>
+			</tr>
+			<tr>
+				<th>성별</th>
 				<td>
 					<input th:field="*{gender}" readonly>
 				</td>
 			</tr>
 			<tr>
-				<th>Address</th>
+				<th>주소</th>
 				<td>
 					<input type="text" id="address" th:field="*{address}">
 				</td>
 			</tr>
 			<tr>
-			    <th>Question</th>
+			    <th>비밀번호 찾기 질문</th>
 			    <td>
 			      <select id="question" onchange="updateQuestionValue()">
             		<th:block th:each="question : ${questions}">
@@ -55,7 +61,7 @@
 			    </td>
 			</tr>
 			<tr>
-			    <th>Answer</th>
+			    <th>비밀번호 찾기 답변</th>
 			    <td>
 			     	<input type="text" id="answer" th:field="*{answer}">
 			    </td>

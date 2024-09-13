@@ -10,6 +10,4 @@ import com.example.tabitabi.model.order.OrderTable;
 public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
 
 	List<OrderItems> getAllByOrderTable(OrderTable findOrder);
-
-	
 }

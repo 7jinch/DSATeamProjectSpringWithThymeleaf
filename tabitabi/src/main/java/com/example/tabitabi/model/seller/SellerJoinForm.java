@@ -29,6 +29,8 @@ public class SellerJoinForm {
 	private String answer;
 	
 	private String phoneNumber;
+	
+	private String nickname;
 
 	public static Seller toSeller(SellerJoinForm memberJoinForm) {
 		Seller seller = new Seller();
@@ -40,6 +42,7 @@ public class SellerJoinForm {
 		seller.setQuestion(memberJoinForm.getQuestion());
 		seller.setAnswer(memberJoinForm.getAnswer());
 		seller.setPhoneNumber(memberJoinForm.getPhoneNumber());
+		seller.setNickname(memberJoinForm.getNickname());
 		
 		return seller;
 	}
@@ -54,6 +57,7 @@ public class SellerJoinForm {
 		seller.setQuestion(memberJoinForm.getQuestion());
 		seller.setAnswer(memberJoinForm.getAnswer());
 		seller.setPhoneNumber(memberJoinForm.getPhoneNumber());
+		seller.setNickname(memberJoinForm.getNickname());
 		
 		return seller;
 	}

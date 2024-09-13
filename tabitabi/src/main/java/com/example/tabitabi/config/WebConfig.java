@@ -17,10 +17,10 @@ import jakarta.servlet.Filter;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	private String[] excludePaths = {"/","/*/join","/*/login", "/*/logout","/*/forgotPw","/*/setPw"
-									 ,"/*.css", "/*.js", "/*.ico", "/error"};
+	private String[] excludePaths = {"/","/*/join","/*/login", "/*/logout", "/*/forgotPw", "/*/setPw"
+			 ,"/*.css", "/*.js", "/*.ico", "/error"};
 	
-//    @Bean
+    @Bean
     FilterRegistrationBean<Filter> logFilter() {
 		FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
     	//등록할 필터를 지정
@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
 		return filterRegistrationBean;
 	}
     
-//    @Bean
+    @Bean
     FilterRegistrationBean<Filter> loginCheckFilter() {
 		FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
     	//등록할 필터를 지정

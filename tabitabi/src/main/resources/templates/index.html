@@ -12,7 +12,7 @@
       <div th:unless="${session.loginSeller}">
       <input type="button" onclick="location.href='/member/join'" value="sign up">
       <input type="button" onclick="location.href='/seller/join'" value="seller sign up">
-        <input type="button" onclick="location.href='/member/login'" value="login">
+       <input type="button" onclick="location.href='/member/login'" value="login">
       <input type="button" onclick="location.href='/seller/login'" value="seller login">
    </div>
    </div>
@@ -23,6 +23,7 @@
    <div th:if="${session.loginMember}">
    <input type="button" onclick="location.href='/member/mypage'" value="mypage">
    		<input type="button" onclick="location.href='/products/list'" value="상품리스트">
+   		<button onclick="location.href='chatList'">채팅 리스트</button>
    </div>
    <div th:if="${session.loginSeller}">
       <p>WELCOME</p>
@@ -36,7 +37,19 @@
    <div th:if="${session.loginSeller}">
    	<p>등록된 상품 리스트</p>
    		<input type="button" onclick="location.href='/products/seller/list'" value="내 상품 리스트">
+   		<button onclick="location.href='chatList'">채팅 리스트</button>
    </div>
+   
+      <!-- 판매자 ID가 있는 경우 -->
+    <div th:if="${session.loginSeller}">
+    	<p>소개글</p>
+        <form th:action="@{/seller/{id}/intro(id=${session.loginSeller.id})}" method="get">
+            <button type="submit">소개글 작성</button>
+        </form>
+        <form th:action="@{/seller/{id}/introshow(id=${session.loginSeller.id})}" method="get">
+            <button type="submit">소개글 보기</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

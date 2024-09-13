@@ -50,10 +50,6 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("member")
 public class MemberController {
-
-	@Autowired
-	private MemberRepository memberRepository;
-
 	private MemberService memberService;
 
 	@Autowired
@@ -99,8 +95,15 @@ public class MemberController {
 	@PostMapping("join")
 	public ResponseEntity<String> join(@Validated @ModelAttribute("member") MemberJoinForm memberJoinForm,
 			Model model) {
+		log.info("join 실행");
+		
 		Member member = memberJoinForm.toMember(memberJoinForm);
+		String memberEmail = member.getEmail();
+		if(memberService.findMemberByEmail(memberEmail) != null) {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); 
+		}
 		memberService.saveMember(member);
+		
 		cartService.createCart(member); // 장바구니 생성
 		log.info("회원가입 컨트롤러: {}", member);
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -116,6 +119,8 @@ public class MemberController {
 	@PostMapping("login")
 	public String login(@Validated @ModelAttribute LoginForm loginForm, HttpServletRequest request,
 			BindingResult result, HttpServletResponse response, HttpSession session) {
+		log.info("login 실행");
+		
 		Member findMember = memberService.findMemberByEmail(loginForm.getEmail());
 		if (result.hasErrors()) {
 			return "member/loginForm";
@@ -134,30 +139,29 @@ public class MemberController {
 				|| request.getSession().getAttribute("loginSeller") != null) {
 			return "redirect:/";
 		}
+		
 		result.reject("notPassword", "패스워드가 맞지 않습니다.");
 		return "member/loginForm";
 	}
 
 	@GetMapping("logout")
 	public String logout(HttpServletRequest request) {
-
+		log.info("logout 실행");
 		HttpSession session = request.getSession();
 		session.setAttribute("loginMember", null);
+		session.invalidate();
 
-		return "index";
+		return "redirect:/";
 	}
 
 	@GetMapping("mypage")
-	public String mypage(HttpSession session, Model model,
-			@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
-		if (loginMember == null) {
-			model.addAttribute("loginForm", new LoginForm());
-			return "member/loginForm";
-		}
-
+	public String mypage(ServletRequest request, Model model) {
+		log.info("mypage 실행");
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpSession session = httpRequest.getSession(false);
 		Member member = (Member) session.getAttribute("loginMember");
 		Member findMember = memberService.findMemberByEmail(member.getEmail());
-		model.addAttribute("member", findMember);
+		model.addAttribute("member",findMember);
 		model.addAttribute("questions", Question.values());
 		model.addAttribute("defaultQu", findMember.getQuestion());
 
@@ -167,6 +171,7 @@ public class MemberController {
 	@PostMapping("mypage")
 	public ResponseEntity<String> pwcheck(@RequestParam("email") String email,
 			@RequestParam("password") String password) {
+		log.info("pwcheck 실행");
 		if (memberService.findMemberByEmail(email).getPassword().equals(password)) {
 			return ResponseEntity.ok("correct password");
 		}
@@ -175,6 +180,7 @@ public class MemberController {
 
 	@DeleteMapping("mypage")
 	public ResponseEntity<String> removeMember(@RequestParam("email") String email, HttpServletRequest request) {
+		log.info("removeMember 실행");
 		HttpSession session = request.getSession();
 
 		memberService.removeMember(email);
@@ -185,6 +191,7 @@ public class MemberController {
 
 	@PostMapping("update")
 	public String update(@Validated @ModelAttribute Member member) {
+		log.info("update 실행");
 		log.info("member:{}", member);
 		memberService.updateMember(member);
 		return "redirect:/";
@@ -193,6 +200,7 @@ public class MemberController {
 	@PutMapping("mypage")
 	public ResponseEntity<String> profileUpdate(@RequestParam("profile") MultipartFile profile,
 			HttpServletRequest request) throws Exception {
+		log.info("profileUpdate 실행");
 		HttpSession session = request.getSession();
 		Member member = (Member) session.getAttribute("loginMember");
 		if (profile.isEmpty()) {
@@ -209,14 +217,17 @@ public class MemberController {
 
 	@GetMapping("forgotPw")
 	public String forgot(Model model) {
+		log.info("forgot 실행");
 		model.addAttribute("questions", Question.values());
 
 		return "forgotPw";
 	}
 
+	// @RequestParam -> @RequestBody로 수정하기
 	@PostMapping("forgotPw")
 	public ResponseEntity<String> forgotPassword(HttpSession session, @RequestParam("email") String email,
 			@RequestParam("question") Question question, @RequestParam("answer") String answer) {
+		log.info("forgotPassword 실행");
 		Member findMember = memberService.findMemberByEmail(email);
 		log.info("member:{}", findMember);
 		if (findMember == null) {
@@ -233,6 +244,7 @@ public class MemberController {
 
 	@GetMapping("forgotPw/setPw")
 	public String setPw(Model model, HttpServletRequest request) {
+		log.info("setPw 실행");
 		// 이메일을 사용하여 Member 객체를 조회
 		HttpSession session = request.getSession();
 		String email = (String) session.getAttribute("email");
@@ -246,6 +258,7 @@ public class MemberController {
 
 	@PostMapping("forgotPw/setPw")
 	public String setPwd(HttpSession session, @RequestParam("password") String password) {
+		log.info("setPwd 실행");
 		String email = (String) session.getAttribute("email");
 		if (email != null) {
 			Member member = memberService.findMemberByEmail(email);
@@ -256,6 +269,15 @@ public class MemberController {
 		}
 		return "redirect:/";
 	}
+	
+    @PostMapping("join/emailCheck")
+    public ResponseEntity<?> emailCheck(@RequestParam("email") String email){
+    	Member member = memberService.findMemberByEmail(email);
+    	if(member != null) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    	}
+    	return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 	// 배송지 관리 페이지로 이동
 	@GetMapping("address/{memberId}")
