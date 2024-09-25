@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tabitabi.DTO.AddressCreateDTO;
 import com.example.tabitabi.DTO.AddressRemoveDTO;
+import com.example.tabitabi.DTO.MyPageMyDataDTO;
 import com.example.tabitabi.DTO.OrderListDTO;
 import com.example.tabitabi.model.Question;
 import com.example.tabitabi.model.cart.Cart;
@@ -93,14 +94,15 @@ public class MemberController {
 	}
 
 	@PostMapping("join")
-	public ResponseEntity<String> join(@Validated @ModelAttribute("member") MemberJoinForm memberJoinForm,
+	public ResponseEntity<?> join(@Validated @ModelAttribute("member") MemberJoinForm memberJoinForm,
 			Model model) {
 		log.info("join 실행");
 		
 		Member member = memberJoinForm.toMember(memberJoinForm);
 		String memberEmail = member.getEmail();
 		if(memberService.findMemberByEmail(memberEmail) != null) {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); 
+//	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.badRequest().body(Map.of("message", "이미 가입한 이메일이 존재합니다."));
 		}
 		memberService.saveMember(member);
 		
@@ -125,8 +127,9 @@ public class MemberController {
 		if (result.hasErrors()) {
 			return "member/loginForm";
 		}
-		if (findMember == null) {
-			result.reject("noID", "아이디가 존재 하지 않습니다.");
+		if (findMember == null || !findMember.getPassword().equals(loginForm.getPassword())) {
+//			result.reject("noID", "아이디가 존재 하지 않습니다.");
+			result.reject("noID", "아이디 또는 패스워드를 확인해주세요.");
 			return "member/loginForm";
 		}
 		if (findMember.getPassword().equals(loginForm.getPassword())) {
@@ -140,7 +143,7 @@ public class MemberController {
 			return "redirect:/";
 		}
 		
-		result.reject("notPassword", "패스워드가 맞지 않습니다.");
+		// result.reject("notPassword", "패스워드를 확인해주세요.");
 		return "member/loginForm";
 	}
 
@@ -167,6 +170,17 @@ public class MemberController {
 
 		return "member/mypage";
 	}
+	
+	// 내 정보 조회
+//	@GetMapping("myData")
+//	public ResponseEntity<?> myData(@SessionAttribute(name = "loginMember", required = false) Member loginMember){
+//		if(loginMember == null) return ResponseEntity.badRequest().body(Map.of("message", "권한이 없습니다."));
+//		
+//		MyPageMyDataDTO mpmd = new MyPageMyDataDTO();
+//		mpmd.setMember(loginMember);
+//		mpmd.setQl(Question.values());
+//		return ResponseEntity.ok(mpmd);
+//	}
 
 	@PostMapping("mypage")
 	public ResponseEntity<String> pwcheck(@RequestParam("email") String email,

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>くだもん</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        let currentIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        updateSlidePosition(); // 페이지 로드 시 첫 번째 슬라이드 보이기
+
+        document.querySelector('.next').addEventListener('click', () => {
+        if (currentIndex < totalSlides - 2) { // 두 개의 이미지를 보여주기 때문에 -2
+          currentIndex++;
+          updateSlidePosition();
+        }
+        });
+
+        document.querySelector('.prev').addEventListener('click', () => {
+          if (currentIndex > 0) {
+            currentIndex--;
+            updateSlidePosition();
+          }
+        });
+
+        function updateSlidePosition() {
+          const offset = currentIndex * -50; // 현재 인덱스에 따라 슬라이드를 왼쪽으로 이동
+          slides.forEach((slide, index) => {
+            slide.style.display = 'block'; // 모든 슬라이드를 보이게 함
+          });
+          document.querySelector('.slider-container').style.transform = `translateX(${offset}%)`;
+      } 
+        // 카테고리 드롭다운 메뉴 보이기/숨기기
+        const categoryButton = document.getElementById('category-button');
+        const categoryMenu = document.getElementById('category-menu');
+
+        categoryButton.addEventListener('click', function() {
+            categoryMenu.classList.toggle('show');
+        });
+
+        const products = document.querySelector('.products');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+
+        let currentPosition = 0;
+        const itemWidth = document.querySelector('.product-item').offsetWidth;
+        const visibleItems = 5; // 화면에 보이는 상품 개수
+        const totalItems = document.querySelectorAll('.product-item').length;
+
+        prevBtn.addEventListener('click', () => {
+          if (currentPosition > 0) {
+            currentPosition--;
+            updateCarousel();
+          }
+        });
+
+        nextBtn.addEventListener('click', () => {
+          if (currentPosition < totalItems - visibleItems) {
+            currentPosition++;
+            updateCarousel();
+          }
+        });
+
+        function updateCarousel() {
+          products.style.transform = `translateX(-${currentPosition * itemWidth}px)`;
+        }
+        
+        document.querySelector('.user-links').addEventListener('click', (e) =>{
+        	console.log(e.target.className);
+        	switch(e.target.className){
+        	case "login-button":
+        		window.location.href = "http://localhost:9000/member/login";
+        		break;
+        	case "sign-up-button":
+        		window.location.href = "http://localhost:9000/member/join";
+        		break;
+        	case "okyaku-sama-button":
+        		window.location.href = "";
+        		break;
+        	}
+        })
+      });
+    </script>
+</head>
+<body>
+    <!-- 헤더 영역 -->
+    <header>
+        <div class="header-container">
+            <h1 class="logo">쿠다몬</h1>
+            
+            <div class="user-options">
+              <div class="search-container">
+                <input type="text" class="search-bar" >
+                <button type="submit" class="search-button">
+                  <img src="/src/img/search-icon.png" alt="돋보기" class="search-icon">
+                </button>
+              </div>
+              <img src="/src/img/favorite.png" alt="찜" class="icon">
+              <img src="/src/img/person.png" alt="로그인" class="icon">
+              <img src="/src/img/bag.png" alt="장바구니" class="icon">
+            </div>
+        </div>
+
+        <!-- 카테고리 이모티콘과 드롭다운 -->
+        <div class="category-container">
+            <button id="category-button">≡ 카테고리</button>
+            <div id="category-menu" class="category-menu">
+                <a href="#">과일</a>
+                <a href="#">고기류</a>
+                <a href="#">채소</a>
+                <a href="#">계란</a>
+                <a href="#">버섯</a>
+                <a href="#">수산물</a>
+                <a href="#">곡물류</a>
+                <a href="#">조개류</a>
+                <a href="#">친환경</a>
+                <a href="#">양념류</a>
+                <a href="#">간식</a>
+                <a href="#">음료</a>
+                <a href="#">가공식품</a>
+                <a href="#">꿀</a>
+                <!-- 추가 카테란리 항목들 -->
+            </div>
+            <div id="navi" class="navi">
+              <a href="#">장보기</a>
+              <a href="#">특가</a>
+              <a href="#">레시피</a>
+              <a href="#">이벤트</a>
+              <a href="#">선물하기</a>
+            </div>
+            <div class="user-links0">
+              <div class="user-links">
+              	<div id="login-button" class="user-button">로그인</div>
+              	<div id="sign-up-button" class="user-button">회원가입</div>
+              	<div id="okyaku-sama-button" class="user-button">고객센터</div>
+              </div>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- 메인 배너 슬라이더 -->
+    <section class="banner-slider">
+      <button class="prev">＜</button>
+      <div class="slider-container">
+          <div class="slide">
+              <img src="/src/img/1.jpg" alt="배너 1">
+          </div>
+          <div class="slide">
+              <img src="/src/img/2.jpg" alt="배너 2">
+          </div>
+          <div class="slide">
+              <img src="/src/img/3.jpg" alt="배너 3">
+          </div>
+          <div class="slide">
+              <img src="/src/img/4.jpg" alt="배너 4">
+          </div>
+          
+          <!-- 추가 배너 이미지 -->
+      </div>
+      <button class="next">＞</button>
+  </section>
+
+    <!-- 카테고리 섹션 -->
+    <section class="category-icons">
+      <div class="category-item">
+          <img src="/src/img/fruit.png" alt="카테고리 1" class="category-icon">
+          <p>과일</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/meat.png" alt="카테고리 2" class="category-icon">
+          <p>고기류</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/veg.png" alt="카테고리 3" class="category-icon">
+          <p>채소</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/egg.png" alt="카테고리 4" class="category-icon">
+          <p>계란</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/mush.png" alt="카테고리 5" class="category-icon">
+          <p>버섯</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/fish.png" alt="카테고리 6" class="category-icon">
+          <p>수산물</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/rice.png" alt="카테고리 7" class="category-icon">
+          <p>곡물류</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/shell.png" alt="카테고리 8" class="category-icon">
+          <p>조개류</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/bio.png" alt="카테고리 9" class="category-icon">
+          <p>친환경</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/salt.png" alt="카테고리 10" class="category-icon">
+          <p>양념류</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/candy.png" alt="카테고리 11" class="category-icon">
+          <p>간식</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/drink.png" alt="카테고리 12" class="category-icon">
+          <p>음료</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/food.png" alt="카테고리 13" class="category-icon">
+          <p>가공식품</p>
+      </div>
+      <div class="category-item">
+          <img src="/src/img/honey.png" alt="카테고리 14" class="category-icon">
+          <p>꿀</p>
+      </div>
+    </section>
+
+
+    <section class="popular-products">
+      <h3>지금 관심도 급상승 중인 상품</h3>
+      <div class="product-container">
+        <div class="product">
+          <img src="/src/img/rr.jpg" alt="상품 1" class="proimg">
+          <p>강원도 철원쌀 10kg</p>
+          <p class="price">₩30,000</p> 
+          <div class="icon-container">
+            <img src="/src/img/favorite.png" alt="찜" class="icon2">
+            <img src="/src/img/cart.png" alt="장바구니" class="icon2">
+          </div>
+        </div>
+        <div class="product">
+          <img src="/src/img/mush2.jpg" alt="상품 2" class="proimg">
+          <p>싱싱한 자연산 버섯 500g</p>
+          <p class="price">₩8,000</p> 
+          <div class="icon-container">
+            <img src="/src/img/favorite.png" alt="찜" class="icon2">
+            <img src="/src/img/cart.png" alt="장바구니" class="icon2">
+          </div>
+        </div>
+        <div class="product">
+          <img src="/src/img/sam.jpg" alt="상품 3" class="proimg">
+          <p>국내산 닭으로 만든 삼계탕 1kg</p>
+          <p class="price">₩13,000</p> 
+          <div class="icon-container">
+            <img src="/src/img/favorite.png" alt="찜" class="icon2">
+            <img src="/src/img/cart.png" alt="장바구니" class="icon2">
+          </div>
+        </div>
+        <div class="product">
+          <img src="/src/img/vegg.jpg" alt="상품 4" class="proimg">
+          <p>무농약 청상추 300g</p>
+          <p class="price">₩6,000</p> 
+          <div class="icon-container">
+            <img src="/src/img/favorite.png" alt="찜" class="icon2">
+            <img src="/src/img/cart.png" alt="장바구니" class="icon2">
+          </div>
+        </div>
+        <div class="product">
+          <img src="/src/img/apple.jpg" alt="상품 5"  class="proimg">
+          <p>프리미엄 청송 사과 5과</p>
+          <p class="price">₩10,000</p> 
+          <div class="icon-container">
+            <img src="/src/img/favorite.png" alt="찜" class="icon2">
+            <img src="/src/img/cart.png" alt="장바구니" class="icon2">
+          </div>
+        </div>
+      </div>
+      <button class="next-products">다음</button>
+    </section>
+
+    
+    <!-- 푸터 영역 -->
+    <footer>
+        <p>고객센터: 1234-5678 | 이메일: info@shop.com</p>
+        <p>© 2024 DSA. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

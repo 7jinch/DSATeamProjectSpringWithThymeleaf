@@ -111,7 +111,7 @@ $(document).ready(function() {
 	
 	$('.move-detail-order').click(function(){
 		const orderId = $(this).attr('id');
-		window.location.href = `http://localhost:9000/order/orderdetails/${orderId}`;
+		window.location.href = `http://localhost:9000/order/details/${orderId}`;
 	})
 })
 </script>
@@ -130,6 +130,7 @@ $(document).ready(function() {
 	          <img th:if="${orderItemAndImage.productImage != null}" 
 	               th:src="@{/products/files?filename={filename}(filename=${orderItemAndImage.productImage.saved_filename})}"
 	               alt="Product Image"/>
+	           <div class="product-name" th:text="${orderItemAndImage.product.name}"></div>
 	      	</div>
 	      	<div class="order-product-item">
 				<div class="item-quantity" th:text="|${orderItemAndImage.quantity}개|"></div>
@@ -143,10 +144,11 @@ $(document).ready(function() {
 	</div>
 	<div id="order-payment-type-container" class="order-payment-type-container order-container">
 		<div id="order-payment-type-title" class="order-payment-type-title">결제수단</div>
+		<div id="order-payment-type-content" class="order-payment-type-content">현금박치기</div>
 	</div>
 	<div id="order-notice-container" class="order-notice-container notice-text">
 		<div id="order-notice-content-1" class="order-notice-content-1">
-			※주문 상태가 [주문 완료 - 판매자가 주문을 확인하는 중]인 경우에만 주문 상세 페이지에서 주문 취소가 가능합니다.
+			※주문 상태가 [주문 완료 - 판매자가 주문을 확인하는 중]인 경우에만 주문 상세 페이지에서 주문을 취소하실 수 있습니다.
 		</div>
 	</div>
 	<div id="button-container" class="button-container">

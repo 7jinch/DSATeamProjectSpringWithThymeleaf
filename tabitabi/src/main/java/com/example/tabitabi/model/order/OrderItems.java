@@ -41,4 +41,3 @@ public class OrderItems {
 	@Column(nullable = false)
 	private Integer quantity = 1; // 일단은 기본값으로 1개만
 }
-

@@ -3,10 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <title>주문 상세 페이지</title>
+<style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.page-title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+	
+	cursor: pointer;
+}
+
+.title{
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.logo{
+	width: 70px;
+	
+	border-radius: 50px;
+}
+
+.page-container {
+	display: flex;
+	flex-direction: row;
+	
+	width: 100%;
+	
+}
+
+.side-bar-container {
+	flex: 1;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	gap: 30px;
+}
+
+.side-bar-container-title {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	gap: 30px;
+}
+
+.side-bar-content {
+	width: 100%;
+	padding-bottom: 30px;
+	border-bottom: 1px solid #ccc;
+	
+	cursor: pointer;
+}
+
+.side-bar-content:last-child {
+	border-bottom: none;
+}
+
+.help-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.help-container-title {
+	font-weight: bold;
+}
+
+.my-page-container {
+	flex: 4;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: start;
+	
+	padding-top: 60px;
+	padding-left: 30px;
+	gap: 10px;
+}
+
+.my-page-contianer-title {
+	font-weight: bold;
+	width: 100%;
+	padding-top: 10px;
+	border-top: 5px solid #03C75A;
+	padding-bottom: 10px;
+	border-bottom: 5px solid #03C75A;
+}
+
+.my-data-content-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.my-data-content-box {
+	display: flex;
+	flex-direction: row;
+	
+	gap: 10px;
+}
+
+.order-status-box {
+	display: flex;
+	flex-direction: row;
+}
+
+.order-date-contianer {
+	display: flex;
+	flex-direction: row;
+}
+
+.order-product-item-box{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.product-image-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.product-image-container > img{
+	width: 70px;
+	height: 70px;
+	border-radius: 10px;
+}
+
+.item-price-quantity {
+	display: flex;
+	flex-direction: row;
+}
+
+.order-payment-amount-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.order-payment-type-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.button-container{
+	display: flex;
+	flex-direction: row;
+}
+
+.button {
+	border: 1px solid black;
+	cursor: pointer;
+}
+</style>
 </head>
 <body>
-<div id="order-detail-page" class="order-detail-page">
-	<div id="order-detail-page-title" class="order-detail-page-title">주문 내역 상세</div>
+<div id="header" class="header">
+	<div id="page-title" class="page-title">
+		<div id="title" class="title">쿠다몽</div>
+		<img id="logo" class="logo" src="/images/kudamon.webp" alt="Kudamon">
+	</div>
+	<div>로그아웃</div>
 </div>
+
+<div class="page-container">
+      <div id="side-bar-container" class="side-bar-container">
+        <div id="side-bar-container-title" class="side-bar-container-title">
+          마이 쿠다몽
+        </div>
+        <div id="side-bar-content-container" class="side-bar-content-container">
+          <div id="edit-my-data" class="edit-my-data side-bar-content">
+            개인정보 수정
+          </div>
+          <div id="shipping-list" class="shipping-list side-bar-content">
+            배송지 관리
+          </div>
+          <div id="order-list" class="order-list side-bar-content">
+            주문 내역
+          </div>
+          <div id="cart-list" class="cart-list side-bar-content">장바구니</div>
+          <div id="chat-list" class="chat-list side-bar-content">채팅 목록</div>
+          <div
+            id="zzim-product-list"
+            class="zzim-product-list side-bar-content"
+          >
+            찜한 상품 목록
+          </div>
+          <div
+            id="follow-seller-list"
+            class="follow-seller-list side-bar-content"
+          >
+            팔로우한 판매자들
+          </div>
+        </div>
+        <div id="help-container" class="help-container">
+          <div id="help-container-title" class="help-container-title">
+            도움이 필요하신가요?
+          </div>
+          <div id="help" class="help">1:1 문의하기</div>
+        </div>
+      </div>
+      <div id="my-page-container" class="my-page-container">
+        <div id="my-page-contianer-title" class="my-page-contianer-title"></div>
+        <div
+          id="my-page-content-container"
+          class="my-page-content-container"
+        >
+			<div id="order-detail-page" class="order-detail-page">
+				<div id="order-detail-pate-title" class="order-detail-pate-title">주문 내역 상세</div>
+				<div id="order-status-box" class="order-status-box">
+					<div id="order-tatus-title" class="order-tatus-title">주문 상태</div>
+					<div id="order-status" class="order-status" th:text="${order.order_status}"></div>
+				</div>
+				<div id="order-date-contianer" class="order-date-contianer">
+					<div id="order-date-title" class="order-date-title">주문일</div>		
+					<div id="order-date-content" class="order-date-content" th:text="|${order.order_date}"></div>	
+				</div>
+				<div id="order-product-list-container" class="order-product-list-container">
+					<div id="order-product-list-title" class="order-product-list-title">주문 상품</div>
+					<div th:each="orderItemAndImage : ${orderItemList}" class="order-product-item-box">
+						<div class="product-image-container" style="text-align: center;" th:id="${orderItemAndImage.product.productId}">
+				          <img th:if="${orderItemAndImage.productImage != null}" 
+				               th:src="@{/products/files?filename={filename}(filename=${orderItemAndImage.productImage.saved_filename})}"
+				               alt="Product Image"/>
+				           <div class="product-name" th:text="${orderItemAndImage.product.name}"></div>
+				      	</div>
+				      	<div class="order-product-item">
+							<div class="item-price-quantity">
+								<div class="item-price" th:text="|${orderItemAndImage.product.price}원&nbsp;X&nbsp;|"></div>
+								<div class="item-quantity" th:text="|${orderItemAndImage.quantity}개|"></div>
+							</div>
+							<div class="item-price-quantity-price" th:text="|총 ${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
+				      	</div>
+					</div>
+				</div>
+				<div id="order-payment-amount-container" class="order-payment-amount-container order-container">
+					<div id="order-payment-amount-title" class="order-payment-amount-title">결제금액</div>
+					<div id="order-payment-amount" class="order-payment-amount" th:text="|${#numbers.formatInteger(order.total_price, 0, 'COMMA')}원|"></div>
+				</div>
+				<div id="order-payment-type-container" class="order-payment-type-container order-container">
+					<div id="order-payment-type-title" class="order-payment-type-title">결제수단</div>
+					<div id="order-payment-type-content" class="order-payment-type-content">현금박치기</div>
+				</div>
+				<div id="button-container" class="button-container">
+					<div id="maove-mypage" class="maove-mypage button">돌아가기</div>
+					<div id="order-cancel-button" class="order-cancel-button button" th:if="${order.order_status != '주문 취소'}">주문 취소</div>
+				</div>
+				<div id="order-notice-container" class="order-notice-container notice-text">
+					<div id="order-notice-content-1" class="order-notice-content-1">
+						<p>※주문 상태가 [주문 완료 - 판매자가 주문을 확인하는 중]인 경우에만 주문을 취소하실 수 있습니다.</p>
+						<p>※신선 제품 특성상 주문 상태가 [주문 완료 - 판매자가 제품 발송 준비 중] 이후인 경우 주문 취소는 불가능하다는 점 양해바랍니다.</p>
+					</div>
+				</div>
+			</div>
+        </div>
+      </div>
+    </div>
+    
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script th:inline="javascript">
+window.onload = function(){
+    // 요소에 클릭 이벤트 바인딩하기
+     // 메인 페이지로
+	   document.querySelector('#page-title').addEventListener('click', () => {
+	   	window.location.href = `http://localhost:9000/kudamon/mall`;
+	   })
+
+    // 회원의 배송지 페이지
+    document.querySelector('#shipping-list').addEventListener('click', () => {
+  	  console.log("클릭");
+		let member_id = [[${member.id}]]; // 회원의 id 가져오기
+		window.location.href = `http://localhost:9000/member/address/${member_id}`;
+    });
+
+    // 장바구니 페이지
+    document.querySelector('#cart-list').addEventListener('click', () => {
+		let member_id = [[${member.id}]]; // 회원의 id 가져오기
+		window.location.href = `http://localhost:9000/cart/${member_id}`;
+    });
+
+    // 주문 목록 페이지
+    document.querySelector('#order-list').addEventListener('click', () => {
+		window.location.href = `http://localhost:9000/order/list`;
+    });
+
+    // 찜한 상품 페이지
+
+    // 찜한 목록 페이지
+}
+
+$(document).ready(function() {
+    $(document).ready(function() {
+      	$('#order-list').css('font-weight', 'bold');
+      	$('#order-list').css('color', '#03C75A');
+      	$('#my-page-contianer-title').text('주문 내역');
+    })
+    
+	$('#maove-mypage').click(function(){
+		window.location.href = `http://localhost:9000/order/list`;
+	})
+	
+	$('.move-detail-order').click(function(){
+		const orderId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/order/details/${orderId}`;
+	})
+	
+	$('.order-cancel-button').click(function() {
+		const cancel = confirm('주문을 취소하시겠어요?');
+		
+		if(!cancel) return;
+		else {
+			let orderId = [[${orderId}]];
+			const url = `http://localhost:9000/order`;
+			$.ajax({
+				url: url + '/cancel',
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({orderId}),
+				success: function(response) {
+					window.location.href = url + '/list';
+				},
+				error: function(xhr, status, error) {
+					window.location.href = url + '/list';
+				}
+			})
+		}
+	})
+})
+</script>
 </body>
 </html>

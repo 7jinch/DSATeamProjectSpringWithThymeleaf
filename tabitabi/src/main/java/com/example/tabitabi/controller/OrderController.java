@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.tabitabi.DTO.OrderAndOrderItemsDTO;
 import com.example.tabitabi.DTO.OrderDTO;
+import com.example.tabitabi.DTO.OrderIDDTO;
 import com.example.tabitabi.DTO.OrderListDTO;
 import com.example.tabitabi.DTO.OrderShippingInfoDTO;
 import com.example.tabitabi.DTO.ProductAndImageDTO;
@@ -79,6 +80,11 @@ public class OrderController {
 		List<ProductAndImageDTO> productAndImageList = new ArrayList<>(); // 빈 리스트 생성
 
 		for (OrderItems ot : orderItemList) {
+			// 주문 수량이 0 이하이거나 상품 재고보다 많으면 주문 페이지 리다이렉트
+			if (ot.getQuantity() <= 0 || ot.getQuantity() > ot.getProduct().getStock()) {
+				return "redirect:/cart/" + loginMember.getId();
+			}
+
 			ProductAndImageDTO productAndImage = new ProductAndImageDTO();
 			ProductImage productImage = productService.findFileByProductId(ot.getProduct()); // 상품 이미지 객체 가져오기
 
@@ -124,12 +130,20 @@ public class OrderController {
 				return ResponseEntity.badRequest()
 						.body(Map.of("message", "기존에 작성 중인 주문서가 존재하여 해당 페이지로 이동합니다.", "orderId", ot.getId()));
 		}
-		
-		for(OrderDTO od : orderListDTO.getOrders()) {
-			int stock =  productService.getProductById(od.getProductId()).getStock();
-			if(stock == 0) {
-				cartService.addCartItem(cartService.findCartByMemberId(loginMember.getId()), productService.findProductById(od.getProductId()));
+
+		for (OrderDTO od : orderListDTO.getOrders()) {
+			int stock = productService.getProductById(od.getProductId()).getStock();
+			int quantity = od.getQuantity();
+			if (stock == 0) {
+				cartService.addCartItem(cartService.findCartByMemberId(loginMember.getId()),
+						productService.findProductById(od.getProductId()));
 				return ResponseEntity.badRequest().body(Map.of("message", "현재 재고가 부족하여 장바구니에 추가합니다."));
+			} else if (quantity <= 0) {
+				return ResponseEntity.badRequest().body(Map.of("message", "0개 이하로 주문하실 수 없습니다."));
+			} else if (quantity > stock) {
+				return ResponseEntity.badRequest()
+						.body(Map.of("message", "재고를 초과하여 주문하실 수 없습니다.", "memberId", loginMember.getId()));
+
 			}
 		}
 
@@ -150,27 +164,32 @@ public class OrderController {
 	) {
 		log.info("orderShippingInfo 실행");
 		log.info("받은 데이터: {}", orderShippingInfoDTO);
-		
+
+		Boolean zeroLength = orderTableService.checkItemsListLength(orderId);
+
+		if (zeroLength)
+			return ResponseEntity.badRequest().body(Map.of("message", "주문할 상품이 없습니다."));
+
 		orderTableService.createShippingInfo(orderId, orderShippingInfoDTO);
 		orderTableService.settingOrderStatusAfterShippingInfo(orderId);
-		
+
 		return ResponseEntity.ok(Map.of("orderId", orderId));
 	}
-	
+
 	// 주문서 작성 완료 페이지
 	@GetMapping("{orderId}/complete")
 	public String orderIsComplete(@PathVariable(name = "orderId") Long orderId, Model model,
 			@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
 		log.info("orderIsComplete 실행");
-		
-		OrderTable ot =  orderTableService.findById(orderId);
-		if(!ot.getMember().getId().equals(loginMember.getId())) {
+
+		OrderTable ot = orderTableService.findById(orderId);
+		if (!ot.getMember().getId().equals(loginMember.getId())) {
 			return "product/product_list";
 		}
-		
+
 		model.addAttribute("order", ot);
 		model.addAttribute("member", loginMember);
-		
+
 		List<OrderItems> orderItemList = orderTableService.findOrderItemsByOrder(orderId);
 		List<ProductAndImageDTO> productAndImageList = new ArrayList<>(); // 빈 리스트 생성
 
@@ -185,17 +204,19 @@ public class OrderController {
 			productAndImageList.add(productAndImage); // 리스트에 값 추가
 		}
 
+		log.info("주문 아이템: {}", productAndImageList);
+
 		model.addAttribute("orderItemList", productAndImageList); // 주문할 상품 리스트 담기
-		
+
 		return "order/orderComplete";
 	}
-	
+
 	// 주문 상세 페이지(주문서 작성 페이지 아님)
-	@GetMapping("orderdetails/{orderId}")
+	@GetMapping("details/{orderId}")
 	public String orderDetails(@PathVariable(name = "orderId") Long orderId, Model model,
 			@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
 		log.info("orderDetails 실행");
-		
+
 		List<OrderItems> orderItemList = orderTableService.findOrderItemsByOrder(orderId);
 		List<ProductAndImageDTO> productAndImageList = new ArrayList<>(); // 빈 리스트 생성
 
@@ -210,12 +231,12 @@ public class OrderController {
 			productAndImageList.add(productAndImage); // 리스트에 값 추가
 		}
 
-		model.addAttribute("orderItemList", productAndImageList); // 주문할 상품 리스트 담기
-		model.addAttribute("member", loginMember);
-		
-		OrderTable ot =  orderTableService.findById(orderId);
-		model.addAttribute("order", ot);
-		
+		model.addAttribute("orderItemList", productAndImageList); // 주문한 상품 리스트 담기
+		model.addAttribute("member", loginMember); // 회원
+
+		OrderTable ot = orderTableService.findById(orderId);
+		model.addAttribute("order", ot); // 주문 정보
+
 		return "order/orderDetails";
 	}
 
@@ -276,4 +297,40 @@ public class OrderController {
 		return "order/orderList";
 	}
 
+	// 주문 취소 기능
+	@PostMapping("cancel")
+	public String orderCancel(@Valid @RequestBody OrderIDDTO orderIdDTO, BindingResult bindingResult,
+			@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
+		log.info("orderCancel 실행");
+		log.info("받은 데이터: {}", orderIdDTO);
+
+		if (bindingResult.hasErrors()) {
+			return "order/orderList";
+		}
+
+		orderTableService.cancelOrder(orderIdDTO.getOrderId());
+
+		return "";
+	}
+
+	// 주문 페이지에서 선택한 상품 지우기
+	@GetMapping("/{orderId}/cancel/{productId}")
+	public ResponseEntity<?> orderItemCancel(@PathVariable(name = "orderId") Long orderId,
+			@PathVariable(name = "productId") Long productId,
+			@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
+		log.info("orderItemCancel 실행");
+
+		List<OrderTable> otList = orderTableService.findByMember(loginMember);
+		for (OrderTable ot : otList) {
+			if (!ot.getMember().getId().equals(loginMember.getId()))
+				return ResponseEntity.badRequest().body(Map.of("message", "유효하지 않은 요청입니다.", "orderId", orderId));
+		}
+
+		int orderItemsLength = orderTableService.cancelItem(orderId, productId);
+
+		if (orderItemsLength == 0)
+			return ResponseEntity.badRequest().body(Map.of("message", "주문할 상품이 없습니다."));
+		
+		return ResponseEntity.ok(Map.of("orderId", orderId));
+	}
 }

@@ -32,6 +32,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import com.example.tabitabi.model.Product.Product;
 import com.example.tabitabi.model.Product.ProductImage;
+import com.example.tabitabi.model.Product.ProductStatus;
 import com.example.tabitabi.model.Product.ProductUpdateForm;
 import com.example.tabitabi.model.Product.ProductWriteForm;
 import com.example.tabitabi.model.member.Member;
@@ -168,7 +169,7 @@ public class ProductController {
         }
         
         log.info("받은 이미지 파일: {}", files);
-
+        
         Product product = ProductWriteForm.toProduct(productWriteForm);
         product.setSeller(loginSeller);
 
@@ -185,7 +186,7 @@ public class ProductController {
         }
 
         productService.createProduct(product, productImages);
-
+        
         log.info("상품 저장완료");
         return "redirect:/products/seller/list";
     }

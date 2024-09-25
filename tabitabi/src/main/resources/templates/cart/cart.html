@@ -2,8 +2,132 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>장바구니</title>
+<title>마이페이지</title>
 <style>
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.page-title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+	
+	cursor: pointer;
+}
+
+.title{
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.logo{
+	width: 70px;
+	
+	border-radius: 50px;
+}
+
+.page-container {
+	display: flex;
+	flex-direction: row;
+	
+	width: 100%;
+	
+}
+
+.side-bar-container {
+	flex: 1;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	gap: 30px;
+}
+
+.side-bar-container-title {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	
+	gap: 30px;
+}
+
+.side-bar-content {
+	width: 100%;
+	padding-bottom: 30px;
+	border-bottom: 1px solid #ccc;
+	
+	cursor: pointer;
+}
+
+.side-bar-content:last-child {
+	border-bottom: none;
+}
+
+.help-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.help-container-title {
+	font-weight: bold;
+}
+
+.my-page-container {
+	flex: 4;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: start;
+	
+	padding-top: 60px;
+	padding-left: 30px;
+	gap: 10px;
+}
+
+.my-page-contianer-title {
+	font-weight: bold;
+	width: 100%;
+	padding-top: 10px;
+	border-top: 5px solid #03C75A;
+	padding-bottom: 10px;
+	border-bottom: 5px solid #03C75A;
+}
+
+.my-data-content-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.my-data-content-box {
+	display: flex;
+	flex-direction: row;
+	
+	gap: 10px;
+
+}
+
 .product-image-container {
 	display: flex;
 	flex-direction: column;
@@ -59,7 +183,46 @@ img {
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:inline="javascript">
+window.onload = function(){
+
+    // 요소에 클릭 이벤트 바인딩하기
+    // 메인 페이지로
+    document.querySelector('#page-title').addEventListener('click', () => {
+    	window.location.href = `http://localhost:9000/kudamon/mall`;
+    })
+    
+    // 개인정보 수정 페이지
+    document.querySelector('#edit-my-data').addEventListener('click', () => {
+		let member_id = [[${memberId}]]; // 회원의 id 가져오기
+		window.location.href = `http://localhost:9000/member/mypage`;
+    });
+
+    // 주문 목록 페이지
+    document.querySelector('#order-list').addEventListener('click', () => {
+		window.location.href = `http://localhost:9000/order/list`;
+    });
+    
+
+    // 회원의 배송지 페이지
+    document.querySelector('#shipping-list').addEventListener('click', () => {
+  	  console.log("클릭");
+		let member_id = [[${memberId}]]; // 회원의 id 가져오기
+		window.location.href = `http://localhost:9000/member/address/${member_id}`;
+    });
+    
+    // 채팅방 목록 페이지
+
+    // 찜한 상품 페이지
+
+    // 찜한 목록 페이지
+}
+
 $(document).ready(function(){
+	$('#add-address-container').css("display", "none");
+  	$('#cart-list').css('font-weight', 'bold');
+  	$('#cart-list').css('color', '#03C75A');
+  	$('#my-page-contianer-title').text('장바구니');
+  	
 	let cartTotalPrice = 0;
 	$('#cart-total-price span').text(cartTotalPrice);
     $('.product-checkbox').change(function() {
@@ -105,10 +268,11 @@ $(document).ready(function(){
 			const max = parent.find('.order-quantity').attr('max');
 			const min = 1;
 			quantity = parent.find('.order-quantity').val();
-			if(quantity > max) {
+
+			if(Number(quantity) > Number(max)) {
 				parent.find('.stock-error').text(`최대 ${max}개 주문할 수 있습니다.`);
 				return;
-			} else if(quantity < min){
+			} else if(Number(quantity) < Number(min)){
 				parent.find('.stock-error').text("1개 이상 주문해 주세요.");
 				return;
 			}
@@ -120,11 +284,11 @@ $(document).ready(function(){
             tm.fadeIn(400).delay(1000).fadeOut(400);
 			return;
 		}
-			
 		const orderListDTO = { orders };
 		
 
 		////////////////////////////////// 주문하기 기능 완성하기
+		
 		$.ajax({
 			url: url,
 			type: "POST",
@@ -133,17 +297,19 @@ $(document).ready(function(){
 			success: function(response){
 				const orderId = response.orderId;
 				console.log(orderId);
-				window.location.href = url + `/${orderId}`; // 주문서 작성 페이지로 이동
+				window.location.href = url + `/${response.orderId}`; // 주문서 작성 페이지로 이동
 			},
 			error: function(xhr, status, error){
 				console.log("실패: ", error);
 				if(xhr.status === 400) {
 					const res = xhr.responseJSON;
 					alert(res.message);
-					window.location.href = url + `/${res.orderId}`; // 기존의 주문서 작성 페이지로 이동
+					console.log(res.orderId);
+					window.location.href = url + `/${res.orderId}` // 장바구니 페이지로 이동
 				}
 			}
 		})
+		
 
 	});
 	
@@ -203,51 +369,106 @@ $(document).ready(function(){
 </script>
 </head>
 <body>
-	<div id="cart-page" class="cart-page">
-		<div id="toast_message" class="toast_message"></div>
-		<h1 id="card-page-title" class="card-page-title">장바구니</h1>
-		<div id="cart-page-contaier" class="cart-page-contaier">
-			<div th:each="item : ${cartList}" class="cart-page-content">
-				<span class="product-image-container" style="text-align: center;">
-					<img
-						class="image-box"
-						th:if="${item.productImage != null}"
-						th:src="@{/products/files?filename={filename}(filename=${item.productImage.saved_filename})}"
-						alt="Product Image" />
-					<input type="checkbox" class="product-checkbox" th:id="${item.cartItem.product.productId}" th:value="${item.cartItem.product.productId}" />
-				</span> 
-				<div class="cart-page-content-name-price-quantity">
-					<span class="product-name" th:id="${item.cartItem.product.productId}">
-						<span>상품이름:</span>
-						<span th:text="${item.cartItem.product.name}"></span>
-					</span>
-					<span class="product-price">
-						<span>상품가격:</span>
-						<span class="this-is-product-price" th:text="|${#numbers.formatInteger(item.cartItem.product.price, 0, 'COMMA')}원|"></span>
-					</span>
-					<span class="product-order-quantity">
-						<span>상품 주문 수량:</span>
-						<span th:text="${item.cartItem.quantity}"></span>
-						<input type="number" class="order-quantity" min="1"
-							th:attr="max=${item.cartItem.product.stock}"
-							th:value="${item.cartItem.quantity}">
-						<span>( 남은 수량:</span>
-						<span th:text="${item.cartItem.product.stock}" class="product-stock"></span>
-						<span>)</span>
-						<span class="stock-error"></span>
-					</span>
+<div id="header" class="header">
+	<div id="page-title" class="page-title">
+		<div id="title" class="title">쿠다몽</div>
+		<img id="logo" class="logo" src="/images/kudamon.webp" alt="Kudamon">
+	</div>
+	<div>로그아웃</div>
+</div>
+
+<div class="page-container">
+      <div id="side-bar-container" class="side-bar-container">
+        <div id="side-bar-container-title" class="side-bar-container-title">
+          마이 쿠다몽
+        </div>
+        <div id="side-bar-content-container" class="side-bar-content-container">
+          <div id="edit-my-data" class="edit-my-data side-bar-content">
+            개인정보 수정
+          </div>
+          <div id="shipping-list" class="shipping-list side-bar-content">
+            배송지 관리
+          </div>
+          <div id="order-list" class="order-list side-bar-content">
+            주문 내역
+          </div>
+          <div id="cart-list" class="cart-list side-bar-content">장바구니</div>
+          <div id="chat-list" class="chat-list side-bar-content">채팅 목록</div>
+          <div
+            id="zzim-product-list"
+            class="zzim-product-list side-bar-content"
+          >
+            찜한 상품 목록
+          </div>
+          <div
+            id="follow-seller-list"
+            class="follow-seller-list side-bar-content"
+          >
+            팔로우한 판매자들
+          </div>
+        </div>
+        <div id="help-container" class="help-container">
+          <div id="help-container-title" class="help-container-title">
+            도움이 필요하신가요?
+          </div>
+          <div id="help" class="help">1:1 문의하기</div>
+        </div>
+      </div>
+      <div id="my-page-container" class="my-page-container">
+        <div id="my-page-contianer-title" class="my-page-contianer-title"></div>
+	        <div
+	          id="my-page-content-container"
+	          class="my-page-content-container"
+	        >
+	        <div>
+				<div id="cart-page" class="cart-page">
+					<div id="toast_message" class="toast_message"></div>
+					<div id="cart-page-contaier" class="cart-page-contaier">
+						<div th:each="item : ${cartList}" class="cart-page-content">
+							<span class="product-image-container" style="text-align: center;">
+								<img
+									class="image-box"
+									th:if="${item.productImage != null}"
+									th:src="@{/products/files?filename={filename}(filename=${item.productImage.saved_filename})}"
+									alt="Product Image" />
+								<input type="checkbox" class="product-checkbox" th:id="${item.cartItem.product.productId}" th:value="${item.cartItem.product.productId}" />
+							</span> 
+							<div class="cart-page-content-name-price-quantity">
+								<span class="product-name" th:id="${item.cartItem.product.productId}">
+									<span>상품이름:</span>
+									<span th:text="${item.cartItem.product.name}"></span>
+								</span>
+								<span class="product-price">
+									<span>상품가격:</span>
+									<span class="this-is-product-price" th:text="|${#numbers.formatInteger(item.cartItem.product.price, 0, 'COMMA')}원|"></span>
+								</span>
+								<span class="product-order-quantity">
+									<span>상품 주문 수량:</span>
+									<span th:text="${item.cartItem.quantity}"></span>
+									<input type="number" class="order-quantity" min="1"
+										th:attr="max=${item.cartItem.product.stock}"
+										th:value="${item.cartItem.quantity}">
+									<span>( 남은 수량:</span>
+									<span th:text="${item.cartItem.product.stock}" class="product-stock"></span>
+									<span>)</span>
+									<span class="stock-error"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div id="cart-total-price" class="cart-total-price">
+						총 <span></span>원
+					</div>
+					<div id="button-box" class="button-box">
+						<input type="button" id="order-button" class="order-button" value="선택한 상품 주문하기">
+						<input type="button" id="delete-button" class="delete-button" value="선택한 상품 장바구니에서 삭제하기">
+					   	<input type="button" id="delete-all-button" class="delete-all-button" value="장바구니 비우기">
+					   	<input type="button" onclick="location.href='/'" value="메인으로">
+					</div>
 				</div>
-			</div>
-		</div>
-		<div id="cart-total-price" class="cart-total-price">
-			총 <span></span>원
-		</div>
-		<div id="button-box" class="button-box">
-			<input type="button" id="order-button" class="order-button" value="선택한 상품 주문하기">
-			<input type="button" id="delete-button" class="delete-button" value="선택한 상품 장바구니에서 삭제하기">
-		   	<input type="button" id="delete-all-button" class="delete-all-button" value="장바구니 비우기">
-		   	<input type="button" onclick="location.href='/'" value="메인으로">
+    		</div>
 		</div>
 	</div>
+</div>
 </body>
 </html>

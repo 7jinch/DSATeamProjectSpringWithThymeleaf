@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.tabitabi.exception.ResourceNotFoundException;
 import com.example.tabitabi.model.Product.Product;
 import com.example.tabitabi.model.Product.ProductImage;
+import com.example.tabitabi.model.Product.ProductStatus;
 import com.example.tabitabi.model.seller.Seller;
 import com.example.tabitabi.repository.FileRepository;
 import com.example.tabitabi.repository.ProductImageRepository;
@@ -47,6 +48,7 @@ public class ProductService {
 
     @Transactional
     public void createProduct(Product product, List<ProductImage> productImages) {
+    	if(product.getStock() > 0) product.setStatus(ProductStatus.AVAILABLE);
         productRepository.save(product);
         if (productImages != null && !productImages.isEmpty()) {
             for (ProductImage productImage : productImages) {
@@ -78,9 +80,11 @@ public class ProductService {
         findProduct.setName(updateProduct.getName());
         findProduct.setDescription(updateProduct.getDescription());
         findProduct.setPrice(updateProduct.getPrice());
-        findProduct.setStock(updateProduct.getStock());
         findProduct.setStatus(updateProduct.getStatus());
         findProduct.setCategory(updateProduct.getCategory());
+        
+        if(updateProduct.getStock() > 0) findProduct.setStatus(ProductStatus.AVAILABLE);
+        else findProduct.setStock(updateProduct.getStock());
 
         // 기존 파일 확인 및 삭제
         List<ProductImage> existingImages = findFilesByProduct(findProduct);

@@ -120,7 +120,6 @@ public class CrawlerController {
                             WebElement minTd = minTr.findElement(By.xpath("./td[2]"));
                             String minText = minTd.getText();
                             
-                          
                             WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h3.s_tit6.color.fl")));
                             String number = element.getText();
                             
@@ -132,20 +131,32 @@ public class CrawlerController {
                             Double averageValue = parsePrice(averageText);
                             Double maxValue = parsePrice(maxText);
                             Double minValue = parsePrice(minText);
-                           
                             
-                            // 데이터 저장
-                            ProductPriceStatistics statistics = new ProductPriceStatistics();
-                            statistics.setCategory(categoryText);
-                            statistics.setItem(itemText);
-                            statistics.setType(kindcodeText);
-                            statistics.setDate(dateText);
-                            statistics.setAveragePrice(averageValue);
-                            statistics.setMaxPrice(maxValue);
-                            statistics.setMinPrice(minValue);
-                            statistics.setUnit(unit);
+                            // 중복 데이터 확인
+                            boolean exists = priceStatisticsRepository.existsByCategoryAndItemAndTypeAndDateAndUnit(
+                                categoryText,
+                                itemText,
+                                kindcodeText,
+                                dateText,
+                                unit
+                            );
                             
-                            priceStatisticsRepository.save(statistics);
+                            if (!exists) {
+                                // 데이터 저장
+                                ProductPriceStatistics statistics = new ProductPriceStatistics();
+                                statistics.setCategory(categoryText);
+                                statistics.setItem(itemText);
+                                statistics.setType(kindcodeText);
+                                statistics.setDate(dateText);
+                                statistics.setAveragePrice(averageValue);
+                                statistics.setMaxPrice(maxValue);
+                                statistics.setMinPrice(minValue);
+                                statistics.setUnit(unit);
+                                
+                                priceStatisticsRepository.save(statistics);
+                            } else {
+                                System.out.println("중복된 데이터: " + categoryText + ", " + itemText + ", " + kindcodeText + ", " + dateText + ", " + unit);
+                            }
                             
                         } catch (Exception e) {
                             // 데이터 추출에 실패한 경우 로그 출력 및 다음 항목으로 넘어감
@@ -166,109 +177,6 @@ public class CrawlerController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-//        try {
-//            driver.get("https://www.ekapepia.com/priceComparison/poducerPrice/retail/periodPrice.do");
-//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//            String categoryText = "축산물";
-//
-//            // 드롭다운 메뉴1의 요소를 클릭하여 드롭다운 열기
-//            WebElement select1 = wait.until(ExpectedConditions.elementToBeClickable(By.id("searchCondition1")));
-//            select1.click();
-//
-//            // 드롭다운 메뉴1의 모든 옵션을 가져옵니다.
-//            List<WebElement> options1 = driver.findElements(By.cssSelector("#searchCondition1 option"));
-//
-//            for (WebElement option1 : options1) {
-//                String itemText = option1.getText();
-//                String value1 = option1.getAttribute("value");
-//
-//                // 드롭다운 메뉴1의 옵션 클릭
-//                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", option1);
-//
-//                // 페이지의 업데이트를 기다립니다.
-//                wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("searchCondition2")));
-//
-//                // 드롭다운 메뉴2의 요소를 클릭하여 드롭다운 열기
-//                WebElement select2 = wait.until(ExpectedConditions.elementToBeClickable(By.id("searchCondition2")));
-//                select2.click();
-//
-//                // 드롭다운 메뉴2의 모든 옵션을 가져옵니다.
-//                List<WebElement> options2 = driver.findElements(By.cssSelector("#searchCondition2 option"));
-//
-//                for (WebElement option2 : options2) {
-//                    String kindcodeText = option2.getText();
-//                    String value2 = option2.getAttribute("value");
-//
-//                    // 드롭다운 메뉴2의 옵션 클릭
-//                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", option2);
-//
-//                    // 검색 버튼 클릭
-//                    WebElement searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("ipt_search")));
-//                    searchButton.click();
-//
-//                    // 검색 결과 로딩 대기
-//                    wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.table-list table tbody")));
-//
-//                    // 테이블의 tbody 가져오기
-//                    WebElement tableBody = driver.findElement(By.cssSelector("div.table-list table tbody"));
-//
-//                    // 첫 번째 tr의 11번째 td 값 추출
-//                    WebElement firstRow = tableBody.findElement(By.xpath("./tr[1]"));
-//                    String averageText = firstRow.findElement(By.xpath("./td[11]")).getText();
-//
-//                    // 두 번째 tr의 11번째 td 값 추출
-//                    WebElement secondRow = tableBody.findElement(By.xpath("./tr[2]"));
-//                    String maxText = secondRow.findElement(By.xpath("./td[11]")).getText();
-//
-//                    // 세 번째 tr의 11번째 td 값 추출
-//                    WebElement thirdRow = tableBody.findElement(By.xpath("./tr[3]"));
-//                    String minText = thirdRow.findElement(By.xpath("./td[11]")).getText();
-//
-//                    // unitLabel에서 단위 가져오기
-//                    WebElement unitElement = driver.findElement(By.id("unitLabel"));
-//                    String unitText = unitElement.getText();
-//
-//                    // 정규식을 사용하여 '100g' 추출
-//                    Pattern pattern = Pattern.compile("(\\d+g)");
-//                    Matcher matcher = pattern.matcher(unitText);
-//                    String unit = "";
-//                    if (matcher.find()) {
-//                        unit = matcher.group(1);
-//                    }
-//
-//                    WebElement tableHead = driver.findElement(By.cssSelector("div.table-list table thead"));
-//                    WebElement thElement = tableHead.findElement(By.xpath(".//th[11]"));
-//                    String date = thElement.getText().trim();
-//                    String dateText = date.replace("월 ", "/").replace("일", "").trim();
-//
-//                    Double averageValue = parsePrice(averageText);
-//                    Double maxValue = parsePrice(maxText);
-//                    Double minValue = parsePrice(minText);
-//
-//                    // 데이터 저장
-//                    ProductPriceStatistics statistics = new ProductPriceStatistics();
-//                    statistics.setCategory(categoryText);
-//                    statistics.setItem(itemText);
-//                    statistics.setType(kindcodeText);
-//                    statistics.setDate(dateText);
-//                    statistics.setAveragePrice(averageValue);
-//                    statistics.setMaxPrice(maxValue);
-//                    statistics.setMinPrice(minValue);
-//                    statistics.setUnit(unit);
-//
-//                    // 데이터 출력 또는 저장 처리
-//                }
-//
-//                // 다시 드롭다운 메뉴1의 요소를 클릭하여 초기화
-//                select1 = wait.until(ExpectedConditions.elementToBeClickable(By.id("searchCondition1")));
-//                select1.click();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            driver.quit(); // WebDriver 완전 종료
-//        }
         return ResponseEntity.ok(1);
     }
 

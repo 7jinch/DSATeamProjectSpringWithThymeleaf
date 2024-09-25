@@ -1,0 +1,915 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Bold';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Black';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+.txt-hide {
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Pretendard-Regular';
+    overflow-x: hidden;
+}
+
+.header,
+.navbar,
+.navbar-menu,
+.navbar-icons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-arround;
+}
+
+.header {
+    padding-left: 30px;
+    position: sticky;
+    top: 0;
+    
+    width: 98.6%;
+    height: 70px;
+    align-items: center;
+    z-index: 10;
+    height: 80px;
+    font-family: 'Pretendard-Bold';
+    font-size: 21px;
+    color: black;
+    background-color: white;
+}
+
+.explore, .meet {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+   	position: relative;
+	padding-left: 30px;
+	left: 0;
+    width: 70vw;
+    height: 70px;
+   	padding-top: 0px;
+    
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+    background-color: white;
+}
+
+#explore, #meet {
+    cursor: pointer;
+}
+
+.meet {
+	padding-top: 0px;
+	width: 100vw;
+    background-color: white;
+}
+
+.font-font {
+	color: black;
+	transition: color 0.5s ease;
+}
+
+.font-font-font {
+	font-size: 20px;
+}
+
+.nav-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.a-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	
+	width: 70%;
+}
+
+.navbar {
+    margin-left: 30px;
+    font-size: 17px;
+}
+
+.navbar-menu li {
+    margin: 0 20px;
+}
+
+.navbar-icons {
+    position: absolute;
+    top: 26px;
+    right: 0px;
+    margin-right: 10px;
+}
+
+.btn-lang {
+    display: flex;
+    align-items: center;
+    position: relative;
+    border: none;
+    background: none;
+    color: black;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-lang span {
+    margin-left: 7px;
+}
+
+.btn-lang:hover {
+    color: #aaa9a9;
+}
+
+.btn-lang:hover img {
+    filter: invert(82%) sepia(11%) saturate(16%) hue-rotate(5deg) brightness(83%) contrast(87%);
+}
+
+.list-lang {
+    display: none;
+    position: absolute;
+    padding: 15px 25px;
+    border: 1px solid black;
+    top: 30px;
+    left: 0;
+    color: black;
+}
+
+.list-lang li {
+    line-height: 1.5em;
+}
+
+.list-lang li:hover {
+    color: #aaa9a9;
+}
+
+.btn-lang.on+.list-lang {
+    display: block;
+}
+
+.btn-find {
+    margin-left: 15px;
+    padding-top: 5px;
+    position: relative;
+    border: none;
+    background: none;
+    color: black;
+    cursor: pointer;
+}
+
+.btn-find:hover img {
+    filter: invert(82%) sepia(11%) saturate(16%) hue-rotate(5deg) brightness(83%) contrast(87%);
+}
+
+.vid {
+	top: 0;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.vid video {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* contents */
+.tit-main,
+.cont-culture,
+footer {
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.tit-main {
+    margin: 0 auto;
+    padding: 0 0 0 40px;
+    position: absolute;
+    top: 270px;
+    left: 0;
+    width: 90%;
+    color: white;
+}
+
+.tit-main h3 {
+    margin-bottom: 50px;
+    display: block;
+    width: 800px;
+    font-family: 'Pretendard-Bold';
+    font-size: 100px;
+    letter-spacing: -2px;
+}
+
+.wrap-options {
+    display: flex;
+}
+
+.wrap-options-mb {
+    display: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+.dropdown {
+    font-family: 'Pretendard-regular';
+    font-size: 17px;
+    position: relative;
+}
+
+.dropdown-btn {
+    padding: 0;
+    padding-right: 10px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    width: 190px;
+    height: 40px;
+    background: none;
+    font-family: 'Pretendard-Bold';
+    color: #fff;
+    font-size: 18px;
+    text-align: left;
+    cursor: pointer;
+    background: url("../src/chevron-down.svg") right 13px center no-repeat;
+}
+
+.dropdown-btn.on+.dropdown-list {
+    display: block;
+}
+
+.dropdown-btn.jobunit {
+    width: 220px;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 25px;
+    height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.dropdown-list::-webkit-scrollbar {
+    width: 12px;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 79px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 4px solid transparent;
+}
+
+.dropdown-list::-webkit-scrollbar-track {
+    background: none;
+}
+
+.dropdown-list li {
+    padding: 5px 0;
+}
+
+.dropdown-list li button {
+    background: inherit;
+    color: #fff;
+    border: none;
+}
+
+.dropdown-list li button:hover {
+    color: #07b53b;
+}
+
+.desc-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    font-size: 12px;
+    color: white;
+    transform: translateX(-50%);
+}
+
+.desc-scroll::after {
+    content: '';
+    display: block;
+    background: url(../src/chevron-down.svg) no-repeat;
+    margin: 6px 0 0 6px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+}
+
+.btn-go {
+    margin-left: 30px;
+    border: none;
+    background: none;
+}
+
+.cont-culture,
+.cont-finers,
+footer {
+    padding: 0 30px;
+}
+
+.cont-culture {
+    margin-top: 0;
+}
+
+.cont-culture h2,
+.cont-finers h2 {
+    width: 1200px;
+    display: block;
+    font-family: 'Pretendard-Bold';
+    font-size: 60px;
+}
+
+.culture-sec {
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.culture-sec .culture-art {
+    width: 585px;
+}
+
+.culture-sec .culture-art a img {
+    margin-top: 70px;
+    width: 100%;
+    height: 244px;
+    object-fit: cover;
+}
+
+.culture-sec .culture-art a strong {
+    display: block;
+    margin: 30px 0 20px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.culture-sec .culture-art a p {
+    font-size: 18px;
+    color: #737373;
+    line-height: 1.5em;
+}
+
+.more-culture,
+.more-finers {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.more-culture {
+    display: inline-block;
+    width: 1200px;
+    margin-top: 70px;
+    text-align: right;
+}
+
+.right-button::after {
+    display: inline-block;
+    position: relative;
+    top: 5px;
+    content: '';
+    width: 21px;
+    height: 21px;
+    background: url('../src/chevron-right.svg') no-repeat;
+    background-position: center;
+}
+
+.cont-finers {
+    margin: 20px 0 0 0;
+    padding: 0 0 50px 0;
+}
+
+.cont-finers .title-area {
+    margin: 0 auto;
+    padding-top: 50px;
+    box-sizing: border-box;
+    height: 320px;
+    background: url('../src/img/05.jpg') no-repeat;
+    background-size: cover;
+    min-width: 1200px;
+    background-position: center;
+
+}
+
+.cont-finers h2 {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    color: rgb(220, 219, 216);
+}
+
+.cont-finers .ul-area {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+    height: 402px;
+}
+
+.career-info {
+    min-width: 1200px;
+    display: flex;
+    /* flex-wrap: wrap; */
+    justify-content: space-between;
+    margin: 0 auto;
+    position: relative;
+    top: -162px;
+}
+
+.cont-finers .career-info .career-card {
+    width: 378px;
+    height: 500px;
+    border: 1px solid rgba(0, 0, 0, .08);
+    background-color: #fff;
+}
+
+.cont-finers .career-info .career-card span {
+    display: none;
+}
+
+.cont-finers .career-info .career-card:hover {
+    background: url(./src/img/07.jpg) no-repeat center;
+    z-index: 9;
+}
+
+.cont-finers .career-info .career-card:hover h3 {
+    color: #fff;
+}
+
+.cont-finers .career-info .career-card:hover strong,
+.cont-finers .career-info .career-card:hover em,
+.cont-finers .career-info .career-card:hover p {
+    visibility: hidden;
+}
+
+.cont-finers .career-info .career-card:hover span {
+    display: block;
+    position: relative;
+    top: -15px;
+    color: #fff;
+}
+
+.cont-finers .career-info .career-card a {
+    padding: 30px 28px;
+    display: block;
+}
+
+.cont-finers .career-info .career-card a h3 {
+    font-family: 'Pretendard-Black';
+    font-size: 46px;
+    font-weight: 900;
+    height: 156px;
+    line-height: 52px;
+}
+
+.cont-finers .career-info .career-card a strong {
+    font-family: 'Pretendard-Black';
+    display: block;
+    margin-top: 40px;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.cont-finers .career-info .career-card a em {
+    font-family: 'Pretendard-Black';
+    display: block;
+    font-size: 16px;
+    font-weight: 900;
+    margin-top: 5px;
+}
+
+.cont-finers .career-info .career-card a p {
+    font-size: 16px;
+    font-weight: 300;
+    color: #616161;
+    margin-top: 29px;
+    line-height: 24px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+}
+
+.more-finers {
+    display: block;
+    width: 1200px;
+    text-align: right;
+    position: relative;
+    top: -130px;
+}
+
+/* footer */
+.cont-footer-wrap,
+.btn-footer,
+.info-footer {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.cont-footer-wrap {
+    padding: 40px 0;
+    justify-content: space-between;
+    border-top: 1px solid #e1e1e1;
+    font-size: 13px;
+    width: 1200px;
+}
+
+.btn-sns {
+    margin-left: 30px;
+}
+
+.btn-sns button {
+    margin-top: -5px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.btn-sns button img {
+    width: 25px;
+    height: 25px;
+}
+
+.btn-sns button img:hover {
+    filter: invert(40%) sepia(5%) saturate(61%) hue-rotate(201deg) brightness(94%) contrast(88%);
+}
+
+.info-footer strong {
+    margin-left: 50px;
+    font-weight: 700;
+}
+
+.info-footer strong {
+    margin-left: 50px;
+    font-weight: 700;
+}
+
+.rel-site {
+    position: relative;
+}
+
+.btn-rel {
+    border: none;
+    background: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.policy:hover,
+.rel-site button:hover {
+    color: #646465;
+}
+
+.list-rel {
+    display: none;
+    position: absolute;
+    padding: 20px;
+    left: -20px;
+    bottom: 65px;
+    width: 120px;
+    background-color: white;
+    border: 1px solid #E1E1E1;
+    font-size: 14px;
+}
+
+.btn-rel.on+.list-rel {
+    display: block;
+}
+
+.list-rel li {
+    line-height: 2em;
+    color: #999;
+}
+
+.rel-site li:hover {
+    color: #1e1e1e;
+}
+
+
+/**
+ * ----------------------------------------
+ * animation flip-vertical-left
+ * ----------------------------------------
+ */
+.flip-vertical-right {
+    transition: transform 0.5s;
+    transform: rotateY(0deg);
+	/*
+	-webkit-animation: flip-vertical-right 0.4s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+	        animation: flip-vertical-right 0.4s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+	*/
+}
+
+.flip-vertical-right {
+    position: relative;
+    perspective: 1000px; /* 3D 효과를 위한 원근감 설정 */
+}
+
+.flip-vertical-right a {
+    display: block;
+    position: relative;
+    width: 100%; /* 필요한 너비 설정 */
+    height: 100%; /* 필요한 높이 설정 */
+    transform-style: preserve-3d; /* 3D 회전을 위한 설정 */
+}
+
+.back-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #3498db; /* 배경색 */
+    color: white; /* 글자색 */
+    font-size: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden; /* 뒷면이 보이지 않도록 설정 */
+    transform: rotateY(180deg); /* 뒷면을 180도로 회전 */
+}
+
+.front-face {
+    backface-visibility: hidden; /* 앞면이 회전할 때 숨기기 */
+}
+
+/*
+@-webkit-keyframes flip-vertical-right {
+  0% {
+    -webkit-transform: rotateY(0);
+            transform: rotateY(0);
+  }
+  100% {
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+  }
+}
+@keyframes flip-vertical-right {
+  0% {
+    -webkit-transform: rotateY(0);
+            transform: rotateY(0);
+  }
+  100% {
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+  }
+}
+*/
+
+/* media query */
+@media screen and (max-width: 828px) {
+    .navbar-menu {
+        display: none;
+    }
+
+    .tit-main h3 {
+        font-size: 40px;
+        margin-bottom: 50px;
+        display: block;
+        width: 310px;
+        font-family: 'Pretendard-Bold';
+        letter-spacing: -1px;
+    }
+
+    /* .wrap-options {
+        display: flex;
+        flex-direction: column;
+    } */
+
+    .wrap-options {
+        display: none;
+    }
+
+    .wrap-options-mb {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .wrap-options-mb select {
+        outline: none;
+        border-radius: 0;
+        /* 아이폰 사파리 보더 없애기 */
+        -webkit-appearance: none;
+        /* 화살표 없애기 for chrome*/
+        -moz-appearance: none;
+        /* 화살표 없애기 for firefox*/
+        appearance: none;
+        /* 화살표 없애기 공통*/
+    }
+    
+    .wrap-options-mb select option {
+        font-family: 'Pretendard-Regular';
+        color: #000;
+    }
+
+    .dropdown-btn,
+    .dropdown-btn.jobunit {
+        margin-bottom: 10px;
+        padding: 10px 0;
+        background: none;
+        border: none;
+        border-bottom: 2px solid #fff;
+        width: 240px;
+        height: 50px;
+        font-family: 'Pretendard-Bold';
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        background: url("../src/chevron-down.svg") right 13px center no-repeat;
+    }
+
+    .dropdown-list {
+        display: none;
+    }
+
+    .btn-go {
+        width: 62px;
+        margin: 0;
+        display: inline-block;
+        border: none;
+        background: none;
+    }
+
+    .tit-main,
+    .cont-culture,
+    footer {
+        /* margin: 0 auto; */
+        max-width: 900px;
+    }
+
+    .cont-culture h2,
+    .cont-finers h2 {
+        font-size: 36px;
+    }
+
+    .cont-finers h2 {
+        padding-left: 25px;
+    }
+
+    .cont-culture {
+        margin-top: 0px;
+    }
+
+    .culture-sec {
+        width: 100%;
+        max-width: 900px;
+        padding: 0;
+        justify-content: flex-start;
+    }
+
+    .culture-sec .culture-art {
+        width: auto;
+    }
+
+    .culture-sec .culture-art a img {
+        margin-top: 30px;
+    }
+
+    .more-culture {
+        display: inline-block;
+        width: 828px;
+        margin-top: 70px;
+        text-align: right;
+    }
+
+    .cont-finers {
+        margin-top: 60px;
+        padding-bottom: 0;
+    }
+
+    .cont-finers .title-area {
+        padding-top: 61px;
+        height: 230px;
+        min-width: 828px;
+    }
+
+    .cont-finers .ul-area {
+        margin: 0 auto;
+        padding: 0;
+        height: 100%;
+    }
+
+    .career-info {
+        min-width: auto;
+        flex-direction: column;
+        justify-content: flex-start;
+        top: -70px;
+        left: 0;
+    }
+
+    .cont-finers .career-info .career-card {
+        margin: 0 auto 20px;
+        width: 90vw;
+        height: auto;
+    }
+
+    .cont-finers .career-info .career-card a h3 {
+        font-size: 36px;
+        height: 100px;
+    }
+
+    .cont-finers .career-info .career-card a strong {
+        margin: 0;
+    }
+
+    .cont-finers .career-info .career-card a p {
+        font-size: 15px;
+    }
+
+    .cont-finers .career-info .career-card:hover {
+        background: #fff;
+    }
+
+    .cont-finers .career-info .career-card:hover h3 {
+        color: inherit;
+    }
+
+    .cont-finers .career-info .career-card:hover strong,
+    .cont-finers .career-info .career-card:hover em,
+    .cont-finers .career-info .career-card:hover p {
+        visibility: visible;
+    }
+
+    .cont-finers .career-info .career-card:hover span {
+        display: none;
+    }
+
+    .more-finers {
+        width: 90vw;
+        margin: 0 auto;
+        top: -60px;
+    }
+
+    /* footer */
+    .cont-footer-wrap,
+    .btn-footer,
+    .info-footer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cont-footer-wrap {
+        padding: 20px 0 40px;
+        width: 100%;
+    }
+
+    .info-footer strong {
+        margin: 30px 0 0 6px;
+    }
+
+    .info-footer address {
+        margin: 10px 0 0 6px;
+    }
+
+    .list-rel {
+        left: 0;
+        bottom: 30px;
+    }
+
+    .btn-sns {
+        margin-left: 0;
+    }
+
+    .btn-sns button img {
+        padding: 0 8px;
+    }
+
+    .btn-sns button {
+        padding: 0;
+        margin: 10px 10px 25px 0;
+    }
+}

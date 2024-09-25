@@ -111,6 +111,7 @@ function joinFormValidator(){
 	 	$('#answer').focus();
 	 	return false;
 	}
+	clearError();
     $.ajax({
         type: "POST",
         data: {
@@ -129,8 +130,12 @@ function joinFormValidator(){
             window.location.href = "/";
         },
         error: function(error, status, xhr){
-           console.error("오류 발생:", error);
-           console.error("상태 코드:", xhr.status); // 400 내(클라이언트)탓 500 니(서버)탓 확인용
+			console.log("error: ", error);
+            const responseBody = error.responseJSON;
+            console.log('에러 메시지:', responseBody.message);
+            alert(responseBody.message);
+           // console.error("오류 발생:", error.message);
+           // console.error("상태 코드:", xhr.status); // 400 내(클라이언트)탓 500 니(서버)탓 확인용
         }
     });
 }

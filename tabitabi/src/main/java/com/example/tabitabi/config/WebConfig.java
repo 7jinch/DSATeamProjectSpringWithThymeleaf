@@ -17,8 +17,15 @@ import jakarta.servlet.Filter;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	private String[] excludePaths = {"/","/*/join","/*/login", "/*/logout", "/*/forgotPw", "/*/setPw"
-			 ,"/*.css", "/*.js", "/*.ico", "/error"};
+    private String[] excludePaths = {
+            "/", 
+            "/*/join", "/*/login", "/*/logout", "/*/forgotPw", "/*/setPw",
+            "/*/kudamon/mall",
+            "/*.css", "/*.js", "/*.ico", "/error",
+            "/src/**",   // 여기 추가: static 디렉토리 내의 src 하위 리소스들을 제외
+            "/uploads/**", // 여기 추가: static/uploads/ 경로에 대한 리소스 제외
+            "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.svg", "/*.mp4" // 추가된 정적 리소스 확장자들
+    };
 	
     @Bean
     FilterRegistrationBean<Filter> logFilter() {

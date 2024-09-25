@@ -55,23 +55,31 @@ public class CartController {
 		session = req.getSession(); // 세션 받아오기
 		
 		Member member = (Member)session.getAttribute("loginMember"); // member 객체 받아오기
-		if(!member.getId().equals(member_id)) {
-	        model.addAttribute("loginForm", new LoginForm());
-			return "product/product_list"; // 로그인한 회원과 조회하려는 회원이 다르면 리스트 페이지로
-		}
+//		if(!member.getId().equals(member_id)) {
+//	        model.addAttribute("loginForm", new LoginForm());
+//			return "product/product_list"; // 로그인한 회원과 조회하려는 회원이 다르면 리스트 페이지로
+//		}
 		
 		List<CartItem> cartItems = cartService.findByMember(member);
 		
 		List<CartItemAndImageDTO> ciai = new ArrayList<>();
 		for (CartItem item : cartItems) {
+			log.info("----------테스트1----------");
 			Long id = item.getProduct().getProductId();
+			log.info("----------테스트2----------");
 			Product product = productService.findProduct(id); // 제품 ID로 제품 조회
+			log.info("----------테스트3----------");
 			ProductImage productImage = productService.findFileByProductId(product); // 제품 ID로 파일 조회
+			log.info("----------테스트4----------");
 			
 			CartItemAndImageDTO cai = new CartItemAndImageDTO();
+			log.info("----------테스트5----------");
 			cai.setCartItem(item);
+			log.info("----------테스트6----------");
 			cai.setProductImage(productImage);
+			log.info("----------테스트7----------");
 			ciai.add(cai);
+			log.info("----------테스트8----------");
 		}
 		
 		for(CartItemAndImageDTO c : ciai) {

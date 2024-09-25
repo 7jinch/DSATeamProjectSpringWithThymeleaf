@@ -1,0 +1,379 @@
+/* 기본 레이아웃 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Pretendard-Regular';
+}
+
+/* 헤더 스타일 */
+.header-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center; /* 로고와 카테고리 버튼을 수직 정렬 */
+  justify-content: space-between; 
+  padding: 10px 150px; 
+  background-color: white; /* 헤더 배경색 */
+}
+
+@font-face {
+  font-family: 'CWDangamAsac-Bold';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/CWDangamAsac-Bold.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.logo {
+  font-family: 'CWDangamAsac-Bold', sans-serif; 
+}
+
+.icon {
+  height: 5%;
+  width: 5%;
+}
+
+.user-options {
+  display: flex;
+  justify-content: flex-end; /* 아이콘들을 우측에 정렬 */
+  align-items: center; /* 아이콘을 수직으로 중앙 정렬 */
+  gap: 10px; /* 아이콘 간의 간격 */
+  padding-right: 10px; /* 우측 여백을 추가하여 아이콘이 너무 붙지 않게 */
+}
+
+
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 400px; /* 검색바의 최대 크기 설정 */
+  
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* 카테고리 메뉴 스타일 */
+.category-container {
+  display: flex;
+  justify-content: space-between; 
+  position: relative; /* 드롭다운 메뉴가 카테고리 버튼 밑에 위치하도록 */
+  padding: 10px 150px; 
+  align-items: center; /* 수직 중앙 정렬 */
+}
+
+#category-button {
+  border: none;
+  
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: white;
+  
+  margin-right: 20px; 
+}
+
+.category-menu {
+  display: none;
+  position: absolute;
+  top: 100%; /* 카테고리 버튼 바로 밑에 드롭다운 메뉴가 나타나도록 */
+  left: 0; /* 카테고리 버튼의 왼쪽에 맞춰서 드롭다운 위치 설정 */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 1000;
+  width: 200px;
+  
+}
+
+.category-menu a {
+  display: block;
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.category-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+/* 드롭다운 메뉴 보이기 */
+.category-menu.show {
+  display: block;
+  opacity: 1; /* 부드러운 트랜지션 */
+  transition: opacity 0.3s ease;
+}
+
+.navi {
+  
+  gap: 20px;
+  align-items: center;
+  margin-right: auto;
+}
+
+.navi a {
+  text-decoration: none; /* 기본 밑줄 제거 */
+  color: gray; /* 기본 색상 */
+}
+
+.navi a:hover {
+  color: black; /* 마우스를 올렸을 때 색상 변화 */
+}
+
+/* 클릭해도 색상, 밑줄 변화 없게 설정 */
+.navi a:visited,
+.navi a:active {
+  color: gray; /* 클릭한 후에도 기본 색상 유지 */
+  text-decoration: none; /* 밑줄 없음 */
+}
+
+#category-button, .navi a {
+  font-size: 16px; /* 같은 폰트 크기로 통일 */
+  line-height: 1; /* 같은 라인 높이로 설정 */
+  margin: 0; /* 기본 마진 리셋 */
+  padding: 10px; /* 필요한 경우 패딩 조정 */
+}
+
+/* 우측에 있는 로그인, 회원가입, 고객센터 링크 스타일 */
+.user-links0 {
+
+  justify-content: flex-end; 
+  align-items: center; 
+  gap: 10px; 
+  padding-right: 10px; 
+}
+.user-links {
+  display: flex;
+  gap: 20px; /* 링크들 간의 간격 */
+  align-items: center; /* 수직 가운데 정렬 */
+  margin-left: auto; /* 우측 정렬을 위해 왼쪽 마진 자동 */
+}
+
+.user-links a {
+  text-decoration: none; /* 기본 밑줄 제거 */
+  color: gray; /* 기본 색상 */
+  font-size: 14px;
+  
+}
+
+.user-links a:hover {
+  color: black; /* 마우스를 올렸을 때 색상 변화 */
+}
+
+/* 클릭해도 색상, 밑줄 변화 없게 설정 */
+.user-links a:visited,
+.user-links a:active {
+  color: gray; /* 클릭한 후에도 기본 색상 유지 */
+  text-decoration: none; /* 밑줄 없음 */
+}
+
+/* 배너 슬라이더 스타일 */
+.banner-slider {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 400px; /* 배너 높이 */
+  overflow: hidden; /* 슬라이더 범위를 넘어선 이미지를 숨김 */
+  margin-top: 20px; /* 헤더와 배너 사이의 간격 조절 */
+}
+
+.slider-container {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  /* 전체 슬라이더를 오른쪽으로 이동 */
+}
+
+.slide {
+  flex: 0 0 50%; /* 배너 두 개씩 보여주기 위해 50% */
+  display: flex; /* 이미지를 수직 중앙 정렬하기 위해 */
+  justify-content: center; /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
+}
+
+.slide img {
+  width: 100%;
+  height: auto; /* 비율 유지 */
+  object-fit: cover; /* 이미지 비율 유지 및 잘림 방지 */
+  /*border-radius: 10px;*/ /*모서리둥글게*/
+}
+
+
+/* 푸터 스타일 */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #333;
+  color: white;
+}
+
+/* 슬라이더 버튼 스타일 */
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.prev {
+  left: 10px; /* 왼쪽 여백 조정 */
+}
+
+.next {
+  right: 10px; /* 오른쪽 여백 조정 */
+}
+
+.category-icons {
+  display: flex; /* 가로로 나열 */
+  justify-content: center; /* 중앙 정렬 */
+  flex-wrap: wrap; /* 여러 줄로 나열될 수 있도록 설정 */
+  padding: 20px 0; /* 상하 패딩 추가 */
+  gap: 20px; /* 각 category-item 간의 좌우 간격 */
+
+}
+
+
+.category-item {
+  display: flex;
+  
+  flex-direction: column; /* 세로로 아이콘과 텍스트 배치 */
+  align-items: center; /* 중앙 정렬 */
+  margin: 10px; /* 아이템 간의 간격 추가 */
+  gap: 10px;
+}
+
+.category-icon {
+  object-fit: contain; /* 이미지가 원 안에 맞게 들어가도록 설정 */
+  padding: 12px; /* 이미지와 경계 사이에 여백 추가 */
+  width: 50px; /* 아이콘 크기 조정 */
+  height: 50px; /* 아이콘 크기 조정 */
+  border-radius: 50%; /* 원형 아이콘 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white; /* 텍스트 색상 */
+  font-weight: bold; /* 텍스트 두께 */
+}
+
+/* 각 카테고리의 배경색 설정 */
+.category-icons .category-item:nth-child(1) .category-icon {
+  background-color: #FFEDDA; /* 과일 */
+}
+.category-icons .category-item:nth-child(2) .category-icon {
+  background-color: #FFE4E1; /* 고기류 */
+}
+.category-icons .category-item:nth-child(3) .category-icon {
+  background-color: #E6E6FA; /* 채소 */
+}
+.category-icons .category-item:nth-child(4) .category-icon {
+  background-color: #FFFACD; /* 계란 */
+}
+.category-icons .category-item:nth-child(5) .category-icon {
+  background-color: #F5F5DC; /* 버섯 */
+}
+.category-icons .category-item:nth-child(6) .category-icon {
+  background-color: #B0E0E6; /* 수산물 */
+}
+.category-icons .category-item:nth-child(7) .category-icon {
+  background-color: #F0FFF0; /* 곡물류 */
+}
+.category-icons .category-item:nth-child(8) .category-icon {
+  background-color: #FAFAD2; /* 조개류 */
+}
+.category-icons .category-item:nth-child(9) .category-icon {
+  background-color: #D8BFD8; /* 친환경 */
+}
+.category-icons .category-item:nth-child(10) .category-icon {
+  background-color: #FDF5E6; /* 양념류 */
+}
+.category-icons .category-item:nth-child(11) .category-icon {
+  background-color: #FFF0F5; /* 간식 */
+}
+.category-icons .category-item:nth-child(12) .category-icon {
+  background-color: #E0FFFF; /* 음료 */
+}
+.category-icons .category-item:nth-child(13) .category-icon {
+  background-color: #F5F5F5; /* 가공식품 */
+}
+.category-icons .category-item:nth-child(14) .category-icon {
+  background-color: #FFFACD; /* 꿀 */
+}
+
+
+/*상품*/
+.popular-products {
+  padding: 20px;
+}
+
+h3 {
+  padding: 0px 120px;
+}
+
+.product-container {
+  display: flex;
+  overflow: hidden; /* 넘치는 상품 숨김 */
+  gap: 10px; /* 상품 간격 */
+  justify-content: space-evenly; /* 상품 간 간격 */
+  flex-wrap: wrap; /* 여러 줄로 배치 가능 */
+}
+
+.product {
+  text-align: center; /* 텍스트 중앙 정렬 */
+  width: 180px; /* 상품 카드의 너비 */
+  margin: 10px; /* 카드 간 간격 */
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 아이템 배치 */
+  align-items: center; /* 아이템 중앙 정렬 */
+}
+
+.proimg {
+  width: 180px; /* 이미지가 카드의 너비에 맞게 조정 */
+  height: auto; /* 이미지 비율 유지 */
+  max-height: 180px; /* 최대 높이 설정 */
+  object-fit: cover; /* 이미지 비율 유지 */
+}
+
+
+.icon-container {
+  display: flex;
+  justify-content: center; /* 아이콘 중앙 정렬 */
+  gap: 10px; /* 아이콘 간격 */
+}
+
+.icon2 {
+  width: 20px; /* 아이콘 크기 조정 */
+  height: 20px; /* 아이콘 크기 조정 */
+  cursor: pointer; 
+}

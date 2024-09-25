@@ -206,6 +206,10 @@
 .order-product-item-box:last-child {
 	border-bottom: none;
 }
+
+.item-delete-button{
+	cursor: pointer;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:inline="javascript">
@@ -329,13 +333,57 @@ $(document).ready(function(){
 				success: function(response){
 					const orderId = response.orderId;
 					window.location.href = url + `/${orderId}/complete`;
+					return;
 				},
 				error: function(xhr, status, error){
+					if(xhr.responseJSON.message == '주문할 상품이 없습니다.') {
+						alert(xhr.responseJSON.message);
+						window.location.href = url + '/list';
+						return;
+					}
 					alert(`에러 발생 - 관리자에게 문의하세요(${xhr.responseJSON.message || error})`);
+					return;
 				}
 			})	
 		}
 		else console.log('주문 취소')
+	})
+	
+	// 상품 삭제하기
+	$('.item-delete-button').click(function(){
+		const cancel = confirm('선택하신 상품을 주문 취소하시겠어요?');
+		if(!cancel) return;
+		
+		const orderId = [[${order.id}]];
+		const productId = $(this).attr('id');
+		const url = 'http://localhost:9000/order';
+		console.log("orderId: " + orderId);
+		console.log("productId: " + productId);
+		
+		$.ajax({
+			url: url + `/${orderId}/cancel/${productId}`,
+			type: 'GET',
+			dataType: 'json',
+		    success: function(data) {
+		    	console.log("성공");
+		    	window.location.href = url + `/${data.orderId}`;
+		    },
+		    error: function(xhr, status, error) {
+		    	console.log("실패");
+		    	console.log(xhr);
+		    	console.log(xhr.responseJSON.message);
+		    	if(xhr.responseJSON.message == '주문할 상품이 없습니다.') {
+		    		alert(xhr.responseJSON.message);
+		    		window.location.href = url + '/list';
+		    		return;
+		    	}
+		    	
+		    	alert("알 수 없는 오류가 발생했습니다. 다시 시도하거나 계속 문제가 발생할 경우 관리자에게 문의하세요.")
+		    	window.location.href = url + '/list';
+		    	return;
+		    }
+		})
+		
 	})
 })
 </script>
@@ -423,7 +471,10 @@ $(document).ready(function(){
 								<div class="item-quantity" th:text="|${orderItemAndImage.quantity}개|"></div>
 								<div>=</div>
 							</div>
-							<div class="item-price-quantity-price" th:text="|${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
+							<div class="price-item-delete-button-box">
+								<div class="item-price-quantity-price" th:text="|${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
+								<div th:id="${orderItemAndImage.product.productId}" class="item-delete-button">지우기</div>
+							</div>
 						</div>
 			       	</div>
 				</div>

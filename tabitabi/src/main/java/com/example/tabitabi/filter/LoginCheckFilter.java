@@ -49,9 +49,14 @@ public class LoginCheckFilter implements Filter {
 	}
 	
 	private boolean isLoginCheckPath(String requestURI) {
-		//로그인 체크X. 로그인을 하지 않아도 들어갈 수 있는 경로들
-		String[] whiteList = {"/","/*/join","/*/login", "/*/logout", "/*/forgotPw", "/*/setPw"
-				 ,"/*.css", "/*.js", "/*.ico", "/error"};
+        // 로그인 체크가 필요 없는 경로들 (화이트리스트)
+        String[] whiteList = {
+                "/", "/*/join", "/*/login", "/*/logout", "/*/forgotPw", "/*/setPw", 
+                "/kudamon/mall",
+                "/*.css", "/*.js", "/*.ico", "/error",
+                "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.svg", "/*.mp4", // 정적 파일 형식
+                "/src/**", "/uploads/**" // 추가: 정적 리소스 경로들
+        };
  		
 		return !PatternMatchUtils.simpleMatch(whiteList, requestURI);
 	}

@@ -148,4 +148,74 @@ public class OrderTableService {
 		List<OrderItems> orderItemList = orderItemsRepository.getAllByOrderTable(orderRepository.getById(orderId));
 		return orderItemList;
 	}
+
+	// 주문 취소
+	@Transactional
+	public void cancelOrder(int orderId) {
+		long oid = orderId;
+		OrderTable ot = orderRepository.getById(oid);
+		log.info("데이터: {}", ot);
+		ot.setOrder_status("주문 취소");
+		orderRepository.save(ot);
+		
+		List<OrderItems> oiList = findOrderItemsByOrder(oid);
+		for(OrderItems oi : oiList) {
+			Product product = productRepository.getById(oi.getProduct().getProductId());
+			int quantity = oi.getQuantity();
+			int stock = product.getStock();
+			product.setStock(quantity + stock);
+			productRepository.save(product);
+		}
+	}
+
+	@Transactional
+	public int cancelItem(Long orderId, Long productId) {
+		log.info("cancelItem 실행");
+		log.info("orderId: {}", orderId);
+		log.info("productId: {}", productId);
+		
+		// 총 결제 금액 변경
+		Product pr = productRepository.findByProductId(productId);
+		log.info("---------------------------------------------");
+		log.info("데이터: {}", pr);
+		log.info("---------------------------------------------");
+		OrderItems oi = orderItemsRepository.findByOrderTableIdAndProductId(orderId, productId);
+		log.info("---------------------------------------------");
+		log.info("데이터: {}", oi);
+		log.info("---------------------------------------------");
+		int totalPrice = pr.getPrice() * oi.getQuantity();
+		OrderTable ot =  orderRepository.getById(orderId);
+		ot.setTotal_price(ot.getTotal_price() - totalPrice);
+		orderRepository.save(ot);
+		
+		log.info("총 결제 금액 변경");
+		
+		// 재고 변경
+		Product pr2 = productRepository.findByProductId(productId);
+		pr2.setStock(pr.getStock() + oi.getQuantity());
+		productRepository.save(pr2);
+		
+		log.info("재고 변경");
+		
+		// 주문할 상품에서 제거
+		orderItemsRepository.deleteByOrderIdAndProductId(orderId, productId);
+		
+		if(orderItemsRepository.findByOrderTableId(orderId).size() == 0) {
+			orderRepository.deleteById(orderId);
+			return 0;
+		}
+		
+		log.info("주문할 상품에서 제거");
+		
+		return 1;
+	}
+
+	public Boolean checkItemsListLength(Long orderId) {
+		List<OrderItems> oiList =  orderItemsRepository.findByOrderTableId(orderId);
+		if(oiList.size() == 0) {
+			orderRepository.deleteById(orderId);
+			return true;
+		}
+		return false;
+	}
 }
