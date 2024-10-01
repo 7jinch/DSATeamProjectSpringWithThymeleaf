@@ -1,6 +1,7 @@
 package com.example.tabitabi.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import com.example.tabitabi.model.Product.ProductImage;
 import com.example.tabitabi.model.cart.CartItem;
 import com.example.tabitabi.model.member.Member;
 import com.example.tabitabi.model.order.OrderItems;
+import com.example.tabitabi.model.order.OrderShippingInfo;
 import com.example.tabitabi.model.order.OrderTable;
 import com.example.tabitabi.model.orderAddress.OrderAddress;
 import com.example.tabitabi.model.seller.LoginForm;
@@ -33,6 +35,7 @@ import com.example.tabitabi.service.MemberService;
 import com.example.tabitabi.service.OrderAddressService;
 import com.example.tabitabi.service.OrderTableService;
 import com.example.tabitabi.service.ProductService;
+import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import jakarta.validation.Valid;
 
@@ -207,6 +210,8 @@ public class OrderController {
 		log.info("주문 아이템: {}", productAndImageList);
 
 		model.addAttribute("orderItemList", productAndImageList); // 주문할 상품 리스트 담기
+		
+		model.addAttribute("orderShippingInfo", ot.getOrderShippingInfo()); // 배송 정보
 
 		return "order/orderComplete";
 	}
@@ -236,6 +241,8 @@ public class OrderController {
 
 		OrderTable ot = orderTableService.findById(orderId);
 		model.addAttribute("order", ot); // 주문 정보
+		
+		model.addAttribute("orderShippingInfo", ot.getOrderShippingInfo()); // 배송 정보
 
 		return "order/orderDetails";
 	}
@@ -273,6 +280,8 @@ public class OrderController {
 			oaoil.add(oaoi); // 리스트에 주문과 해당 주문의 아이템 리스트를 담은 DTO 객체 추가하기
 		}
 
+//		model.addAttribute("orderAndOrderItemsList", oaoil);
+		Collections.reverse(oaoil);
 		model.addAttribute("orderAndOrderItemsList", oaoil);
 
 		List<CartItem> CartItems = cartService.findByMember(loginMember);

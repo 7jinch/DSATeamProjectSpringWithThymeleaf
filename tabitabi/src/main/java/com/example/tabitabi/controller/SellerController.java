@@ -169,7 +169,7 @@ public class SellerController {
 		log.info("logout 실행");
 		session.setAttribute("loginSeller", null);
 
-		return "redirect:/";
+		return "mall";
 	}
 
 	// 비번 검사용

@@ -1,116 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>사업자회원가입</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/join.css">
 </head>
 <body>
-	<div id="containter">
-		<h1>회원가입</h1>
-		<p>
-		<form action="join" method="POST" th:object="${member}">
-			<table>
-				<tr>
-					<th>이메일</th>
-					<td>
-						<input type="text" id="email"  th:field="*{email}" required>
-						 @ <input id="dotCom" type=text>
-						<select id="selectEmail"  onchange="updateDotComValue()">
-		                     <option value="select">직접 입력하기</option>
-		                     <option value="gmail.com">google</option>
-		                     <option value="naver.com">naver</option>
-               			</select>
-               			<div id="error-email" class="error"></div>
-               			<!-- 
-               			<input type="button" id="emailSend" onclick="emailCodeSend()" value="이메일 인증">
-               			 -->
-					</td>
-				</tr>
-				<!-- 
-				<tr>
-					<th>인증코드</th>
-					<td>
-						<input type="text" id="emailCode">
-						<div style="display:none" id="VerifyCode"></div>
-						<div id="error-emailCode" class="error"></div>
-						<input type="button" id="codeVerify" onclick="return emailCodeVerify();" value="인증코드 확인"></input>
-					</td>
-				</tr>
-				 -->
-				<tr>
-					<th>비밀번호</th>
-					<td>
-						<input type="password" th:field="*{password}">
-						<div id="error-password" class="error"></div>
-					</td>
-				</tr>
-				<tr>
-					<th>이름</th>
-					<td>
-						<input type="text" th:field="*{name}">
-						<div id="error-name" class="error"></div>
-					</td>
-				</tr>
-				<tr>
-					<th>별명</th>
-					<td>
-						<input type="text" th:field="*{nickname}">
-						<div id="error-nickname" class="error"></div>
-					</td>
-				</tr>
-				<tr>
-					<th>연락처</th>
-					<td>
-						<input type="text" th:field="*{phoneNumber}">
-						<div id="error-phone-number" class="error"></div>
-					</td>
-				</tr>
-				<tr>
-					<th>성별</th>
-					<td>
-						<th:block th:each="gender : ${T(com.example.tabitabi.model.member.GenderType).values()}">
-							<label th:for="${#ids.next('gender')}">[[${gender.description}]]</label>
-							<input type="radio" th:field="*{gender}" th:value="${gender}">				
-						</th:block>
-						<div id="error-gender" class="error"></div>
-					</td>
-				</tr>
-				<tr>
-					<th>생년월일</th>
-					<td>
-						<input type="date" th:field="*{birth}">
-						<div th:errors="*{birth}" class="error"></div>
-					</td>
-				</tr>
-				<tr>
-				    <th>비밀번호 찾기 질문</th>
-				    <td>
-				      <select id="question" onchange="updateQuestionValue()">
-				        <option value="">Select a question</option>
-            			<th:block th:each="question : ${questions}">
-                			<option th:value="${question.name()}" th:text="${question.questionText}"></option>
-            			</th:block>
-        			  </select>
-        			  <input type="hidden" id="selected-question" name="question">
-        			  <div id="error-question" class="error"></div>
-				    </td>
-				</tr>
-				<tr>
-				    <th>답변</th>
-				    <td>
-				     	<input type="text" th:field="*{answer}">
-						<div id="error-answer" class="error"></div>
-				    </td>
-				</tr>
-			</table>
-			<p>
-			<div class="center">
-				<input type="button" onclick="location.href='/'" value="Main">
-				<input type="button" onclick="return joinFormValidator();" value="Sign up">
-				<input type="reset" value="reset">
-			</div>
-		</form>
 <script src="/js/join.js"></script>
+    <header>
+    
+        <div class="nav-container">
+            <h1 class="logo"><a href="/">쿠다몬</a></h1>
+            <nav class="nav-links">
+                <a href="#">장보기</a>
+                <a href="#">선물하기</a>
+                <a href="#">이벤트</a>
+            </nav>
+            <div class="icons">
+                <div class="search-container">
+					<input type="text" class="search-bar">
+					<button type="submit" class="search-button">
+						<img src="/images/search-icon.png" alt="돋보기" class="search-icon">
+					</button>
+				</div>
+                <a href="#"><img src="/images/favorite.png" alt="찜 아이콘"></a>
+                <a href="#"><img src="/images/person.png" alt="로그인 아이콘"></a>
+                <a href="#"><img src="/images/bag.png" alt="장바구니 아이콘"></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <main>
+        <div class="container">
+            <h1 class="title">사업자회원</h1>
+            <form action="join" method="POST" th:object="${member}">
+                <table>
+                    <tr>
+                        <th>이메일</th>
+                        <td>
+                            <input type="text" id="email" th:field="*{email}" required>
+                            @ <input id="dotCom" type="text">
+                            <select id="selectEmail" onchange="updateDotComValue()">
+                                <option value="select">직접 입력하기</option>
+                                <option value="gmail.com">google</option>
+                                <option value="naver.com">naver</option>
+                            </select>
+                            <div id="error-email" class="error"></div>
+                            <input type="button" id="emailSend" onclick="emailCodeSend()" value="이메일 인증">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>인증코드</th>
+                        <td>
+                            <input type="text" id="emailCode">
+                            <div style="display:none" id="VerifyCode"></div>
+                            <div id="error-emailCode" class="error"></div>
+                            <input type="button" id="codeVerify" onclick="return emailCodeVerify();" value="인증코드 확인">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>비밀번호</th>
+                        <td>
+                            <input type="password" th:field="*{password}">
+                            <div id="error-password" class="error"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이름</th>
+                        <td>
+                            <input type="text" th:field="*{name}">
+                            <div id="error-name" class="error"></div>
+                        </td>
+                    </tr>
+					<tr>
+						<th>닉네임</th>
+						<td><input type="text" th:field="*{nickname}">
+							<div id="error-nickname" class="error"></div></td>
+					</tr>
+					<tr>
+                        <th>연락처</th>
+                        <td>
+                            <input type="text" th:field="*{phoneNumber}">
+                            <div id="error-phone-number" class="error"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>성별</th>
+                        <td>
+                            <th:block th:each="gender : ${T(com.example.tabitabi.model.member.GenderType).values()}">
+                                <label th:for="${#ids.next('gender')}">[[${gender.description}]]</label>
+                                <input type="radio" th:field="*{gender}" th:value="${gender}">				
+                            </th:block>
+                            <div id="error-gender" class="error"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>생년월일</th>
+                        <td>
+                            <input type="date" th:field="*{birth}">
+                            <div id="error-birth" class="error"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>비밀번호 찾기 질문</th>
+                        <td>
+                            <select id="question" onchange="updateQuestionValue()">
+                                <option value="">질문 선택</option>
+                                <th:block th:each="question : ${questions}">
+                                    <option th:value="${question.name()}" th:text="${question.questionText}"></option>
+                                </th:block>
+                            </select>
+                            <input type="hidden" id="selected-question" name="question">
+                            <div id="error-question" class="error"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>답변</th>
+                        <td>
+                            <input type="text" th:field="*{answer}">
+                            <div id="error-answer" class="error"></div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="button-container">
+                    <input type="button" onclick="return joinFormValidator();" class="btn" value="가입하기">
+                    <input type="reset" class="btn reset" value="초기화">
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- 푸터 -->
+    <footer>
+        <p>고객센터: 1234-5678 | 이메일: info@shop.com</p>
+        <p>© 2024 DSA. All Rights Reserved.</p>
+    </footer>
+
 </body>
 </html>

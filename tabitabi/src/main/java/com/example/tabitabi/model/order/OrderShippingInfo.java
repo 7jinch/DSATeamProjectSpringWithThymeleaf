@@ -1,5 +1,6 @@
 package com.example.tabitabi.model.order;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,4 +24,6 @@ public class OrderShippingInfo {
 	private String shipping_phone_number;
 	private String shipping_address;
 	private String request_info;
+	
+	private String payment_type;
 }

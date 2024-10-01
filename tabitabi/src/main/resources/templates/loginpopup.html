@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login POPUP</title>
+<link rel="stylesheet" href="/css/loginpopup.css">
+</head>
+<body>
+<div class="login-popup">
+    <div class="popup-content">
+        <div class="popup-header">
+            <h2>로그인</h2>
+            
+        </div>
+        
+        <div class="user-type-toggle">
+            <button id="personal-btn" class="active">개인 회원</button>
+            <button id="business-btn">사업자 회원</button>
+        </div>
+
+			<!-- 개인회원 로그인 폼 -->
+			<!-- 개인회원 로그인 폼 -->
+			<form id="personal-login-form" class="login-form active"
+				action="/member/login" method="POST" th:object="${loginForm}"
+				onsubmit="onLoginSuccess(event);">
+				<input type="text" id="email" th:field="*{email}" placeholder="이메일">
+				<input type="password" id="password" th:field="*{password}"
+					placeholder="비밀번호">
+				<div class="options">
+					<input type="button" class="forgot-password"
+						onclick="location.href='/member/forgotPw'" value="비밀번호 찾기">
+				</div>
+				<input type="submit" value="Login">
+			</form>
+
+
+			<!-- 사업자회원 로그인 폼 -->
+			<form id="business-login-form" class="login-form"
+				action="/seller/login" method="POST" th:object="${loginForm}"
+				onsubmit="onLoginSuccess(event);">
+				<input type="text" id="business-email" th:field="*{email}"
+					placeholder="이메일"> <input type="password"
+					id="business-password" th:field="*{password}" placeholder="비밀번호">
+						<div class="options">
+					<input type="button" class="forgot-password"
+						onclick="location.href='/seller/forgotPw'" value="비밀번호 찾기">
+				</div>
+				<input type="submit" value="Login">
+			</form>
+
+		</div>
+</div>
+
+<script>
+const personalBtn = document.getElementById('personal-btn');
+const businessBtn = document.getElementById('business-btn');
+const personalForm = document.getElementById('personal-login-form');
+const businessForm = document.getElementById('business-login-form');
+
+// 개인회원 버튼 클릭 시
+personalBtn.addEventListener('click', () => {
+    personalBtn.classList.add('active');
+    businessBtn.classList.remove('active');
+    personalForm.classList.add('active');
+    businessForm.classList.remove('active');
+});
+
+// 사업자회원 버튼 클릭 시
+businessBtn.addEventListener('click', () => {
+    businessBtn.classList.add('active');
+    personalBtn.classList.remove('active');
+    businessForm.classList.add('active');
+    personalForm.classList.remove('active');
+});
+
+function onLoginSuccess(event) {
+    // 이벤트의 기본 동작을 막습니다.
+    event.preventDefault();
+
+    // 폼 데이터 전송
+    const form = event.target; // 현재 폼을 가져옵니다.
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (response.redirected) {
+            // 로그인 성공 시 부모 창 새로 고침 및 팝업 닫기
+            if (window.opener) {
+                window.opener.location.reload();
+                window.close();
+            }
+        } else {
+            // 로그인 실패 처리: 에러 메시지 표시 등
+            return response.text(); // 실패 시 응답을 텍스트로 반환
+        }
+    })
+    .then(html => {
+        // 로그인 실패 시 로그인 폼의 내용을 업데이트
+        if (html) {
+            document.querySelector('.popup-content').innerHTML = html;
+        }
+    })
+    .catch(error => {
+        console.error('로그인 오류:', error);
+    });
+}
+
+</script>
+</body>
+</html>

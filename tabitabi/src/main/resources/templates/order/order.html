@@ -210,6 +210,13 @@
 .item-delete-button{
 	cursor: pointer;
 }
+
+.payment-type-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script th:inline="javascript">
@@ -312,24 +319,30 @@ $(document).ready(function(){
 			if($('#input-address-check-box').is(':checked')) shipping_address = $('#self-shipping-info-address').val();
 			else shipping_address = $('#shipping-info-address-content').val() + ' ' + $('#shipping-info-address-details').val();
 			const request_info = $('#request-info-content').val();
+			const payment_type = $('#payment-type').val();
 			
-			if(shipping_name === '') {
+			console.log(`이름: ${shipping_name}, 주소: ${shipping_address}, 연락처: ${shipping_phone_number}, 요청사항: ${request_info}, 결제수단: ${payment_type}`);
+
+			if(!shipping_name || shipping_name === '') {
 				alert("받는 분의 성함을 정확히 입력하세요.");
 				return;
 			} else if(!RegExp('^\\d{3}-\\d{4}-\\d{4}$').test(shipping_phone_number)){
 				alert("연락처를 정확히 입력하세요.");
 				return;
-			} else if(shipping_address === "") {
-				alert("주소를 입력해주세요.");
+			} else if(!shipping_address || shipping_address.length === "") {
+				alert("주소를 입력해주세요1.");
+				return;
+			} else if(!payment_type) {
+				alert("결제 수단을 선택해주세요.");
 				return;
 			}
-			console.log(`이름: ${shipping_name}, 주소: ${shipping_address}, 연락처: ${shipping_phone_number}, 요청사항: ${request_info}`);
+			
 			
 			$.ajax({
 				url: url + `/${orderId}/shipping`,
 				type: "POST",
 				contentType: "application/json",
-				data: JSON.stringify({shipping_name, shipping_phone_number, shipping_address, request_info}),
+				data: JSON.stringify({shipping_name, shipping_phone_number, shipping_address, request_info, payment_type}),
 				success: function(response){
 					const orderId = response.orderId;
 					window.location.href = url + `/${orderId}/complete`;
@@ -344,7 +357,7 @@ $(document).ready(function(){
 					alert(`에러 발생 - 관리자에게 문의하세요(${xhr.responseJSON.message || error})`);
 					return;
 				}
-			})	
+			})
 		}
 		else console.log('주문 취소')
 	})
@@ -484,6 +497,15 @@ $(document).ready(function(){
 				<div id="order-product-total-price-box" class="order-product-total-price-box">
 					<div id="order-product-total-price" class="order-product-total-price" th:text="|${#numbers.formatInteger(order.total_price, 0, 'COMMA')}원|"></div>
 				</div>
+			</div>
+			<div id="payment-type-container" class="payment-type-container">
+				<div id="payment-type-container-title" class="payment-type-container-title">결제 수단 선택</div>
+				<select id="payment-type" class="payment-type">
+					<option value="신용카드">신용카드</option>
+					<option value="실시간계좌이체">실시간 계좌이체</option>
+					<option value="휴대폰결제">휴대폰 결제</option>
+					<option value="무통장입급">무통장입금</option>
+				</select>		
 			</div>
 			<div id="payment-button" class="payment-button">결제하기</div>
 		</div>

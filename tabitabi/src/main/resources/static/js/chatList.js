@@ -1,3 +1,41 @@
+const chatSender = $("#sender").val();
+
+function showChatList(button) {
+   const chatRoomId = button.value;
+   const popupUrl = `/chatLists?id=${chatRoomId}`
+   window.open(popupUrl, "popupWindow", "width=800,height=600,resizable=no");
+}
+function formatDate(date) {
+   const d = new Date(date);
+
+   const month = String(d.getMonth() + 1).padStart(2, '0');
+   const day = String(d.getDate()).padStart(2, '0');
+
+   const formattedTime = d.toLocaleTimeString(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+   })
+
+   return `${month}/${day} ${formattedTime}`;
+}
+function searchProducts() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    
+    const productList = document.querySelectorAll('.chat-list li');
+
+    productList.forEach(function(li) {
+        const productName = li.querySelector('#productname').textContent.toLowerCase();
+        
+        if (productName.includes(input)) {
+            li.style.display = '';
+        } else {
+            li.style.display = 'none';
+        }
+    });
+}
+
+/*
 function showChatList(button) {
     const chatRoomId = button.value;
     console.log("showChatList 아이디: ", chatRoomId);
@@ -43,3 +81,4 @@ function updateChatList(data, chatRoomId) {
     `;
     chatListElement.innerHTML = chatRoomHTML;
 }
+*/

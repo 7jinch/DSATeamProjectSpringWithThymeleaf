@@ -25,4 +25,10 @@ public interface OrderItemsRepository extends JpaRepository<OrderItems, Long> {
 	OrderItems findByOrderTableIdAndProductId(@Param("orderId") Long orderId,  @Param("productId") Long productId);
 
 	List<OrderItems> findByOrderTableId(Long orderId);
+
+	@Query("SELECT oi.product, SUM(oi.quantity) AS totalQuantity " +
+	           "FROM OrderItems oi " +
+	           "GROUP BY oi.product " +
+	           "ORDER BY totalQuantity DESC")
+	 List<Object[]> findTop10ProductsByOrderQuantity();
 }

@@ -1,0 +1,208 @@
+/* 기본 레이아웃 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard-Regular';
+}
+
+@font-face {
+    font-family: 'CWDangamAsac-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/CWDangamAsac-Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.logo a {
+    font-family: 'CWDangamAsac-Bold', sans-serif;
+    text-decoration: none;
+    color: #000;
+}
+
+body {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-bar {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-button {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+}
+
+.icons {
+    display: flex;
+    gap: 15px;
+    align-items: center; 
+}
+
+.icons a img {
+    height: 24px;
+    width: 24px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 중앙 수직 정렬 */
+    align-items: center;
+    width: 100%;
+    margin-top: 40px;
+    flex: 1;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px; /* 위쪽 여백 추가 */
+}
+
+button {
+    border: none;
+    background-color: #007bff; /* 기본 버튼 색상 */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn {
+    margin-right: 20px; /* 간격 설정 */
+    padding: 8px 16px; /* 크기 조정 */
+    background-color: #007bff;
+    border-radius: 15px;
+    color: white; /* 흰색 글자 */
+    border: none;
+   	width : 85px;
+}
+
+.reset {
+    background-color: #007bff; /* 파란색 배경 */
+    color: white; /* 흰색 글자 */
+
+}
+
+.button-container {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    margin-top: 20px; /* 위쪽 여백 추가 */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 합치기 */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    width: 30%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+select {
+    width: calc(100% - 20px); /* 폭 조절 */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* 버튼 호버 효과 */
+}
+
+.reset:hover {
+    background-color: #0056b3; /* 초기화 버튼 호버 효과 */
+}
+
+/* 미디어 쿼리 예시 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: flex-start; /* 세로로 배치할 때 왼쪽 정렬 */
+    }
+
+    .title {
+        margin: 0 0 20px 0; /* 위 아래 여백 추가 */
+    }
+}
+
+footer {
+	margin-top : 20px;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}

@@ -144,7 +144,7 @@ $(document).ready(function() {
 	</div>
 	<div id="order-payment-type-container" class="order-payment-type-container order-container">
 		<div id="order-payment-type-title" class="order-payment-type-title">결제수단</div>
-		<div id="order-payment-type-content" class="order-payment-type-content">현금박치기</div>
+		<div id="order-payment-type-content" class="order-payment-type-content" th:text="${orderShippingInfo.payment_type}"></div>
 	</div>
 	<div id="order-notice-container" class="order-notice-container notice-text">
 		<div id="order-notice-content-1" class="order-notice-content-1">

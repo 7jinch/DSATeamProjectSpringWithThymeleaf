@@ -120,31 +120,31 @@ public class MemberController {
 
 	@PostMapping("login")
 	public String login(@Validated @ModelAttribute LoginForm loginForm, HttpServletRequest request,
-			BindingResult result, HttpServletResponse response, HttpSession session) {
-		log.info("login 실행");
-		
-		Member findMember = memberService.findMemberByEmail(loginForm.getEmail());
-		if (result.hasErrors()) {
-			return "member/loginForm";
-		}
-		if (findMember == null || !findMember.getPassword().equals(loginForm.getPassword())) {
-//			result.reject("noID", "아이디가 존재 하지 않습니다.");
-			result.reject("noID", "아이디 또는 패스워드를 확인해주세요.");
-			return "member/loginForm";
-		}
-		if (findMember.getPassword().equals(loginForm.getPassword())) {
-			session = request.getSession();
-			session.setAttribute("loginMember", findMember);
+	        BindingResult result, HttpServletResponse response, HttpSession session) {
+	    log.info("login 실행");
+	    
+	    // 로그인 시도 전에 결과 체크
+	    if (result.hasErrors()) {
+	        return "loginpopup"; // 에러 발생 시 로그인 페이지로 돌아감
+	    }
 
-			return "redirect:/";
-		}
-		if (request.getSession().getAttribute("loginMember") != null
-				|| request.getSession().getAttribute("loginSeller") != null) {
-			return "redirect:/";
-		}
-		
-		// result.reject("notPassword", "패스워드를 확인해주세요.");
-		return "member/loginForm";
+	    // 이메일로 회원 조회
+	    Member findMember = memberService.findMemberByEmail(loginForm.getEmail());
+	    if (findMember == null) {
+	        result.reject("noID", "아이디가 존재 하지 않습니다.");
+	        return "loginpopup"; // 이메일이 없으면 로그인 페이지로 돌아감
+	    }
+	    
+	    // 비밀번호 체크 (비밀번호 해시 검증 필요 시 적절한 해시 알고리즘 사용)
+	    if (!findMember.getPassword().equals(loginForm.getPassword())) {
+	        result.reject("notPassword", "패스워드가 맞지 않습니다.");
+	        return "loginpopup"; // 비밀번호가 다르면 로그인 페이지로 돌아감
+	    }
+
+	    // 로그인 성공 시 세션에 정보 저장
+	    session.setAttribute("loginMember", findMember);
+
+	    return "redirect:/"; // 로그인 성공 시 메인 페이지로 리다이렉트
 	}
 
 	@GetMapping("logout")
@@ -154,7 +154,7 @@ public class MemberController {
 		session.setAttribute("loginMember", null);
 		session.invalidate();
 
-		return "redirect:/";
+		return "mall";
 	}
 
 	@GetMapping("mypage")

@@ -67,7 +67,7 @@ public class ChatController {
         String content = HtmlUtils.htmlEscape(chat.getContent());
         Long chatRoomId = chat.getChatRoomId();
         ChatRoom chatRoom = chatRoomService.findById(chatRoomId);
-        messageService.saveMessage(sender, content, chatRoom);
+        // messageService.saveMessage(sender, content, chatRoom);
 
         return new Chat(sender, content,chatRoomId);
     }
@@ -119,19 +119,19 @@ public class ChatController {
     	return "chat/chatList";
     }
     
-    @PostMapping("showChatList")
-    public ResponseEntity<List<MessageDTO>> showChatList(@RequestParam("chatRoomId") Long chatRoomId) {
-        log.info("chatRoomId: {}", chatRoomId);
-        List<Message> messages = messageService.findMessage(chatRoomId);
-        List<MessageDTO> messageDTOs = messages.stream()
-                .map(message -> new MessageDTO(
-                    message.getId(),
-                    message.getSender(),
-                    message.getContent(),
-                    message.getChatRoom().getId()
-                ))
-                .collect(Collectors.toList());
-        log.info("messageDTOs: {}", messageDTOs);
-        return ResponseEntity.ok(messageDTOs);
-    }
+//    @PostMapping("showChatList")
+//    public ResponseEntity<List<MessageDTO>> showChatList(@RequestParam("chatRoomId") Long chatRoomId) {
+//        log.info("chatRoomId: {}", chatRoomId);
+//        List<Message> messages = messageService.findMessage(chatRoomId);
+//        List<MessageDTO> messageDTOs = messages.stream()
+//                .map(message -> new MessageDTO(
+//                    message.getId(),
+//                    message.getSender(),
+//                    message.getContent(),
+//                    message.getChatRoom().getId()
+//                ))
+//                .collect(Collectors.toList());
+//        log.info("messageDTOs: {}", messageDTOs);
+//        return ResponseEntity.ok(messageDTOs);
+//    }
 }

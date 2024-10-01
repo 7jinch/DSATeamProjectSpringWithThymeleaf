@@ -13,7 +13,6 @@ public class CrawlerScheduler {
     }
 
     @Scheduled(cron = "0 0 10 * * *") // 매일 오전 10시에 실행
-//    @Scheduled(cron = "0 */10 * * * *")
     public void performCrawling() {
         crawlerController.crawling(null);
     }

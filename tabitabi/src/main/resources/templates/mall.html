@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>くだもん</title>
+<link rel="stylesheet" href="/css/index.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<style>
+.account-box {
+	display: none;
+	position: absolute;
+    top: 0; /* account 요소의 바로 아래에 위치 */
+    left: 0; /* 좌측 정렬 */
+    display: none; /* 기본적으로 숨김 */
+    background-color: white; /* 배경색 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+}
+
+.logoline {
+	cursor: pointer;
+}
+
+.user-links0 {
+	display: none;
+}
+
+.user-links{
+	display: flex;
+	flex-direction: row;
+}
+
+.header-icon {
+	cursor: pointer;
+}
+</style>
+<script>
+$(document).ready(function() {
+   function openPopup() {
+	      window.open("/openPopup", "popupWindow", "width=360,height=500,resizable=no");
+   }
+   
+   $('.account').click(function() {
+	   $('.user-links0').toggle();
+   })
+	   
+	$('.logoline').click(function() {
+		window.location.href = 'http://localhost:9000/kudamon/mall';
+	})
+	
+	$('.member-logout').click(function() {
+		window.location.href = 'http://localhost:9000/member/logout';
+	})
+
+	$('.member-mypage').click(function() {
+		window.location.href = 'http://localhost:9000/member/mypage';
+	})
+
+	$('.chat').click(function() {
+		window.location.href = 'http://localhost:9000/openPopup';
+	})
+	
+	$('.seller-logout').click(function() {
+		window.location.href = 'http://localhost:9000/seller/logout';
+	})
+	
+	$('.seller-mypage').click(function() {
+		window.location.href = 'http://localhost:9000/seller/mypage';
+	})
+
+	$('.register').click(function() {
+		window.location.href = 'http://localhost:9000/seller/register';
+	})
+
+	$('.list').click(function() {
+		window.location.href = 'http://localhost:9000/products/seller/list';
+	})
+
+	$('.login').click(function() {
+		openLoginPopup();
+	})
+
+	$('.joinchoice').click(function() {
+		window.location.href = 'http://localhost:9000/joinchoice';
+	})
+
+	$('.support').click(function() {
+		window.location.href = 'http://localhost:9000/support';
+	})
+
+	$('.cart').click(function() {
+		let member_id = [[${memberId != null ? memberId : false}]]; // 회원의 id 가져오기
+		if(member_id === false) {
+			alert('로그인이 필요합니다.');
+			return;
+		}
+		window.location.href = `http://localhost:9000/cart/${member_id}`;
+	})
+})
+</script>
+
+</head>
+<body>
+	<script src="/js/index.js"></script>
+	<header>
+		<div class="header-container">
+			<div class="logoline">
+				<h1 class="logo">
+					<a href="/kudamon/mall">쿠다몬</a>
+				</h1>
+				<img src="/src/images/kudamon.png">
+			</div>
+			
+			<div class="user-options">
+				<div class="search-container">
+					<input type="text" class="search-bar">
+					<button type="submit" class="search-button">
+						<img src="/src/images/search-icon.png" alt="돋보기" class="search-icon">
+					</button>
+				</div>
+				
+				<img src="/src/images/favorite.png" alt="찜" class="icon zzim header-icon">
+				<img src="/src/images/person.png" alt="account" class="icon account header-icon" >
+				<img src="/src/images/bag.png" alt="장바구니" class="icon cart header-icon" >
+			</div>
+		</div>
+
+		<!-- 카테고리 이모티콘과 드롭다운 -->
+		<div class="category-container">
+			<button id="category-button">≡ 카테고리</button>
+			<div id="category-menu" class="category-menu">
+				<a href="#">과일</a> <a href="#">고기류</a> <a href="#">채소</a> <a
+					href="#">계란</a> <a href="#">버섯</a> <a href="#">수산물</a> <a href="#">곡물류</a>
+				<a href="#">조개류</a> <a href="#">친환경</a> <a href="#">양념류</a> <a
+					href="#">간식</a> <a href="#">음료</a> <a href="#">가공식품</a> <a href="#">꿀</a>
+				<!-- 추가 카테란리 항목들 -->
+			</div>
+			<div id="navi" class="navi">
+				<a href="#">장보기</a> <a href="#">특가</a> <a href="#">레시피</a> <a
+					href="#">이벤트</a> <a href="#">선물하기</a>
+			</div>
+			<div class="user-links0">
+				<div class="user-links">
+					<div th:unless="${session.loginMember}">
+						<div th:unless="${session.loginSeller}" class="login-member login-box">
+							<div class="login button">로그인</div>
+							<div>|</div>
+							<div class="joinchoice button">회원가입</div>
+							<div>|</div>
+							<div class="support button">고객센터</div>
+						</div>
+					</div>
+					<div th:if="${session.loginMember}" class="login-member login-box">
+						<div class="member-logout button">로그아웃</div>
+						<div>|</div>
+						<div class="member-mypage button">마이페이지</div>
+						<div>|</div>
+						<div class="chat button">채팅</div>
+					</div>
+					<div th:if="${session.loginSeller}" class="login-seller login-box">
+						<div class="seller-logout button">로그아웃</div>
+						<div>|</div>
+						<div class="seller-mypage button">마이페이지</div>
+						<div>|</div>
+						<div class="chat button">채팅</div>
+						<div>|</div>
+						<div class="register button">상품 등록</div>
+						<div>|</div>
+						<div class="list button">내 상품리스트</div>
+					</div>
+		
+				</div>
+			</div>
+
+		</div>
+	</header>
+	
+	<!-- 메인 배너 슬라이더 -->
+    <section class="banner-slider">
+      <button class="prev">＜</button>
+      <div class="slider-container">
+          <div class="slide">
+              <img src="/src/images/1.jpg" alt="배너 1">
+          </div>
+          <div class="slide">
+              <img src="/src/images/2.jpg" alt="배너 2">
+          </div>
+          <div class="slide">
+              <img src="/src/images/3.jpg" alt="배너 3">
+          </div>
+          <div class="slide">
+              <img src="/src/images/4.jpg" alt="배너 4">
+          </div>
+          
+          <!-- 추가 배너 이미지 -->
+      </div>
+      <button class="next">＞</button>
+  	</section>
+	
+	<!-- 카테고리 섹션 -->
+    <section class="category-icons">
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'과일'})}" >
+      		<img src="/src/images/fruit.png" alt="카테고리 1" class="category-icon"></a>
+          <p>과일</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'고기류'})}" >
+          <img src="/src/images/meat.png" alt="카테고리 2" class="category-icon"></a>
+          <p>고기류</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'채소'})}" >
+          <img src="/src/images/veg.png" alt="카테고리 3" class="category-icon"></a>
+          <p>채소</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'계란'})}" >
+          <img src="/src/images/egg.png" alt="카테고리 4" class="category-icon"></a>
+          <p>계란</p>
+      </div>
+      <div class="category-item">
+     	<a th:href="@{/products/categorylist(category=${'버섯'})}" >
+          <img src="/src/images/mush.png" alt="카테고리 5" class="category-icon"></a>
+          <p>버섯</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'수산물'})}" >
+          <img src="/src/images/fish.png" alt="카테고리 6" class="category-icon"></a>
+          <p>수산물</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'곡물류'})}" >
+          <img src="/src/images/rice.png" alt="카테고리 7" class="category-icon"></a>
+          <p>곡물류</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'조개류'})}" >
+          <img src="/src/images/shell.png" alt="카테고리 8" class="category-icon"></a>
+          <p>조개류</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'친환경'})}" >
+          <img src="/src/images/bio.png" alt="카테고리 9" class="category-icon"></a>
+          <p>친환경</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'양념류'})}" >
+          <img src="/src/images/salt.png" alt="카테고리 10" class="category-icon"></a>
+          <p>양념류</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'간식'})}" >
+          <img src="/src/images/candy.png" alt="카테고리 11" class="category-icon"></a>
+          <p>간식</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'음료'})}" >
+          <img src="/src/images/drink.png" alt="카테고리 12" class="category-icon"></a>
+          <p>음료</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'가공식품'})}" >
+          <img src="/src/images/food.png" alt="카테고리 13" class="category-icon"></a>
+          <p>가공식품</p>
+      </div>
+      <div class="category-item">
+      	<a th:href="@{/products/categorylist(category=${'꿀'})}" >
+          <img src="/src/images/honey.png" alt="카테고리 14" class="category-icon"></a>
+          <p>꿀</p>
+      </div>
+    </section>
+	
+	<section class="popular-products">
+      <h3>실시간 구매 TOP 10</h3>
+		
+		<div class="product-container">
+			<button id="prev-btn">＜</button>
+			<ul>
+				<th:block th:each="productStat : ${topProducts}">
+					<li class="product"><a
+						th:href="@{/products/read(id=${productStat[0].productId})}"
+						class="product-link"> <img
+							th:src="@{/products/files?filename={filename}(filename=${productStat[0].images[0].saved_filename})}"
+							class="product-image" alt="Product Image" />
+					</a> 
+					<div class="product-info"><span th:text="${productStat[0].name}" class="product-name">상품명</span>
+					<div class="price-container">
+							<span th:text="${#numbers.formatInteger(productStat[0].price, 0, 'COMMA')} + '원'" class="product-price">가격</span>
+							<div class="icons">
+								<img src="/src/images/favorite.png" alt="찜" class="wishlist-icon"> <img
+									src="/src/images/bag.png" alt="장바구니" class="cart-icon">
+							</div>
+						</div> 
+						<span class="store-name" th:text="${productStat[0].seller.nickname}"></span> <!--셀러 이름 작게 추가 -->
+					</li>
+				</th:block>
+			</ul>
+				<button id="next-btn">＞</button>
+		</div>
+
+	</section>
+	
+	<section class="popular-products">
+      <h3>많은 사람들이 찜한 상품 ❤</h3>
+		
+		<div class="product-container">
+			<button id="prev-btn">＜</button>
+			<ul>
+				<th:block th:each="zzimp : ${popularzzim}">
+					<li class="product"><a
+						th:href="@{/products/read(id=${zzimp[0].productId})}"
+						class="product-link"> <img
+							th:src="@{/products/files?filename={filename}(filename=${zzimp[0].images[0].saved_filename})}"
+							class="product-image" alt="Product Image" />
+					</a> 
+					<div class="product-info"><span th:text="${zzimp[0].name}" class="product-name">상품명</span>
+					<div class="price-container">
+							<span th:text="${#numbers.formatInteger(zzimp[0].price, 0, 'COMMA')} + '원'" class="product-price">가격</span>
+							<div class="icons">
+								<img src="/src/images/favorite.png" alt="찜" class="wishlist-icon"> <img
+									src="/src/images/bag.png" alt="장바구니" class="cart-icon">
+							</div>
+						</div> 
+						<span class="store-name" th:text="${zzimp[0].seller.nickname}"></span> <!--셀러 이름 작게 추가 -->
+					</li>
+				</th:block>
+			</ul>
+				<button id="next-btn">＞</button>
+		</div>
+
+	</section>
+
+	<div class="graph">
+		<h3>소매가 시세 참고하세요!</h3>
+		<div class="navigation-buttons">
+			<button id="prev-btn">＜</button>
+			<div id="charts-container"></div>
+			<button id="next-btn">＞</button>
+		</div>
+	</div>
+	
+	<footer>
+		<p>고객센터: 1234-5678 | 이메일: info@shop.com</p>
+		<p>© 2024 DSA. All Rights Reserved.</p>
+	</footer>
+	
+
+</body>
+</html>

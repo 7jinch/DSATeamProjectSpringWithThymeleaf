@@ -1,5 +1,8 @@
 package com.example.tabitabi.model.chat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,8 @@ public class Chat {
 	private String sender;
 	
     private String content;
+    
+    private LocalDateTime createdtime;
 
     public Chat() {
     }

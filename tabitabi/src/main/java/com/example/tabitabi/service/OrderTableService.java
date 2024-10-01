@@ -120,7 +120,6 @@ public class OrderTableService {
 	@Transactional
 	public void createShippingInfo(Long orderId, @Valid OrderShippingInfoDTO orderShippingInfoDTO) {
 		OrderTable ot = orderRepository.getById(orderId);
-		if(ot.getOrderShippingInfo() == null) return; // 이미 배송지 주소를 설정했으면
 
 		// 배송지 정보 저장
 		OrderShippingInfo osi = new OrderShippingInfo();
@@ -128,11 +127,14 @@ public class OrderTableService {
 		osi.setShipping_phone_number(orderShippingInfoDTO.getShipping_phone_number());
 		osi.setShipping_address(orderShippingInfoDTO.getShipping_address());
 		osi.setRequest_info(orderShippingInfoDTO.getRequest_info());
+		osi.setPayment_type(orderShippingInfoDTO.getPayment_type());
 		OrderShippingInfo newOsi = orderShippingInfoRespository.save(osi);
 		
 		// 주문에 배송지 정보 설정
 		ot.setOrderShippingInfo(newOsi);
 		orderRepository.save(ot);
+		
+		orderShippingInfoRespository.save(osi);
 		
 	}
 

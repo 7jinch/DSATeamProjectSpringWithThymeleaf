@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard-Regular';
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.login-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 팝업창 스타일 */
+.popup-content {
+    width: 400px; /* 너비 설정 */
+    height: 500px; /* 높이 설정 */
+    padding: 20px;
+    background-color: white;
+    position: relative;
+    border-radius: 8px; /* 모서리 둥글게 */
+    margin-top: 140px; /* 상단 여백 추가 */
+}
+
+/* 팝업 헤더 스타일 */
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.popup-header h2 {
+    margin: 0;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+th {
+    text-align: left;
+    padding: 5px; /* 패딩 조정 */
+}
+
+td {
+    padding: 5px; /* 패딩 조정 */
+}
+
+/* 입력창 스타일 */
+input[type="text"], select {
+    width: 100%; /* 너비를 100%로 변경 */
+    padding: 10px;
+    margin-bottom: 10px; /* 간격 좁히기 */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* 버튼 스타일 */
+.options {
+    display: flex;
+    justify-content: space-between; /* 버튼 간의 간격을 일정하게 유지 */
+    margin-top: 20px;
+}
+
+input[type="button"] {
+    padding: 10px;
+    background: linear-gradient(to right, #28a745, #5dd39e);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 48%; /* 버튼의 너비 조정 */
+}
+
+input[type="button"]:hover {
+    background-color: #218838; /* 버튼 호버 색상 */
+}

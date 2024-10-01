@@ -64,22 +64,14 @@ public class CartController {
 		
 		List<CartItemAndImageDTO> ciai = new ArrayList<>();
 		for (CartItem item : cartItems) {
-			log.info("----------테스트1----------");
 			Long id = item.getProduct().getProductId();
-			log.info("----------테스트2----------");
 			Product product = productService.findProduct(id); // 제품 ID로 제품 조회
-			log.info("----------테스트3----------");
 			ProductImage productImage = productService.findFileByProductId(product); // 제품 ID로 파일 조회
-			log.info("----------테스트4----------");
 			
 			CartItemAndImageDTO cai = new CartItemAndImageDTO();
-			log.info("----------테스트5----------");
 			cai.setCartItem(item);
-			log.info("----------테스트6----------");
 			cai.setProductImage(productImage);
-			log.info("----------테스트7----------");
 			ciai.add(cai);
-			log.info("----------테스트8----------");
 		}
 		
 		for(CartItemAndImageDTO c : ciai) {

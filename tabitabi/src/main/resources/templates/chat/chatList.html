@@ -2,29 +2,92 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>채팅리스트</title>
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/chat2.css">
 <script
-	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<style>
-</style>
+   src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+   const images = [ '/images/free-icon-apple-3137044.png',
+         '/images/free-icon-dragon-fruit-2224312.png',
+         '/images/free-icon-peach-454443.png',
+         '/images/free-icon-strawberry-4587687.png' ];
+
+   function displayRandomImage() {
+      const randomImageElements = document
+            .getElementsByClassName('randomImage');
+
+      for (let i = 0; i < randomImageElements.length; i++) {
+         const randomIndex = Math.floor(Math.random() * images.length);
+         const randomImageUrl = images[randomIndex];
+         randomImageElements[i].src = randomImageUrl;
+      }
+   }
+
+   window.onload = displayRandomImage;
+</script>
 </head>
 <body>
-	<ul th:each="chatRoom : ${chatRoom}">
-		<li th:object="${chatRoom.product}">
-			<button th:id="'chatRoomId-'+ '${chatRoom.id}'"
-				th:text="*{name}" th:value="${chatRoom.id}"
-				onclick="showChatList(this)"
-				th:data-id="${chatRoom.id}"></button>
-		</li>
-	</ul>
-	<table>
-		<input type="hidden" id="sender" th:value="${sender.name}" />
-		<tbody id="chat"></tbody>
-	</table>
-	<script src="/js/chatList.js"></script>
-	<script src="/js/chat.js"></script>
+   <div id="chatListHeader">
+      <div class="myprofile">
+         <div th:if="${sender.fileName}">
+            <img th:src="@{/uploads/{imageUrl}(imageUrl=${sender.fileName})}"
+               alt="" />
+         </div>
+         <div th:unless="${sender.fileName}">
+            <img class="randomImage" src="" alt="랜덤 이미지" />
+         </div>
+         <div class="myname" th:text="${sender.name}"></div>
+      </div>
+      <input type="text" id="searchInput" class="search" placeholder="상품찾기" onkeyup="searchProducts()">
+   </div>
+   <div class="chat-list">
+      <ul th:each="chatRoom : ${chatRoom}">
+         <li th:object="${chatRoom.product}">
+            <button th:value="${chatRoom.id}" onclick="showChatList(this)"
+               th:data-id="${chatRoom.id}" class="chatButton">
+               <div class="opponent">
+                  <div th:if="${session.loginMember}">
+                     <div th:if="${chatRoom.seller.fileName}">
+                        <img class="imagePreview"
+                           th:src="@{/uploads/{imageUrl}(imageUrl=${chatRoom.seller.fileName})}"
+                           alt="" />
+                     </div>
+                     <div th:unless="${chatRoom.seller.fileName}">
+                        <img class="randomImage" src="" alt="랜덤 이미지" />
+                     </div>
+                     <div th:text="${chatRoom.seller.name}"></div>
+                  </div>
+                  <div th:if="${session.loginSeller}">
+                     <div th:if="${chatRoom.member.fileName}">
+                        <img
+                           th:src="@{/uploads/{imageUrl}(imageUrl=${chatRoom.member.fileName})}"
+                           alt="" />
+                     </div>
+                     <div th:unless="${chatRoom.member.fileName}">
+                        <img class="randomImage" src="" alt="랜덤 이미지" />
+                     </div>
+                     <div th:text="${chatRoom.member.name}"></div>
+                  </div>
+               </div>
+               <div class="chatBody">
+                  <div id="productname" th:text="${chatRoom.product.name}"></div>
+                  <div th:each="message, iterStat : ${chatRoom.messages}"
+                     th:if="${iterStat.last}">
+                     <span
+                        th:text="${#strings.length(message.content) > 5 ? #strings.substring(message.content, 0, 5) + '...' : message.content}"></span>
+                  </div>
+               </div>
+                  <div th:each="message, iterStat : ${chatRoom.messages}"
+                     th:if="${iterStat.last}" class="createdTime">
+                     <div class="date"
+                        th:text="${#temporals.format(message.createdTime, 'MM/dd')}"></div>
+                     <div class="time"
+                        th:text="${#temporals.format(message.createdTime, ' a hh:mm')}"></div>
+                  </div>
+            </button>
+         </li>
+      </ul>
+   </div>
+   <script src="/js/chatList.js"></script>
 </body>
 </html>

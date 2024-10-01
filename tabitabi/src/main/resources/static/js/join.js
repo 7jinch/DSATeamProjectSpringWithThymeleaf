@@ -72,13 +72,13 @@ function joinFormValidator(){
        $('#error-name').text(errorMessage);
        $('#name').focus();
        return false;
-    } else if(name.length <= 5 || name.length >= 21){
-       clearError();
-       errorMessage = "이름은 6자 ~ 20자 사이로 입력해 주세요.";
-		$('#error-name').text(errorMessage);
-       $('#name').focus();
-       return false;
-    } 
+    } else if (nickname.length <= 2 || nickname >= 20) {
+	errorMessage = "닉네임은 2자 ~ 20자 사이로";
+	clearError();
+	$('#error-name').text(errorMessage);
+	$('#name').focus();
+	return false;
+}
 	else if(!RegExp('^\\d{3}-\\d{4}-\\d{4}$').test(phoneNumber)){
 	 	clearError();
 	 	errorMessage = "연락처를 정확하게 작성해 주세요.(예시: 000-0000-0000)";
@@ -111,7 +111,6 @@ function joinFormValidator(){
 	 	$('#answer').focus();
 	 	return false;
 	}
-	clearError();
     $.ajax({
         type: "POST",
         data: {
@@ -130,12 +129,9 @@ function joinFormValidator(){
             window.location.href = "/";
         },
         error: function(error, status, xhr){
-			console.log("error: ", error);
-            const responseBody = error.responseJSON;
-            console.log('에러 메시지:', responseBody.message);
-            alert(responseBody.message);
-           // console.error("오류 발생:", error.message);
-           // console.error("상태 코드:", xhr.status); // 400 내(클라이언트)탓 500 니(서버)탓 확인용
+			console.error("회원가입에 실패했습니다.");
+           console.error("오류 발생:", error);
+           console.error("상태 코드:", xhr.status); // 400 내(클라이언트)탓 500 니(서버)탓 확인용
         }
     });
 }

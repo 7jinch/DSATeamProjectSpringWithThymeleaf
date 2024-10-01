@@ -1,5 +1,6 @@
 package com.example.tabitabi.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ public class MessageService {
     @Autowired
     private ChatRoomService chatRoomService;
     
-    public void saveMessage(String sender,String content,ChatRoom chatRoom) {
+    public void saveMessage(String sender,String content,ChatRoom chatRoom,
+    		LocalDateTime createdIme) {
     	Message message = new Message();
         message.setSender(sender);
         message.setContent(content);
         message.setChatRoom(chatRoom);
+        message.setCreatedtime(createdIme);
     	messageRepository.save(message);
     }
     

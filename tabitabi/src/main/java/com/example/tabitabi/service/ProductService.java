@@ -17,6 +17,7 @@ import com.example.tabitabi.model.Product.ProductImage;
 import com.example.tabitabi.model.Product.ProductStatus;
 import com.example.tabitabi.model.seller.Seller;
 import com.example.tabitabi.repository.FileRepository;
+import com.example.tabitabi.repository.OrderItemsRepository;
 import com.example.tabitabi.repository.ProductImageRepository;
 import com.example.tabitabi.repository.ProductRepository;
 import com.example.tabitabi.util.FileService;
@@ -39,8 +40,16 @@ public class ProductService {
     @Autowired
     private final ProductImageRepository productImageRepository;
     
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
+    
     private final FileService fileService;
     private final FileRepository fileRepository;
+    
+    public List<Object[]> getTop10Products() {
+    	log.info("---getTop10Products 실행---");
+        return orderItemsRepository.findTop10ProductsByOrderQuantity();
+    }
 
     public Page<Product> getProductsBySeller(Seller seller, Pageable pageable) {
         return productRepository.findBySeller(seller, pageable);

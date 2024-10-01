@@ -1,5 +1,7 @@
 package com.example.tabitabi.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,10 @@ public class WishlistService {
 
 	    @Autowired
 	    private SellerWishListRepository sellerWishListRepository;
+	    
+	    public List<Object[]> getProductsOrderedByWishCount() {
+	        return wishlistRepository.findAllByOrderByWishCountDesc();
+	    }
 
 	    public boolean isProductInWishlist(Long memberId, Long productId) {
 	        Member member = memberRepository.findById(memberId).orElseThrow();
