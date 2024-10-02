@@ -50,7 +50,10 @@ public class HomeController {
       model.addAttribute("topProducts", topProducts);
       model.addAttribute("popularzzim", popularzzim);
       
-      if(loginMember != null) model.addAttribute("memberId", loginMember.getId());
+      if(loginMember != null) {
+    	  model.addAttribute("memberId", loginMember.getId());
+    	  model.addAttribute("member", loginMember);
+      }
         
       return "mall";
 	}

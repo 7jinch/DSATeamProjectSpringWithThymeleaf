@@ -225,6 +225,15 @@ public class ProductController {
         
         model.addAttribute("isInWishlist", isInWishlist);
         model.addAttribute("isOwnProduct", isOwnProduct); 
+        
+        // 관련 상품
+        List<Product> productList =  productService.findProductsByCategory(product.getCategory());
+        
+//        for(Product p : productList) {
+//        	log.info("카테고리 상품: {}", p);
+//        }
+        
+        model.addAttribute("productList", productList);
 
 		return "product/read"; // 제품 상세 페이지 반환
 	}

@@ -52,7 +52,7 @@ public class LoginCheckFilter implements Filter {
         // 로그인 체크가 필요 없는 경로들 (화이트리스트)
         String[] whiteList = {
                 "/", "/*/join", "/*/login", "/*/logout", "/*/forgotPw", "/*/setPw", 
-                "/kudamon/mall", "/products/categorylist", "/products/read*",
+                "/kudamon/mall", "/products/categorylist", "/products/read",
                 "/products/files", "/joinchoice", "/crawling", "/api/statistics",
                 "/*.css", "/*.js", "/*.ico", "/error",
                 "/*.png", "/*.jpg", "/*.jpeg", "/*.gif", "/*.svg", "/*.mp4", // 정적 파일 형식

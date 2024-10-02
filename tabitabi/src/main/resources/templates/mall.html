@@ -43,6 +43,7 @@ $(document).ready(function() {
    
    $('.account').click(function() {
 	   $('.user-links0').toggle();
+	   $('.welcome').toggle();
    })
 	   
 	$('.logoline').click(function() {
@@ -169,10 +170,9 @@ $(document).ready(function() {
 						<div>|</div>
 						<div class="list button">내 상품리스트</div>
 					</div>
-		
 				</div>
 			</div>
-
+			<div class="welcome" th:if="${member != null}" th:text="${member.nickname != null ? member.nickname : member.name} + '님, 환영합니다!'"></div>
 		</div>
 	</header>
 	

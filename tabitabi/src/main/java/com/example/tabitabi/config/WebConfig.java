@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     private String[] excludePaths = {
             "/", 
             "/*/join", "/*/login", "/*/logout", "/*/forgotPw", "/*/setPw",
-            "/*/kudamon/mall",
+            "/*/kudamon/mall", "/products/read",
             "/*.css", "/*.js", "/*.ico", "/error",
             "/src/**",   // 여기 추가: static 디렉토리 내의 src 하위 리소스들을 제외
             "/uploads/**", // 여기 추가: static/uploads/ 경로에 대한 리소스 제외
