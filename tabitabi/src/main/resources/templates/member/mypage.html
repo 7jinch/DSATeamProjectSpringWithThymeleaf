@@ -37,6 +37,8 @@
 	flex-direction: row;
 	
 	margin-top: 50px;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 .side-bar-container {
@@ -44,7 +46,7 @@
 	
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 70px;
 }
 
 @font-face {
@@ -59,7 +61,13 @@
 .side-bar-container-title {
 	font-family: 'CWDangamAsac-Bold', sans-serif;
 	font-weight: bold;
-	font-size: large;
+	font-size: x-large;
+}
+
+.side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .my-page-container {
@@ -70,13 +78,147 @@
 	font-weight: bold;
 	width: 100%;
 	padding-top: 10px;
-	border-top: 5px solid #03C75A;
 	padding-bottom: 10px;
+	padding-left: 20px;
+	border-top: 5px solid #03C75A;
 	border-bottom: 5px solid #03C75A;
 }
 
 .side-bar-content {
 	cursor: pointer;
+}
+
+.my-page-content-container {
+	display: flex;
+	flex-direction: row;
+}
+
+.image-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
+	gap: 50px;
+	
+	padding-top: 50px;
+}
+
+.imagePreview {
+	width: 150px;
+	height: 150px;
+	border: 1px solid lightgray;
+	border-radius: 50px;
+	
+	padding: 10px;
+	
+}
+
+.form-control-box {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+input[type="file"] {
+    all: unset;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.image-change-button {
+	border: 1px solid gray;
+	border-radius: 50px;
+	background-color: white;
+	
+	font-size: 15px;
+}
+
+.image-change-button:hover {
+	background-color: lightgray;
+	border: 1px solid lightgray;
+	color: white;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	
+	width: 100%;
+	
+	padding-top: 50px;
+}
+
+.form > table > tbody {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 30px;
+}
+
+.form > table > tbody > tr {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.form > table > tbody > tr > td > input {
+	all: unset;
+	border-bottom: 1px solid lightgray;
+}
+
+.form > table > tbody > tr > td > select {
+	all: unset;
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: center;
+	color: gray;
+}
+
+.my-page-button-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 30px;
+}
+
+.my-page-button-box > input {
+    all: unset;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 22px;
+    transition: transform 0.3s ease;
+}
+
+.my-page-button-box > input[type="submit"] {
+	color: white;
+	background-color: rgb(104, 245, 86);
+    border: 1px solid rgb(104, 245, 86);
+}
+.my-page-button-box > input[type="submit"]:hover {
+	background-color: rgb(42, 232, 60);
+    border: 1px solid rgb(42, 232, 60);
+    
+    transform: scale(1.1);
+}
+
+.my-page-button-box > input[type="button"] {
+	color: white;
+	background-color: rgb(230, 66, 7);
+    border: 1px solid rgb(230, 66, 7);
+}
+.my-page-button-box > input[type="button"]:hover {
+	background-color: black;
+    border: 1px solid black;
+    
+    transform: scale(0.9);
 }
 </style>
 <script>
@@ -190,14 +332,19 @@ $(document).ready(function() {
 		<div id="my-page-container" class="my-page-container">
 			<div id="my-page-contianer-title" class="my-page-contianer-title"></div>
 			<div id="my-page-content-container" class="my-page-content-container">
-				<img id="imagePreview"
-					th:src="@{/uploads/{imageUrl}(imageUrl=${member.fileName})}"
-					alt="Image Preview" /> <input type="file" class="form-control"
-					id="profile" name="profile" onchange="chooseImage(this)" />
-				<button type="button" class="btn btn-primary"
-					onclick="updateImage()">사진 변경</button>
+				<div class="image-container">
+					<img id="imagePreview" class="imagePreview"
+						th:src="@{/uploads/{imageUrl}(imageUrl=${member.fileName})}"
+						alt="Image Preview" />
+					<div class="form-control-box">
+						<input type="file" class="form-control"
+							id="profile" name="profile" onchange="chooseImage(this)" />
+						<button type="button" class="btn btn-primary image-change-button"
+							onclick="updateImage()">프로필 이미지 변경</button>
+					</div>
+				</div>
 
-				<form action="update" id="updateForm" method="POST"
+				<form class="form" action="update" id="updateForm" method="POST"
 					th:object="${member}">
 					<table>
 						<tr>
@@ -241,8 +388,8 @@ $(document).ready(function() {
 					</table>
 					<p></p>
 					<div class="my-page-button-box">
-						<input type="submit" value="정보 수정하기" /> <input type="button"
-							onclick="pwCheck()" value="회원탈퇴" />
+						<input type="submit" value="정보 수정하기" />
+						<input type="button" onclick="pwCheck()" value="회원탈퇴" />
 					</div>
 				</form>
 			</div>
@@ -327,6 +474,15 @@ $(document).ready(function() {
   		})
   	})
   	*/
+  	
+	// 프로필 이미지 없을 경우 보여줄 랜덤 이미지  	
+  	let profileImageUrl = [[${member.fileName}]];
+//    console.log(profileImageUrl);
+    if(true) {
+    	const memberEmail = [[${member.email}]];
+    	$('#imagePreview').attr('src', `https://api.dicebear.com/9.x/micah/svg?seed=${memberEmail}`);
+    }
+  	// https://api.dicebear.com/9.x/micah/svg?seed=${}
   })
 </script>
 </body>

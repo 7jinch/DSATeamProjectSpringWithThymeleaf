@@ -28,11 +28,14 @@ function removeSeller(){
 function pwCheck(){
 	const email = $("#email").val();
 	const password = $("#password").val();
+	if(!confirm("탈퇴하시겠어요?")) return;
 	if(password.trim() === ''){
 		alert("비밀번호를 입력하세요");
 		$("#password").focus();
 		return;
 	}
+	if(!confirm("정말 탈퇴하실건가요?")) return;
+	
 	$.ajax({
         type: "POST",
         data: {
@@ -105,8 +108,8 @@ $(document).ready(function() {
 			const question = $('#selected-question').val();
 			const answer = $('#answer').val().trim();
 	
-            if(password.length <= 4 || password.length >= 21) {
-				alert("비밀번호는 5자 ~ 20자 사이로");				
+            if(password.length <= 3 || password.length >= 21) {
+				alert("비밀번호는 4자 ~ 20자 사이로");				
        			$('#password').focus();
        			return false;
 		    } else if(name == null || name == ""){

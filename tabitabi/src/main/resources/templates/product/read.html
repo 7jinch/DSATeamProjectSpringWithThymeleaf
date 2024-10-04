@@ -245,7 +245,8 @@
 .button-box {
 	display: flex;
 	flex-direction: row;
-	width: 100%
+	width: 100%;
+	height: 60px;
 }
 
 .add-cart-button-container {
@@ -253,10 +254,12 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	background-color: black;
+	background-color: rgb(71, 69, 69);
 	color: white;
+}
+
+.add-cart-button-container:hover {
 	background-color: black;
-	background-color: black
 }
 
 .wishlist-button-container {
@@ -268,9 +271,82 @@
 	color: white;
 }
 
+.wishlist-button-container:hover {
+	background-color: rgb(245, 63, 20);
+}
+
+.chat-button-container {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	background-color: rgb(52, 235, 101);
+	color: white;
+}
+
+.chat-button-container:hover {
+	background-color: rgb(22, 245, 82);
+}
+
+@media screen and (min-width: 1263px) {
+	.add-cart-button {
+		display: flex;
+	}
+	.wishlist-button {
+		display: flex;
+	}
+	.chat-button {
+		display: flex;
+	}
+	
+	.add-cart-button-icon {
+		display: none;
+	}
+	.wishlist-button-icon {
+		display: none;
+	}
+	.chat-button-icon {
+		display: none;
+	}
+}
+
+
+@media screen and (max-width: 1262px) {
+	.add-cart-button {
+		display: none;
+	}
+	.wishlist-button {
+		display: none;
+	}
+	.chat-button {
+		display: none;
+	}
+	
+	.add-cart-button-icon {
+		display: flex;
+	}
+	.wishlist-button-icon {
+		display: flex;
+	}
+	.chat-button-icon {
+		display: flex;
+	}
+}
+
 .buttons {
 	cursor: pointer;
 	padding: 20px;
+}
+
+.button-icon {
+	display: felx;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.button-icon > img {
+	height: 30px;
 }
 
 .tab-box {
@@ -594,12 +670,27 @@ $(document).ready(function(){
 						<div class="add-cart-button-container buttons">
 							<div id="add-cart-button" class="add-cart-button">장바구니에
 								추가하기</div>
+							<div class="add-cart-button-icon button-icon">
+								<img src="/src/cart.png" />
+							</div>
 						</div>
 
 						<!-- 찜 버튼 -->
 						<!-- <div style="text-align: center;"> -->
 						<div class="wishlist-button-container buttons">
 							<div id="wishlistButton" class="wishlist-button">찜하기</div>
+							<div class="wishlist-button-icon button-icon">
+								<img src="/src/zzim.png" />
+							</div>
+						</div>
+						
+						<!-- 판매자와 채팅 버튼 -->
+						<!-- <div style="text-align: center;"> -->
+						<div class="chat-button-container buttons">
+							<div id="chat-button" class="chat-button">채팅하기</div>
+							<div class="chat-button-icon button-icon">
+								<img src="/src/chat.png" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -700,6 +791,40 @@ $(document).ready(function(){
 		tm.classList.add('active'); // 클래스 속성에 'active' 추가
 		setTimeout(() => tm.classList.remove('active'), 2000) // 클래스 속성에서 'active' 제거(1000밀리초 후)
 	}
+    
+    // 장바구니에 추가하기하는 함수
+    const addCart = async () => {
+    	let productId = [[${product.productId}]];
+    	console.log('상품 정보:', productId);
+    	return await fetch("http://localhost:9000/cart", {
+    		method: "POST",
+    		headers: {
+    			"Content-Type" : "application/json",
+    		},
+    		body: JSON.stringify({productId})
+    	})
+    	.then((response)=>{
+    		if(response.ok) return response.json();
+    		else {
+    	        return response.json().then(error => {
+    	            throw new Error(error.message);
+    	        });
+    	    }
+    	})
+    	.then(data => {
+    		console.log("장바구니 추가 성공");
+    		console.log(data.message);
+    		showTM(data.message);
+    	})
+    	.catch(error => {
+    		console.log("장바구니 추가 실패");
+    		console.log(error.message);
+    		showTM(error.message);
+    	})
+    }
+
+    // 요소에 이벤트 바인딩하기
+    document.querySelector('.add-cart-button-container').addEventListener('click', addCart);
 	
     // 찜 버튼 상태 업데이트 함수
     function updateWishlistButton(isInWishlist) {

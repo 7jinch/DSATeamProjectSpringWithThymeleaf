@@ -35,14 +35,18 @@
 .page-container {
 	display: flex;
 	flex-direction: row;
+	
 	margin-top: 50px;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 .side-bar-container {
 	flex: 1;
+	
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 70px;
 }
 
 @font-face {
@@ -57,7 +61,13 @@
 .side-bar-container-title {
 	font-family: 'CWDangamAsac-Bold', sans-serif;
 	font-weight: bold;
-	font-size: large;
+	font-size: x-large;
+}
+
+.side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .my-page-container {
@@ -71,6 +81,74 @@
 	border-top: 5px solid #03C75A;
 	padding-bottom: 10px;
 	border-bottom: 5px solid #03C75A;
+}
+
+..side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.cart-page {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	padding-top: 10px;
+}
+
+.cart-page-contaier {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.cart-page-content {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 10px;
+
+	border-bottom: 1px solid lightgray;
+	margin-top: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.cart-page-content:last-of-type {
+	border-bottom: none;
+}
+
+.product-image-container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.product-image-container > img {
+	width: 100px;
+	height: 100px;
+}
+
+.cart-page-content-name-price-quantity {
+	display: flex;
+	flex-direction: row;
+	gap: 50px;
+}
+
+.cpcnpq {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: end;
+}
+
+.product-order-quantity {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
 }
 
 .side-bar-content {
@@ -224,7 +302,7 @@ $(document).ready(function(){
 	
 	// 상품 페이지로 이동
 	$('.image-box').click(function(){
-		const productId = $(this).closest('.product-image-container').find('.product-checkbox').attr('id');
+		const productId = $(this).attr('id');
 		console.log(productId);
 		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
 	})
@@ -297,7 +375,7 @@ $(document).ready(function(){
 			<div id="side-bar-content-container"
 				class="side-bar-content-container">
 				<div id="edit-my-data" class="edit-my-data side-bar-content">
-					개인정보 수정</div>
+					내 정보 수정</div>
 				<div id="shipping-list" class="shipping-list side-bar-content">
 					배송지 관리</div>
 				<div id="order-list" class="order-list side-bar-content">주문 내역
@@ -325,29 +403,33 @@ $(document).ready(function(){
 							<div th:each="item : ${cartList}" class="cart-page-content">
 								<span class="product-image-container"
 									style="text-align: center;"> <img class="image-box"
+									th:id="${item.cartItem.product.productId}"
 									th:if="${item.productImage != null}"
 									th:src="@{/products/files?filename={filename}(filename=${item.productImage.saved_filename})}"
-									alt="Product Image" /> <input type="checkbox"
-									class="product-checkbox"
-									th:id="${item.cartItem.product.productId}"
-									th:value="${item.cartItem.product.productId}" />
+									alt="Product Image" /> 
 								</span>
 								<div class="cart-page-content-name-price-quantity">
-									<span class="product-name"
-										th:id="${item.cartItem.product.productId}"> <span>상품이름:</span>
-										<span th:text="${item.cartItem.product.name}"></span>
-									</span> <span class="product-price"> <span>상품가격:</span> <span
-										class="this-is-product-price"
-										th:text="|${#numbers.formatInteger(item.cartItem.product.price, 0, 'COMMA')}원|"></span>
-									</span> <span class="product-order-quantity"> <span>상품
-											주문 수량:</span> <span th:text="${item.cartItem.quantity}"></span> <input
-										type="number" class="order-quantity" min="1"
-										th:attr="max=${item.cartItem.product.stock}"
-										th:value="${item.cartItem.quantity}"> <span>(
-											남은 수량:</span> <span th:text="${item.cartItem.product.stock}"
-										class="product-stock"></span> <span>)</span> <span
-										class="stock-error"></span>
-									</span>
+									<div class="cpcnpq">
+										<span class="product-name"
+											th:id="${item.cartItem.product.productId}">
+											<span th:text="${item.cartItem.product.name}"></span>
+										</span> <span class="product-price"> <span>개당 상품가격:</span> <span
+											class="this-is-product-price"
+											th:text="|${#numbers.formatInteger(item.cartItem.product.price, 0, 'COMMA')}원|"></span>
+										</span> <span class="product-order-quantity"> <span>상품
+												주문 수량:</span> <span th:text="${item.cartItem.quantity} + '개'"></span> <input
+											type="number" class="order-quantity" min="1"
+											th:attr="max=${item.cartItem.product.stock}"
+											th:value="${item.cartItem.quantity}"> <span>(
+												주문 가능 수량:</span> <span th:text="${item.cartItem.product.stock} + '개'"
+											class="product-stock"></span> <span>)</span> <span
+											class="stock-error"></span>
+										</span>
+									</div>
+									<input type="checkbox"
+										class="product-checkbox"
+										th:id="${item.cartItem.product.productId}"
+										th:value="${item.cartItem.product.productId}" />
 								</div>
 							</div>
 						</div>
@@ -546,14 +628,14 @@ $(document).ready(function(){
 	
 	// 상품 페이지로 이동
 	$('.image-box').click(function(){
-		const productId = $(this).closest('.product-image-container').find('.product-checkbox').attr('id');
+		const productId = $(this).attr('id');
 		console.log(productId);
-		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+//		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
 	})
 	$('.product-name').click(function(){
 		const productId = $(this).attr('id');
 		console.log(productId);
-		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+		// window.location.href = `http://localhost:9000/products/read?id=${productId}`;
 	})
 	
 	let ooo = [[${cartList}]];

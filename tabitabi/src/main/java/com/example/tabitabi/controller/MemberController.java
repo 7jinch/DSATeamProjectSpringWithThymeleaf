@@ -208,7 +208,7 @@ public class MemberController {
 		log.info("update 실행");
 		log.info("member:{}", member);
 		memberService.updateMember(member);
-		return "redirect:/";
+		return "redirect:/member/mypage";
 	}
 
 	@PutMapping("mypage")

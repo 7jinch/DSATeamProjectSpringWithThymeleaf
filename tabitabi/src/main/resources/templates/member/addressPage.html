@@ -36,7 +36,9 @@
 	display: flex;
 	flex-direction: row;
 	
-		margin-top: 50px;
+	margin-top: 50px;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 .side-bar-container {
@@ -44,7 +46,13 @@
 	
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 70px;
+}
+
+.side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 @font-face {
@@ -59,7 +67,7 @@
 .side-bar-container-title {
 	font-family: 'CWDangamAsac-Bold', sans-serif;
 	font-weight: bold;
-	font-size: large;
+	font-size: x-large;
 }
 
 .my-page-container {
@@ -70,9 +78,104 @@
 	font-weight: bold;
 	width: 100%;
 	padding-top: 10px;
-	border-top: 5px solid #03C75A;
 	padding-bottom: 10px;
+	padding-left: 20px;
+	border-top: 5px solid #03C75A;
 	border-bottom: 5px solid #03C75A;
+}
+
+.my-page-content-container {
+}
+
+.address-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	padding-top: 30px;
+}
+
+.address-container > div {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.buttons {
+    all: unset;
+    border: 1px solid;
+	border-radius: 30px;
+	text-align: center;
+    padding: 5px;
+    width: 12%;
+    
+    cursor: pointer;
+}
+
+.address-checkbox {
+   	border: 1px solid rgb(255, 47, 0);
+    background-color: rgb(255, 47, 0);
+    color: white;
+}
+
+.address-checkbox:hover {
+   	border: 1px solid black;
+    background-color: black;
+    color: white;
+}
+
+.show-add-address-container-button {
+	width: 12%;
+	text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid rgb(78, 245, 42);
+    background-color: rgb(78, 245, 42);
+    color: white;
+}
+
+.show-add-address-container-button:hover {
+    border: 1px solid rgb(45, 255, 0);
+    background-color: rgb(45, 255, 0);
+    color: white;
+    
+    /* transform: scale(1.05);*/
+}
+
+.button-box {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	border: 1px solid lightgray;
+	border-radius: 20px;
+	
+	padding: 20px;
+}
+
+.button-box > input {
+	all: unset;
+	border-bottom: 1px solid lightgray;
+}
+
+.button-box > input:focus {
+	transform: scale(1.05);
+	border-bottom: 1px solid lightgray;
+}
+
+.add-address-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.add-address-box > input {
+	all: unset;
+	cursor: pointer;
+}
+
+.add-address-error {
+	color: red;
 }
 
 .side-bar-content {
@@ -194,7 +297,7 @@
 			<div id="side-bar-content-container"
 				class="side-bar-content-container">
 				<div id="edit-my-data" class="edit-my-data side-bar-content">
-					개인정보 수정</div>
+					내 정보 수정</div>
 				<div id="shipping-list" class="shipping-list side-bar-content">
 					배송지 관리</div>
 				<div id="order-list" class="order-list side-bar-content">주문 내역
@@ -217,26 +320,27 @@
 		<div id="my-page-container" class="my-page-container">
 			<div id="my-page-contianer-title" class="my-page-contianer-title"></div>
 			<div id="my-page-content-container" class="my-page-content-container">
-				<div>
+				<div class="address-container">
 					<div th:each="address : ${addressList}">
 						<span class="address" th:text="${address.address}"></span> <input
-							type="button" class="address-checkbox" th:attr="id=${address.id}"
+							type="button" class="address-checkbox buttons" th:attr="id=${address.id}"
 							value="배송지 삭제하기" />
 					</div>
 					<input type="button" id="show-add-address-container-button"
-						class="show-add-address-container-button" value="배송지 추가하기" />
+						class="show-add-address-container-button buttons" value="배송지 추가하기" />
 					<div id="add-address-container" class="add-address-container">
 						<div id="add-address-body" class="add-address-body">
-							<div id="add-address-body-title" class="add-address-body-title">배송지
-								추가하기</div>
 							<div id="button-box" class="button-box">
 								<input type="text" id="add-address-input"
-									class="add-address-input" />
+									class="add-address-input" placeholder="추가할 주소를 입력하세요." />
 								<div id="add-address-error" class="add-address-error"></div>
-								<input type="button" id="add-address-button"
-									class="add-address-button" value="배송지 추가하기" /> <input
-									type="button" value="X" id="close-add-address-container"
-									class="close-add-address-container" />
+								<div class="add-address-box">
+									<input type="button" id="add-address-button"
+										class="add-address-button buttons" value="배송지 추가하기" />
+									<input
+										type="button" value="닫기" id="close-add-address-container"
+										class="close-add-address-container buttons" />
+								</div>
 							</div>
 						</div>
 
@@ -325,9 +429,12 @@ $(document).ready(function() {
     
     $('#close-add-address-container').click(function(){
     	$('#add-address-container').css("display", "none");
+    	$('#add-address-error').text('');
     })
     
     $('.address-checkbox').on('click',function(){
+    	if(!confirm("등록하신 배송지를 삭제하시겠어요?")) return;
+    		
     	const addressId = $(this).attr('id');
     	const memberId = [[${memberId}]];
     	const url = `http://localhost:9000/member/address/${memberId}`;

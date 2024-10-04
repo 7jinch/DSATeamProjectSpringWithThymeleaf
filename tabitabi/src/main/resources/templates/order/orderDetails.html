@@ -130,6 +130,12 @@ $(document).ready(function() {
 		}
 	})
 	
+	// 개인정보 수정 페이지
+   document.querySelector('#edit-my-data').addEventListener('click', () => {
+	let member_id = [[${memberId}]]; // 회원의 id 가져오기
+	window.location.href = `http://localhost:9000/member/mypage`;
+   });
+	
     // 회원의 배송지 페이지
     document.querySelector('#shipping-list').addEventListener('click', () => {
   	  console.log("클릭");
@@ -189,7 +195,7 @@ $(document).ready(function() {
 			<div id="side-bar-content-container"
 				class="side-bar-content-container">
 				<div id="edit-my-data" class="edit-my-data side-bar-content">
-					개인정보 수정</div>
+					내 정보 수정</div>
 				<div id="shipping-list" class="shipping-list side-bar-content">
 					배송지 관리</div>
 				<div id="order-list" class="order-list side-bar-content">주문 내역

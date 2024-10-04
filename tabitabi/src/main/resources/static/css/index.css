@@ -261,6 +261,9 @@ footer {
 	padding: 20px;
 	background-color: #333;
 	color: white;
+	
+	position: relative;
+	top: 20vh;
 }
 
 /* 슬라이더 버튼 스타일 */
