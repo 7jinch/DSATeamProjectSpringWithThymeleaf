@@ -131,6 +131,7 @@ input[type="file"] {
 	border: 1px solid gray;
 	border-radius: 50px;
 	background-color: white;
+	color: gray;
 	
 	font-size: 15px;
 }
@@ -155,7 +156,7 @@ input[type="file"] {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 30px;
+	gap: 15px;
 }
 
 .form > table > tbody > tr {
@@ -164,9 +165,17 @@ input[type="file"] {
 	justify-content: space-between;
 }
 
+.form > table > tbody > tr > th {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .form > table > tbody > tr > td > input {
 	all: unset;
 	border-bottom: 1px solid lightgray;
+	padding: 10px;
 }
 
 .form > table > tbody > tr > td > select {
@@ -206,7 +215,7 @@ input[type="file"] {
 	background-color: rgb(42, 232, 60);
     border: 1px solid rgb(42, 232, 60);
     
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 .my-page-button-box > input[type="button"] {
@@ -218,7 +227,11 @@ input[type="file"] {
 	background-color: black;
     border: 1px solid black;
     
-    transform: scale(0.9);
+    /* transform: scale(0.9); */
+}
+
+#question {
+	cursor: pointer;
 }
 </style>
 <script>

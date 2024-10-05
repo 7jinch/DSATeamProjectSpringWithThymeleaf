@@ -34,6 +34,7 @@ public class HomeController {
 	private final WishlistService wishlistService;
 	private final ChatRoomService chatRoomService;
 	private final MessageService messageService;
+	private final MemberService memberService;
 	
 	@GetMapping("/")
 	public String home(Model model) {
@@ -51,8 +52,9 @@ public class HomeController {
       model.addAttribute("popularzzim", popularzzim);
       
       if(loginMember != null) {
-    	  model.addAttribute("memberId", loginMember.getId());
-    	  model.addAttribute("member", loginMember);
+    	  Member member = memberService.findMemberById(loginMember.getId());
+    	  model.addAttribute("memberId", member.getId());
+    	  model.addAttribute("member", member);
       }
         
       return "mall";

@@ -74,11 +74,11 @@ public class CartController {
 			ciai.add(cai);
 		}
 		
-		for(CartItemAndImageDTO c : ciai) {
-			log.info("이미지 데이터: {}", c.getProductImage());
-			log.info("상품 데이터: {}", c.getCartItem());
-			log.info("\n");
-		}
+//		for(CartItemAndImageDTO c : ciai) {
+//			log.info("이미지 데이터: {}", c.getProductImage());
+//			log.info("상품 데이터: {}", c.getCartItem());
+//			log.info("\n");
+//		}
 		model.addAttribute("cartList", ciai);
 		model.addAttribute("memberId", member.getId());
 		log.info("장바구니 페이지 열기");

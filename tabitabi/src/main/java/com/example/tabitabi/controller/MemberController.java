@@ -154,7 +154,7 @@ public class MemberController {
 		session.setAttribute("loginMember", null);
 		session.invalidate();
 
-		return "mall";
+		return "redirect:/kudamon/mall";
 	}
 
 	@GetMapping("mypage")

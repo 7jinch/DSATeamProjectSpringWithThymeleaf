@@ -35,7 +35,6 @@
 .page-container {
 	display: flex;
 	flex-direction: row;
-	
 	margin-top: 50px;
 	margin-left: 20px;
 	margin-right: 20px;
@@ -43,7 +42,6 @@
 
 .side-bar-container {
 	flex: 1;
-	
 	display: flex;
 	flex-direction: column;
 	gap: 70px;
@@ -85,25 +83,142 @@
 }
 
 .my-page-content-container {
+	
 }
 
 .order-list-page {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	
 	padding-top: 10px;
 }
 
 .order-container {
-	padding-left: 20px;
-	padding-right: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding-left: 30px;
+	padding-right: 30px;
 	padding-bottom: 10px;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid lightgray;
 }
 
 .order-container:last-of-type {
 	border-bottom: none;
+}
+
+.order-status-and-order-date {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	width: 100%;
+}
+
+.order-status-date {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.order-status-and-details {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.order_status {
+	font-size: larger;
+}
+
+.order-date {
+	color: gray;
+	font-size: small;
+}
+
+.show-button, .order-details {
+	cursor: pointer;
+}
+
+.show-button {
+	font-size: 15px;
+}
+
+.order-details {
+	color: gray;
+}
+
+.product-container-box {
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	margin: 0;
+}
+
+.product-container {
+	padding: 0;
+	margin: 0;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.product-image-name-price-quantity {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.product-image-container > img {
+	width: 150px;
+	height: 150px;
+	cursor: pointer;
+}
+
+.product-name-price-quantity {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 20px;
+}
+
+.seller-name-box {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
+	
+	font-size: small;
+	font-weight: bold;
+	color: gray;
+	cursor: pointer;
+}
+
+.seller-name {
+
+}
+
+.shop-image {
+	width: 25px;
+}
+
+.item-name {
+	font-size: larger;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.already {
+	color: gray;
+}
+
+.order-product-total-price-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	
+	font-size: x-large;
+	font-weight: bold;
 }
 
 .side-bar-content {
@@ -219,124 +334,97 @@
 	</header>
 
 	<div class="page-container">
-      <div id="side-bar-container" class="side-bar-container">
-        <div id="side-bar-container-title" class="side-bar-container-title">
-          마이 쿠다몽
-        </div>
-        <div id="side-bar-content-container" class="side-bar-content-container">
-          <div id="edit-my-data" class="edit-my-data side-bar-content">
-            내 정보 수정
-          </div>
-          <div id="shipping-list" class="shipping-list side-bar-content">
-            배송지 관리
-          </div>
-          <div id="order-list" class="order-list side-bar-content">
-            주문 내역
-          </div>
-          <div id="cart-list" class="cart-list side-bar-content">장바구니</div>
-          <div id="chat-list" class="chat-list side-bar-content">채팅 목록</div>
-          <div
-            id="zzim-product-list"
-            class="zzim-product-list side-bar-content"
-          >
-            찜한 상품 목록
-          </div>
-          <div
-            id="follow-seller-list"
-            class="follow-seller-list side-bar-content"
-          >
-            팔로우한 판매자들
-          </div>
-        </div>
-        <div id="help-container" class="help-container">
-          <div id="help-container-title" class="help-container-title">
-            도움이 필요하신가요?
-          </div>
-          <div id="help" class="help">1:1 문의하기</div>
-        </div>
-      </div>
-      <div id="my-page-container" class="my-page-container">
-        <div id="my-page-contianer-title" class="my-page-contianer-title"></div>
-        <div id="my-page-content-container" class="my-page-content-container">
-           <div id="order-list-page" class="order-list-page">
-             <div id="toast_message" class="toast_message"></div>
-             <div
-               th:each="order : ${orderAndOrderItemsList}"
-               class="order-container"
-             >
-               <div class="order-status-and-order-date">
-                 <div class="order-status-date">
-                   <div
-                     th:text="${order.orderTable.order_status}"
-                     class="order_status"
-                   ></div>
-                   <div
-                     th:text="|${order.orderTable.order_date}에 주문하신 상품|"
-                     class="order-date"
-                   ></div>
-                 </div>
-                 <div th:id="${order.orderTable.id}" class="order-details">
-                   주문 상세 보기 >
-                 </div>
-               </div>
-               <div class="show-button">펼쳐보기 ▼</div>
-               <div
-                 th:each="orderItems : ${order.ProductAndImageList}"
-                 class="product-container"
-               >
-                 <div class="product-image-name-price-quantity">
-                   <div
-                     class="product-image-container"
-                     style="text-align: center"
-                     th:id="${orderItems.product.productId}"
-                   >
-                     <img
-                       th:if="${orderItems.productImage != null}"
-                       th:src="@{/products/files?filename={filename}(filename=${orderItems.productImage.saved_filename})}"
-                       alt="Product Image"
-                     />
-                   </div>
-                   <div class="product-name-price-quantity">
-                     <div
-                       th:text="${orderItems.product.name}"
-                       class="item-name"
-                       th:id="${orderItems.product.productId}"
-                     ></div>
-                     <div class="product-price-quantity">
-                       <div
-                         th:text="|${#numbers.formatInteger(orderItems.product.price, 0, 'COMMA')}원|"
-                       ></div>
-                       <div th:text="|${orderItems.quantity}개|"></div>
-                     </div>
-                   </div>
-                 </div>
-                 <div
-                   class="add-cart-button"
-                   th:id="${orderItems.product.productId}"
-                   th:if="${not idList.contains(orderItems.product.productId)}"
-                 >
-                   장바구니에 추가하기
-                 </div>
-                 <div
-                   class="added-in-cart"
-                   th:id="${orderItems.product.productId}"
-                   th:if="${idList.contains(orderItems.product.productId)}"
-                 >
-                   이미 장바구니에 추가된 상품입니다.
-                 </div>
-               </div>
-               <div class="order-product-total-price-container">
-                 <div>총 주문 금액:&nbsp;</div>
-                 <div
-                   th:text="|${#numbers.formatInteger(order.orderTable.total_price, 0, 'COMMA')}원|"
-                   class="order-total-price"
-                 ></div>
-               </div>
-             </div>
-           </div>
-        </div>
-      </div>
-      </div>
+		<div id="side-bar-container" class="side-bar-container">
+			<div id="side-bar-container-title" class="side-bar-container-title">
+				마이 쿠다몽</div>
+			<div id="side-bar-content-container"
+				class="side-bar-content-container">
+				<div id="edit-my-data" class="edit-my-data side-bar-content">
+					내 정보 수정</div>
+				<div id="shipping-list" class="shipping-list side-bar-content">
+					배송지 관리</div>
+				<div id="order-list" class="order-list side-bar-content">주문 내역
+				</div>
+				<div id="cart-list" class="cart-list side-bar-content">장바구니</div>
+				<div id="chat-list" class="chat-list side-bar-content">채팅 목록</div>
+				<div id="zzim-product-list"
+					class="zzim-product-list side-bar-content">찜한 상품
+					목록</div>
+				<div id="follow-seller-list"
+					class="follow-seller-list side-bar-content">팔로우한
+					판매자들</div>
+			</div>
+			<div id="help-container" class="help-container">
+				<div id="help-container-title" class="help-container-title">
+					도움이 필요하신가요?</div>
+				<div id="help" class="help">1:1 문의하기</div>
+			</div>
+		</div>
+		<div id="my-page-container" class="my-page-container">
+			<div id="my-page-contianer-title" class="my-page-contianer-title"></div>
+			<div id="my-page-content-container" class="my-page-content-container">
+				<div id="order-list-page" class="order-list-page">
+					<div id="toast_message" class="toast_message"></div>
+					<div th:each="order : ${orderAndOrderItemsList}"
+						class="order-container">
+						<div class="order-status-and-order-date">
+							<div class="order-status-and-details">
+								<div class="order-status-date">
+									<div th:text="${order.orderTable.order_status}"
+										class="order_status"></div>
+									<div th:text="|${order.orderTable.order_date}에 주문하신 상품|"
+										class="order-date"></div>
+								</div>
+								<div th:id="${order.orderTable.id}" class="order-details">
+									주문 상세 보기 ></div>
+							</div>
+							<div class="show-button">펼쳐보기 ▼</div>
+						</div>
+						<div class="product-container-box">
+							<div th:each="orderItems : ${order.ProductAndImageList}"
+								class="product-container">
+								<div class="product-image-name-price-quantity">
+									<div class="product-image-container" style="text-align: center"
+										th:id="${orderItems.product.productId}">
+										<img th:if="${orderItems.productImage != null}"
+											th:src="@{/products/files?filename={filename}(filename=${orderItems.productImage.saved_filename})}"
+											alt="Product Image" />
+									</div>
+									<div class="product-name-price-quantity">
+										<div class="seller-name-box">
+											<div class="seller-name" th:text="${orderItems.product.seller.name}"></div>
+											<img class="shop-gray-image shop-image" src="/src/shop-gray.png" />
+										</div>
+										<div th:text="${orderItems.product.name}" class="item-name"
+											th:id="${orderItems.product.productId}"></div>
+										<div class="product-price-quantity">
+											<div
+												th:text="|${#numbers.formatInteger(orderItems.product.price, 0, 'COMMA')}원|"></div>
+											<div th:text="|${orderItems.quantity}개|"></div>
+										</div>
+									</div>
+								</div>
+								<div class="add-cart-button"
+									th:id="${orderItems.product.productId}"
+									th:if="${not idList.contains(orderItems.product.productId)}">
+									장바구니에 추가하기</div>
+								<div class="added-in-cart already"
+									th:id="${orderItems.product.productId}"
+									th:if="${idList.contains(orderItems.product.productId)}">
+									이미 장바구니에 추가된 상품입니다.</div>
+							</div>
+						</div>
+						<div class="order-product-total-price-container">
+							<div>총 주문 금액:&nbsp;</div>
+							<div
+								th:text="|${#numbers.formatInteger(order.orderTable.total_price, 0, 'COMMA')}원|"
+								class="order-total-price"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<footer>
 		<p>고객센터: 1234-5678 | 이메일: info@shop.com</p>
@@ -364,20 +452,32 @@
     	$('.order-product-total-price-container').hide();
 
     	$('.show-button').click(function(){
-    		const text = $(this).text();
+    		const text = $(this).text();    		
     		if(text === '펼쳐보기 ▼') {
     			// $(this).closest('.product-container').addClass('hide');
+    			$(this).closest('.order-container').find('.product-container-box').css('border', '1px solid lightgray');
+    			$(this).closest('.order-container').find('.product-container-box').css('border-radius', '10px');
+    			$(this).closest('.order-container').find('.product-container-box').css('padding', '10px');
+    			$(this).closest('.order-container').find('.product-container-box').css('padding-left', '30px');
+    			$(this).closest('.order-container').find('.product-container-box').css('padding-right', '30px');
+    			$(this).closest('.order-container').find('.product-container-box').css('margin', '20px');
     			$(this).closest('.order-container').find('.product-container').show('fast');
     			$(this).closest('.order-container').find('.order-product-total-price-container').show('fast');
     			$(this).text('접기 ▲');
+    			$(this).css('color', 'gray');
     		} else {
     			// $(this).closest('.product-container').removeClass('hide');
+    			$(this).closest('.order-container').find('.product-container-box').css('border', 'none');
+    			$(this).closest('.order-container').find('.product-container-box').css('border-radius', 'none');
+    			$(this).closest('.order-container').find('.product-container-box').css('padding', '0');
+    			$(this).closest('.order-container').find('.product-container-box').css('margin', '0');
     			$(this).closest('.order-container').find('.product-container').hide('fast');
     			$(this).closest('.order-container').find('.order-product-total-price-container').hide('fast');
     			$(this).text('펼쳐보기 ▼');
+    			$(this).css('color', 'black');
     		}
     	})
-
+    	
     	$('.product-image-container').click(function(){
     		const productId = $(this).attr('id');
     		window.location.href = `http://localhost:9000/products/read?id=${productId}`;

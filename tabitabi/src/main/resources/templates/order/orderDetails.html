@@ -36,13 +36,15 @@
 	display: flex;
 	flex-direction: row;
 	margin-top: 50px;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 
 .side-bar-container {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 70px;
 }
 
 @font-face {
@@ -57,7 +59,13 @@
 .side-bar-container-title {
 	font-family: 'CWDangamAsac-Bold', sans-serif;
 	font-weight: bold;
-	font-size: large;
+	font-size: x-large;
+}
+
+.side-bar-content-container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .my-page-container {
@@ -68,13 +76,177 @@
 	font-weight: bold;
 	width: 100%;
 	padding-top: 10px;
-	border-top: 5px solid #03C75A;
 	padding-bottom: 10px;
+	padding-left: 20px;
+	border-top: 5px solid #03C75A;
 	border-bottom: 5px solid #03C75A;
 }
 
 .side-bar-content {
 	cursor: pointer;
+}
+
+.order-detail-page {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	
+	padding-left: 70px;
+	padding-right: 70px;
+}
+
+.order-detail-pate-title {
+	text-align: center;
+	font-size: x-large;
+	font-weight: bold;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.order-status-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.order-date-contianer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.order-product-list-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.order-product-item-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 35px;
+	padding-right: 35px;
+	
+	border-bottom: 1px solid lightgray;
+}
+
+.order-product-item-box:last-of-type {
+	border-bottom: none;
+}
+
+.product-image-container > img {
+	width: 100px;
+	height: 100px;
+	
+	cursor: pointer;
+}
+
+.product-name {
+	font-size: larger;
+	font-weight: bold;
+	
+	cursor: pointer;
+}
+
+.order-product-item {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: end;
+}
+
+.item-price-quantity-box {
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+}
+
+.item-price-quantity {
+	display: flex;
+	flex-direction: row;
+	
+	padding-bottom: 10px;
+}
+
+.item-price-quantity-price {
+	font-size: large;
+	font-weight: bold;
+}
+
+.order-payment-amount-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.order-payment-type-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.shipping-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.shipping-info-box {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+.shipping-info-box-box {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.button-container {
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+}
+
+.button {
+	border-radius: 30px;
+	padding: 10px;
+}
+
+.maove-mypage {
+	border: 1px solid rgb(0, 104, 250);
+	background-color: rgb(0, 104, 250);
+	color: white;
+}
+.maove-mypage:hover {
+	border: 1px solid rgb(37, 0, 250);
+	background-color: rgb(37, 0, 250);
+}
+
+.order-cancel-button {
+	border: 1px solid rgb(250, 83, 0);
+	background-color: rgb(250, 83, 0);
+	color: white;
+}
+.order-cancel-button:hover {
+	border: 1px solid rgb(250, 0, 0);
+	background-color: rgb(250, 0, 0);
+}
+
+.order-notice-container {
+	color: gray;
+}
+
+.box-title {
+	font-weight: bold;
 }
 </style>
 
@@ -92,6 +264,9 @@ window.onload = function(){
 $(document).ready(function() {
 	let order = [[${orderShippingInfo}]];
 	console.log(order);
+	
+	let requestInfo = [[${orderShippingInfo.request_info}]];
+	if(!requestInfo) $('.order-shipping-request-content').text('없음');
 	
     $(document).ready(function() {
       	$('#order-list').css('font-weight', 'bold');
@@ -128,6 +303,16 @@ $(document).ready(function() {
 				}
 			})
 		}
+	})
+	
+	$('.product-image-container').click(function() {
+		const productId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
+	})
+
+	$('.product-name').click(function() {
+		const productId = $(this).attr('id');
+		window.location.href = `http://localhost:9000/products/read?id=${productId}`;
 	})
 	
 	// 개인정보 수정 페이지
@@ -220,19 +405,19 @@ $(document).ready(function() {
 					<div id="order-detail-pate-title" class="order-detail-pate-title">주문
 						내역 상세</div>
 					<div id="order-status-box" class="order-status-box">
-						<div id="order-tatus-title" class="order-tatus-title">주문 상태</div>
+						<div id="order-tatus-title" class="order-tatus-title box-title">주문 상태</div>
 						<div id="order-status" class="order-status"
 							th:text="${order.order_status}"></div>
 					</div>
 					<div id="order-date-contianer" class="order-date-contianer">
-						<div id="order-date-title" class="order-date-title">주문일</div>
+						<div id="order-date-title" class="order-date-title box-title">주문일</div>
 						<div id="order-date-content" class="order-date-content"
 							th:text="|${order.order_date}"></div>
 					</div>
 					<div id="order-product-list-container"
 						class="order-product-list-container">
 						<div id="order-product-list-title"
-							class="order-product-list-title">주문 상품</div>
+							class="order-product-list-title box-title">주문 상품</div>
 						<div th:each="orderItemAndImage : ${orderItemList}"
 							class="order-product-item-box">
 							<div class="product-image-container" style="text-align: center;"
@@ -240,68 +425,74 @@ $(document).ready(function() {
 								<img th:if="${orderItemAndImage.productImage != null}"
 									th:src="@{/products/files?filename={filename}(filename=${orderItemAndImage.productImage.saved_filename})}"
 									alt="Product Image" />
-								<div class="product-name"
-									th:text="${orderItemAndImage.product.name}"></div>
 							</div>
 							<div class="order-product-item">
-								<div class="item-price-quantity">
-									<div class="item-price"
-										th:text="|${orderItemAndImage.product.price}원&nbsp;X&nbsp;|"></div>
-									<div class="item-quantity"
-										th:text="|${orderItemAndImage.quantity}개|"></div>
+								<div class="product-name"
+									th:id="${orderItemAndImage.product.productId}"
+									th:text="${orderItemAndImage.product.name}"></div>
+								<div class="item-price-quantity-box">
+									<div class="item-price-quantity">
+										<div class="item-price"
+											th:text="|${orderItemAndImage.product.price}원&nbsp;X&nbsp;|"></div>
+										<div class="item-quantity"
+											th:text="|${orderItemAndImage.quantity}개|"></div>
+									</div>
+									<div class="item-price-quantity-price"
+										th:text="|총 ${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
 								</div>
-								<div class="item-price-quantity-price"
-									th:text="|총 ${#numbers.formatInteger(orderItemAndImage.product.price * orderItemAndImage.quantity, 0, 'COMMA')}원|"></div>
 							</div>
 						</div>
 					</div>
 					<div id="order-payment-amount-container"
 						class="order-payment-amount-container order-container">
 						<div id="order-payment-amount-title"
-							class="order-payment-amount-title">결제금액</div>
+							class="order-payment-amount-title box-title">결제금액</div>
 						<div id="order-payment-amount" class="order-payment-amount"
 							th:text="|${#numbers.formatInteger(order.total_price, 0, 'COMMA')}원|"></div>
 					</div>
 					<div id="order-payment-type-container"
 						class="order-payment-type-container order-container">
 						<div id="order-payment-type-title"
-							class="order-payment-type-title">결제수단</div>
+							class="order-payment-type-title box-title">결제수단</div>
 						<div id="order-payment-type-content"
 							class="order-payment-type-content"
 							th:text="${orderShippingInfo.payment_type}"></div>
 					</div>
 					<div id="shipping-info" class="shipping-info">
-						<div id="order-shipping-name-container"
-							class="order-shipping-name-container order-container">
-							<div id="order-shipping-name-title"
-								class="order-shipping-name-title">받으시는 분</div>
-							<div id="order-shipping-name-content"
-								class="order-shipping-name-content"
-								th:text="${orderShippingInfo.shipping_name}"></div>
-						</div>
-						<div id="order-shipping-address-container"
-							class="order-shipping-address-container order-container">
-							<div id="order-shipping-address-title"
-								class="order-shipping-address-title">배송지</div>
-							<div id="order-shipping-address-content"
-								class="order-shipping-address-content"
-								th:text="${orderShippingInfo.shipping_address}"></div>
-						</div>
-						<div id="order-shipping-phone-number-container"
-							class="order-shipping-phone-number-container order-container">
-							<div id="order-shipping-phone-number-title"
-								class="order-shipping-phone-number-title">연락처</div>
-							<div id="order-shipping-phone-number-content"
-								class="order-shipping-phone-number-content"
-								th:text="${orderShippingInfo.shipping_phone_number}"></div>
-						</div>
-						<div id="order-shipping-request-container"
-							class="order-shipping-request-container order-container">
-							<div id="order-shipping-request-title"
-								class="order-shipping-request-title">요청사항</div>
-							<div id="order-shipping-request-content"
-								class="order-shipping-request-content"
-								th:text="${orderShippingInfo.request_info}"></div>
+						<div class="shipping-info-title box-title">배송 정보</div>
+						<div class="shipping-info-box">
+							<div id="order-shipping-name-container"
+								class="order-shipping-name-container order-container shipping-info-box-box">
+								<div id="order-shipping-name-title"
+									class="order-shipping-name-title box-title">받으시는 분</div>
+								<div id="order-shipping-name-content"
+									class="order-shipping-name-content"
+									th:text="${orderShippingInfo.shipping_name}"></div>
+							</div>
+							<div id="order-shipping-address-container"
+								class="order-shipping-address-container order-container shipping-info-box-box">
+								<div id="order-shipping-address-title"
+									class="order-shipping-address-title box-title">배송지</div>
+								<div id="order-shipping-address-content"
+									class="order-shipping-address-content"
+									th:text="${orderShippingInfo.shipping_address}"></div>
+							</div>
+							<div id="order-shipping-phone-number-container"
+								class="order-shipping-phone-number-container order-container shipping-info-box-box">
+								<div id="order-shipping-phone-number-title"
+									class="order-shipping-phone-number-title box-title">연락처</div>
+								<div id="order-shipping-phone-number-content"
+									class="order-shipping-phone-number-content"
+									th:text="${orderShippingInfo.shipping_phone_number}"></div>
+							</div>
+							<div id="order-shipping-request-container"
+								class="order-shipping-request-container order-container shipping-info-box-box">
+								<div id="order-shipping-request-title"
+									class="order-shipping-request-title box-title">요청사항</div>
+								<div id="order-shipping-request-content"
+									class="order-shipping-request-content"
+									th:text="${orderShippingInfo.request_info}"></div>
+							</div>
 						</div>
 					</div>
 					<div id="button-container" class="button-container">

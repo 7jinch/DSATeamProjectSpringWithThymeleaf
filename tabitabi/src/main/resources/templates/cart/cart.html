@@ -78,8 +78,9 @@
 	font-weight: bold;
 	width: 100%;
 	padding-top: 10px;
-	border-top: 5px solid #03C75A;
 	padding-bottom: 10px;
+	padding-left: 20px;
+	border-top: 5px solid #03C75A;
 	border-bottom: 5px solid #03C75A;
 }
 
@@ -100,7 +101,6 @@
 .cart-page-contaier {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
 }
 
 .cart-page-content {
@@ -132,6 +132,10 @@
 	height: 100px;
 }
 
+.image-box, .product-name {
+	cursor: pointer;
+}
+
 .cart-page-content-name-price-quantity {
 	display: flex;
 	flex-direction: row;
@@ -149,6 +153,41 @@
 	display: flex;
 	flex-direction: row;
 	gap: 5px;
+}
+
+.cart-total-price {
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	
+	padding-right: 30px;
+}
+
+.button-box {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+
+.button-box > input {
+	all: unset;
+	cursor: pointer;
+	border: 1px solid;
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.order-button:hover {
+	border: 1px solid rgb(40, 235, 50);
+	background-color: rgb(40, 235, 50);
+	color:  white;
+}
+
+.delete-button:hover, .delete-all-button:hover {
+	border: 1px solid rgb(224, 48, 36);
+	background-color: rgb(224, 48, 36);
+	color:  white;
 }
 
 .side-bar-content {
@@ -442,8 +481,12 @@ $(document).ready(function(){
 								id="delete-button" class="delete-button"
 								value="선택한 상품 장바구니에서 삭제하기"> <input type="button"
 								id="delete-all-button" class="delete-all-button"
-								value="장바구니 비우기"> <input type="button"
-								onclick="location.href='/'" value="메인으로">
+								value="장바구니 비우기">
+								
+								<!-- 
+								 <input type="button" class="main-button"
+									onclick="location.href='/kudamon/mall'" value="메인으로">
+								 -->
 						</div>
 					</div>
 				</div>
